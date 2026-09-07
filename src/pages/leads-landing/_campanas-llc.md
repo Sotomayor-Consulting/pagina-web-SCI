@@ -9,7 +9,8 @@ para que Astro no lo publique como ruta.
 | Carpeta | `abrir-llc-primera-vez/` | `corregir-llc-existente/` |
 | Ruta | `/leads-landing/abrir-llc-primera-vez/` | `/leads-landing/corregir-llc-existente/` |
 | Persona | Emprendedor/empresario **sin LLC** — la va a abrir | Emprendedor/empresario que **ya tiene LLC** — corregir, ordenar, migrar |
-| H1 | «Abre tu LLC en EE. UU. sin errores, con una asesoría de 30 min» | «¿Ya tienes una LLC? Corrígela antes de que un error te cueste caro» |
+| H1 | «Abre tu LLC en EE. UU. sin errores, con la estructura correcta desde el inicio» | «¿Ya tienes una LLC? Corrígela antes de que un error te cueste caro» |
+| Público en el copy | e-commerce, agencias, SaaS, creadores, consultores, inversionistas (giros en **negrita** en el sub) | los mismos, **con una LLC ya abierta** |
 | Form · `goal` por defecto | «Elige una opción» | «Ordenar o corregir mi LLC actual» (preseleccionado) |
 | `page_name` (analítica) | `landing_abrir_llc_primera_vez` | `landing_corregir_llc_existente` |
 | Enlace a la otra | Solo en el cierre de FAQ → `../corregir-llc-existente/` | Solo en el cierre de FAQ → `../abrir-llc-primera-vez/` |
@@ -18,14 +19,19 @@ para que Astro no lo publique como ruta.
 
 ## Qué comparten (idéntico)
 
-- **Objetivo único:** cerrar la reunión de asesoría de 30 min por Zoom. Un solo CTA repetido.
+- **Objetivo único:** cerrar la reunión de asesoría por Zoom. Un solo CTA repetido.
+  El copy **no menciona duración** (ni "30 min" ni rango): posiciona la reunión como
+  conversación consultiva, no llamada con cronómetro.
 - **Mecanismo:** formulario de 4 campos (nombre, WhatsApp con país+bandera, correo, `goal`)
   → `POST` a `https://n8n.sotomayorconsulting.com/webhook/leads-directos-tiktok-landing`
   → n8n → Odoo (crm.lead). Luego se muestra el **calendario Zcal embebido** prellenado:
   `name`, `email`, `smsPhone` (recordatorio SMS) y **`a0`** (pregunta "Teléfono (WhatsApp)"
   = `customQuestionAnswers.0`, type tel — Zcal prefila las preguntas personalizadas por
-  índice a0, a1, a2…). Evento: **"Sesión Estratégica: Tu Empresa en EE. UU."**, dura 30 min,
-  pero su slug sigue siendo `.../agendar-asesoria-llc/60min` (el `/30min` no existe).
+  índice a0, a1, a2…). Evento: **"Sesión Estratégica: Tu Empresa en EE. UU."** — el evento
+  Zcal está configurado en 30 min y su slug es `.../agendar-asesoria-llc/60min` (el `/30min`
+  no existe). El copy de la landing no expone la duración; Zcal sí la muestra en el widget.
+  Pendiente: revisar si conviene subir la duración del evento Zcal a 45–60 min para dar
+  margen a que el asesor se extienda sin colisionar reservas consecutivas.
   El `lead_id` **no** viaja en la URL de Zcal; la reserva se reconcilia por email/teléfono
   en n8n (webhook de Zcal).
 - **Tracking:** GTM `GTM-TNRQGDM` + TikTok Pixel `D5KFDEBC77U6BL6T7LDG` + scaffold de

@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>¿Ya tienes una LLC? Corrígela | Sotomayor Consulting International </title>
-<meta name="description" content="Asesoría gratuita de 30 minutos: revisamos tu LLC actual —estado, elección fiscal, declaraciones 5472/1120, BOI y banca— y te decimos qué corregir y en qué orden. Firma boutique, 10 años, partner de Mercury y Relay." />
+<meta name="description" content="Asesoría gratuita por Zoom para e-commerce, agencias, SaaS, consultores e inversionistas con una LLC ya abierta: revisamos estado, elección fiscal, 5472/1120, BOI y banca — y te decimos qué corregir y en qué orden. Firma boutique, 10 años, partner de Mercury y Relay." />
 <meta name="robots" content="noindex,nofollow" />
 
 <!--
@@ -16,7 +16,7 @@
   Doc del sistema: src/pages/leads-landing/_campanas-llc.md
 
   FUNCIONAMIENTO
-   · Objetivo único: agendar la reunión de revisión de 30 min por Zoom. Un solo CTA.
+   · Objetivo único: agendar la revisión gratuita por Zoom. Un solo CTA.
    · Formulario de 4 campos → POST al webhook n8n (leads-directos-tiktok-landing) → Odoo
      → calendario Zcal embebido y prellenado (name, email, a0=teléfono, smsPhone).
      El desplegable `goal` viene preseleccionado en "Ordenar o corregir mi LLC actual".
@@ -60,7 +60,7 @@
     },
     service_content: {
       content_name: "Revisión de LLC en EE. UU.",
-      description: "Reunión de 30 min: revisamos tu LLC actual —estado, elección fiscal, 5472/1120, BOI y banca— y qué corregir."
+      description: "Asesoría gratuita para e-commerce, agencias, SaaS, consultores e inversionistas con LLC ya abierta: revisamos estado, elección fiscal, 5472/1120, BOI y banca — y qué corregir."
     },
     debug: false
   };
@@ -88,6 +88,7 @@
     var pixelId = config.tiktok_pixel_id;
     var qaParams = new URLSearchParams(w.location.search || "");
     if (qaParams.get("qa") === "1" && qaParams.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(w.location.hostname)) return; // guard: pixeles solo en produccion
     if (!pixelId) return;
     w.TiktokAnalyticsObject = t;
     var ttq = w[t] = w[t] || [];
@@ -112,6 +113,7 @@
     var c = window.SCI_TRACKING_CONFIG || {};
     var qp = new URLSearchParams(location.search);
     if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(location.hostname)) return; // guard: pixeles solo en produccion
     if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
@@ -476,6 +478,8 @@
   .js .reveal{opacity:0;transform:translateY(16px)}
   .js .reveal.is-in{opacity:1;transform:none;transition:opacity .7s var(--e-out), transform .7s var(--e-out)}
   .js .reveal.d1{transition-delay:.06s} .js .reveal.d2{transition-delay:.12s} .js .reveal.d3{transition-delay:.18s}
+  .js .hero .reveal{opacity:1;transform:none;transition:none}   /* hero visible en el primer paint — tráfico social no espera */
+  .cal-fallback--urgent{font-size:.95rem !important;font-weight:700 !important;color:var(--gold-300) !important}
   @media (prefers-reduced-motion: reduce){
     .js .reveal{opacity:1;transform:none;transition:none}
     .btn,.step,.pcard{transition:none}
@@ -490,7 +494,7 @@
     <a class="brand" href="#inicio" aria-label="Sotomayor Consulting International">
       <img src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International" width="200" height="40" />
     </a>
-    <a class="btn btn--primary btn--sm" href="#agendar" data-cta="header">Agenda 30 min</a>
+    <a class="btn btn--primary btn--sm" href="#agendar" data-cta="header">Agenda tu revisión</a>
   </div>
 </header>
 
@@ -502,7 +506,7 @@
       <div>
         <span class="hero-eyebrow reveal">Firma boutique legal, fiscal y tecnológica · 10 años</span>
         <h1 class="reveal d1" id="hero-h1">¿Ya tienes una LLC? <span class="u">Corrígela</span> antes de que un error te cueste caro.</h1>
-        <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> de 30 minutos, por Zoom: revisamos tu LLC actual —estado, elección fiscal, declaraciones 5472/1120, BOI y banca— y te decimos <strong>qué corregir y en qué orden</strong>. Antes de que sea un problema.</p>
+        <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> por Zoom para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong> e <strong>inversionistas</strong> con una LLC ya abierta: revisamos estado, elección fiscal, 5472/1120, BOI y banca — y te decimos <strong>qué corregir y en qué orden</strong>.</p>
         <div class="hero-obj reveal d2">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Revisión sin compromiso</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>La creaste tú o un proveedor anterior</span>
@@ -530,7 +534,7 @@
 
         <!-- PASO 1 -->
         <div id="book-step-form">
-          <span class="book-badge">Revisión gratuita · 30 min</span>
+          <span class="book-badge">Revisión gratuita · por Zoom</span>
           <h2>Agenda la revisión de tu LLC</h2>
           <p class="book-sub">Sin costo, sin compromiso. Déjanos tus datos y elige el horario en el siguiente paso.</p>
           <form id="lead-form" novalidate>
@@ -581,11 +585,11 @@
 
         <!-- PASO 2 -->
         <div id="book-step-cal" class="book-cal" hidden>
-          <span class="book-badge">Último paso</span>
+          <span class="book-badge">Casi listo</span>
           <h2>Elige tu horario</h2>
-          <p class="book-sub" id="cal-greeting">Selecciona la fecha y la hora que mejor te queden.</p>
+          <p class="book-sub" id="cal-greeting">Tus datos ya están cargados — solo elige el día y la hora.</p>
           <div class="cal-frame" id="cal-frame"><!-- iframe Zcal se inyecta aquí tras el envío --></div>
-          <p class="cal-fallback">¿No carga? <a id="cal-open" href="#" target="_blank" rel="noopener">Abre el calendario en una pestaña nueva</a>.</p>
+          <p class="cal-fallback"><a id="cal-open" href="#" target="_blank" rel="noopener">Abrir el calendario en una pestaña nueva</a> (tus datos van igual de precargados).</p>
           <p class="book-devnote" id="book-devnote" hidden></p>
         </div>
       </aside>
@@ -620,7 +624,7 @@
       <div class="section-head reveal">
         <span class="kicker">Lo que se acumula en silencio</span>
         <h2>Una LLC mal mantenida se vuelve un problema caro</h2>
-        <p class="lede">No pasa de golpe. Se acumula: una declaración que no se presentó, un reporte fuera de plazo, un estado que no era. Media hora de revisión lo detecta antes de que te alcance.</p>
+        <p class="lede">No pasa de golpe. Se acumula: una declaración que no se presentó, un reporte fuera de plazo, un estado que no era. Una revisión a tiempo lo detecta antes de que te alcance.</p>
       </div>
       <div class="pain-grid">
         <div class="pain-item reveal">
@@ -637,8 +641,8 @@
         </div>
       </div>
       <div class="pain-cta reveal">
-        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar la revisión de 30 min</a>
-        <span class="cta-note on-navy-note">Gratis · sin compromiso · 30 min</span>
+        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar mi revisión gratuita</a>
+        <span class="cta-note on-navy-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -671,7 +675,7 @@
       <p class="why-kicker reveal">Si tu proveedor anterior desapareció o nunca te explicó qué mantener, esta revisión te pone al día.</p>
       <div class="why-cta reveal">
         <a class="btn btn--primary" href="#agendar" data-cta="why-first">Agendar la revisión gratuita</a>
-        <span class="cta-note">Gratis · sin compromiso · 30 min</span>
+        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -682,7 +686,7 @@
       <div class="meeting-grid">
         <div class="reveal">
           <div class="section-head" style="margin-bottom:0">
-            <span class="kicker">La reunión de 30 minutos</span>
+            <span class="kicker">La revisión inicial</span>
             <h2>Qué revisamos contigo</h2>
           </div>
           <ul class="meeting-list">
@@ -695,13 +699,14 @@
         </div>
         <div class="meeting-card reveal d1">
           <h3>Detalles</h3>
-          <div class="row"><b>Duración</b><span>30 minutos</span></div>
+          <div class="row"><b>Para quién</b><span>Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas con LLC ya abierta.</span></div>
+          <div class="row"><b>Enfoque</b><span>Primero revisamos el estado real de tu LLC; después definimos qué corregir y en qué orden.</span></div>
           <div class="row"><b>Modalidad</b><span>Online, por Zoom</span></div>
           <div class="row"><b>Costo</b><span>Gratuita, sin compromiso</span></div>
           <div class="row"><b>Con quién</b><span>Un asesor de la firma, en español</span></div>
           <div class="row"><b>Si no es tu caso</b><span>Te lo decimos en la reunión. Sin costo.</span></div>
           <a class="btn btn--primary" href="#agendar" data-cta="meeting">Agendar ahora</a>
-          <span class="cta-note" style="text-align:center">Gratis · sin compromiso · 30 min</span>
+          <span class="cta-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
         </div>
       </div>
     </div>
@@ -716,7 +721,7 @@
       </div>
       <div class="steps-row">
         <div class="step reveal">
-          <h3>Revisión de 30 min</h3>
+          <h3>Revisión inicial</h3>
           <p>Diagnóstico de tu LLC actual: estado, elección fiscal, cumplimiento y banca. Te decimos qué está en riesgo.</p>
           <p class="meta">Online, por Zoom · sin compromiso</p>
         </div>
@@ -751,7 +756,7 @@
       </ul>
       <div class="why-cta reveal">
         <a class="btn btn--primary" href="#agendar" data-cta="cases">Agendar la revisión gratuita</a>
-        <span class="cta-note">Gratis · sin compromiso · 30 min</span>
+        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -762,7 +767,7 @@
       <div class="section-head reveal">
         <span class="kicker">Qué podemos corregir</span>
         <h2>La corrección se cotiza según tu caso</h2>
-        <p class="plans-note">No hay dos LLC en el mismo estado. En la revisión de 30 min definimos <b>qué corregir y con qué costo</b>. Estas son las áreas más comunes:</p>
+        <p class="plans-note">No hay dos LLC en el mismo estado. En la revisión definimos <b>qué corregir y con qué costo</b>. Estas son las áreas más comunes:</p>
       </div>
       <div class="plans-grid reveal">
         <div class="pcard">
@@ -790,9 +795,9 @@
       <div class="plans-cta reveal">
         <div>
           <a class="btn btn--primary" href="#agendar" data-cta="plans">Ver qué necesita mi LLC</a>
-          <span class="cta-note">Gratis · sin compromiso · 30 min</span>
+          <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
         </div>
-        <p>Te lo decimos en la revisión de 30 min, según tu caso.</p>
+        <p>Te lo decimos en la revisión, según tu caso.</p>
       </div>
     </div>
   </section>
@@ -895,7 +900,7 @@
         </details>
         <details>
           <summary>¿Cuánto cuesta la corrección?</summary>
-          <div class="a">Depende de qué haya que corregir (declaraciones atrasadas, cambio de estado, Operating Agreement, banca, contabilidad). En la revisión de 30 min lo definimos y te lo cotizamos por escrito. El mantenimiento anual arranca desde USD 350/año + tasa estatal.</div>
+          <div class="a">Depende de qué haya que corregir (declaraciones atrasadas, cambio de estado, Operating Agreement, banca, contabilidad). En la revisión lo definimos y te lo cotizamos por escrito. El mantenimiento anual arranca desde USD 350/año + tasa estatal.</div>
         </details>
         <details>
           <summary>Voy a sumar un socio o a facturar más. ¿Mi LLC aguanta?</summary>
@@ -915,12 +920,12 @@
     <div class="wrap">
       <div class="reveal">
         <h2>Agenda la revisión gratuita de tu LLC</h2>
-        <p>30 minutos por Zoom. Sales con un plan claro: qué corregir, en qué orden y con qué costo. Sin costo y sin compromiso.</p>
+        <p>Reunión por Zoom. Sales con un plan claro: qué corregir, en qué orden y con qué costo. Sin costo y sin compromiso.</p>
         <div class="cta-row">
           <a class="btn btn--primary" href="#agendar" data-cta="final">Agendar ahora</a>
           <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
         </div>
-        <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · 30 min · por Zoom</span>
+        <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -970,6 +975,8 @@
   var QA_MODE = URL_PARAMS.get("qa") === "1";
   var QA_NO_PIXELS = QA_MODE && URL_PARAMS.get("no_pixels") === "1";
   var QA_NO_WEBHOOK = QA_MODE && URL_PARAMS.get("no_webhook") === "1";
+  // guard de entorno: POST a n8n y CAPI solo se ejecutan en *.sotomayorconsulting.com
+  var HOST_ALLOWS_LIVE = /(^|\.)sotomayorconsulting\.com$/i.test(location.hostname);
   var DEBUG = QA_MODE || !!(window.SCI_TRACKING_CONFIG && window.SCI_TRACKING_CONFIG.debug);
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1114,7 +1121,7 @@
 
   /* CAPI de TikTok server-side vía n8n (webhook pixel-api-conversiones), deduplicado por event_id */
   function sendTikTokConversionsApiEvent(eventName, payload) {
-    if (QA_NO_WEBHOOK || !CONFIG.tiktokCapiWebhookUrl) return;
+    if (QA_NO_WEBHOOK || !HOST_ALLOWS_LIVE || !CONFIG.tiktokCapiWebhookUrl) return;
     var c = getClickTrackingData();
     var evId = payload.event_id || buildEventId(eventName, payload);
     var eventTime = payload.event_time || Math.floor(Date.now() / 1000);
@@ -1187,34 +1194,26 @@
     } catch (e) {}
   }
 
-  /* ---------- atributos para el hook de mensaje (variantes por ?utm_content=/?hook=) ---------- */
-  var ATTR = {};
-  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "ttclid", "fbclid", "hook"].forEach(function (k) {
-    var v = URL_PARAMS.get(k); if (v) ATTR[k] = v;
-  });
-  try {
-    var storedAttr = JSON.parse(sessionStorage.getItem("sci_attr") || "{}");
-    ATTR = Object.assign({}, storedAttr, ATTR);
-    sessionStorage.setItem("sci_attr", JSON.stringify(ATTR));
-  } catch (e) {}
-
-  /* ---------- message match (hook / utm_content) — variantes para público con LLC ---------- */
+  /* ---------- message match (hook / utm_content) — SOLO parámetros de la visita actual ----------
+     El hook no se persiste: si el lead vuelve por otro creativo (o un link directo sin parámetro),
+     debe ver el mensaje de ESA visita, no el de un ad anterior. La atribución (utm/click ids) sí
+     se persiste, pero eso lo maneja getClickTrackingData() con su propio storage. */
   var HOOKS = {
     atrasadas: {
       h1: '¿Tu LLC tiene <span class="u">declaraciones atrasadas</span>? Todavía estás a tiempo.',
-      sub: 'Revisión gratuita de 30 minutos, por Zoom: vemos qué años tienes pendientes de 5472 y 1120, si presentaste el BOI y cómo regularizarlo sin que se vuelva multa.'
+      sub: 'Revisión gratuita por Zoom para e-commerce, agencias, SaaS, consultores e inversionistas: vemos qué años tienes pendientes de 5472 y 1120, si presentaste el BOI y cómo regularizarlo sin que se vuelva multa.'
     },
     estado: {
       h1: '¿Estás en <span class="u">Delaware pagando franchise tax</span> que quizá no necesitas?',
-      sub: 'Revisión gratuita de 30 minutos: evaluamos si te conviene cambiar tu LLC de estado (costo, privacidad, nexo) y cómo hacerlo sin perder tu EIN ni tu banca.'
+      sub: 'Revisión gratuita por Zoom para e-commerce, agencias, SaaS, consultores e inversionistas: evaluamos si te conviene cambiar tu LLC de estado (costo, privacidad, nexo) y cómo hacerlo sin perder tu EIN ni tu banca.'
     },
     proveedor: {
       h1: '¿Tu proveedor anterior <span class="u">desapareció</span>? Retomamos tu LLC.',
-      sub: 'Revisión gratuita de 30 minutos, por Zoom: reconstruimos el estado de tu LLC —documentos, cumplimiento, agente residente— y pasamos a ser tu soporte.'
+      sub: 'Revisión gratuita por Zoom para e-commerce, agencias, SaaS, consultores e inversionistas: reconstruimos el estado de tu LLC —documentos, cumplimiento, agente residente— y pasamos a ser tu soporte.'
     }
   };
   (function applyHook() {
-    var key = (ATTR.hook || ATTR.utm_content || "").toLowerCase().split(/[|_-]/)[0];
+    var key = (URL_PARAMS.get("hook") || URL_PARAMS.get("utm_content") || "").toLowerCase().split(/[|_-]/)[0];
     var h = HOOKS[key];
     if (!h) return;
     var h1 = document.getElementById("hero-h1");
@@ -1357,7 +1356,7 @@
       setActive(currentIndex());
       list.focus();
       document.addEventListener("click", onOutside, true);
-      window.addEventListener("scroll", closeList, true);
+      window.addEventListener("scroll", onScroll, true);
       window.addEventListener("resize", closeList);
     }
     function closeList() {
@@ -1365,10 +1364,15 @@
       open = false; list.hidden = true;
       btn.setAttribute("aria-expanded", "false");
       document.removeEventListener("click", onOutside, true);
-      window.removeEventListener("scroll", closeList, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", closeList);
     }
     function onOutside(e) { if (!root.contains(e.target)) closeList(); }
+    function onScroll(e) {
+      var t = e.target;
+      if (t === list || (t && t.nodeType === 1 && list.contains(t))) return;
+      closeList();
+    }
 
     btn.addEventListener("click", function () { open ? closeList() : openList(); });
     btn.addEventListener("keydown", function (e) {
@@ -1527,6 +1531,7 @@
 
   async function sendLeadToWebhook(payload) {
     if (QA_NO_WEBHOOK) return { ok: false, duplicate: false, status: "qa_no_webhook" };
+    if (!HOST_ALLOWS_LIVE) return { ok: false, duplicate: false, status: "skipped_non_prod_host" };
     var guarded = Object.assign({}, payload, {
       backend_validation: {
         required_unique_keys: ["email", "phone_e164"],
@@ -1584,12 +1589,18 @@
     iframe.setAttribute("allow", "clipboard-write");
     frame.appendChild(iframe);
 
+    // Si el iframe de Zcal no carga (ad-blocker, red corporativa, caída), realza el enlace de respaldo.
+    var fb = stepCal.querySelector(".cal-fallback");
+    var iframeLoaded = false;
+    iframe.addEventListener("load", function () { iframeLoaded = true; });
+    setTimeout(function () { if (!iframeLoaded && fb) fb.classList.add("cal-fallback--urgent"); }, 6000);
+
     document.getElementById("cal-open").href = u.toString();
     var greet = document.getElementById("cal-greeting");
-    if (greet) greet.textContent = "Gracias, " + payload.full_name.split(" ")[0] + ". Elige la fecha y la hora que mejor te queden.";
+    if (greet) greet.textContent = "Ya casi, " + payload.full_name.split(" ")[0] + ". Tus datos ya están cargados — solo elige el día y la hora.";
 
     var dn = document.getElementById("book-devnote");
-    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
+    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook" || res.status === "skipped_non_prod_host")) {
       dn.hidden = false;
       dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
     }
@@ -1598,12 +1609,16 @@
     stepCal.hidden = false;
     stepCal.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
 
-    // Confirmación de reserva de Zcal → evento Schedule
+    // Confirmación de reserva de Zcal → evento Schedule.
+    // Señal solo de cliente: es la mejor disponible aquí, pero la FIABLE es server-side
+    // (webhook de Zcal → n8n → CAPI). Mientras tanto, este listener acota a las formas de
+    // mensaje de "reserva confirmada" e ignora los mensajes de resize/height de Zcal.
     window.addEventListener("message", function onMsg(e) {
-      if (!/zcal\.co$/.test((e.origin || "").replace(/^https?:\/\//, "").split("/")[0])) return;
-      var d = e.data || {};
-      var isBooked = d === "zcal:booking_completed" ||
-        (typeof d === "object" && /book|schedul|complete/i.test(JSON.stringify(d)));
+      var host = (e.origin || "").replace(/^https?:\/\//, "").split("/")[0];
+      if (!/(^|\.)zcal\.co$/.test(host)) return;
+      var d = e.data;
+      var s = typeof d === "string" ? d : (d && typeof d === "object" ? JSON.stringify(d) : "");
+      var isBooked = /booking[_-]?(completed|confirmed|success)|schedule[_-]?confirmed|event[_-]?created|"?booked"?\s*[:=]\s*true|\bbooking_completed\b/i.test(s);
       if (isBooked) {
         trackAdsEvent("Schedule", {
           event_id: buildEventId("Schedule", { lead_id: payload.lead_id }),
