@@ -24,7 +24,7 @@
    · Respeta ?qa=1  ?no_webhook=1  ?no_pixels=1.
 
   ANTES DE PUBLICAR (ver _campanas-llc.md)
-   · Evento Zcal de 30 min ya en uso (CONFIG.zcalBaseUrl). Confirmar que "Teléfono (WhatsApp)" sigue siendo la pregunta a0.
+   · Zcal: evento "Sesión Estratégica" (dura 30 min, slug /60min). Verificado 2026-09: "Teléfono (WhatsApp)" = customQuestionAnswers.0 (a0, type tel); name/email/smsPhone/a0 prellenan bien.
    · Poner META_PIXEL_ID real + acceso CAPI en n8n.
    · n8n: devolver cabeceras CORS y mapear el desplegable `goal` a Odoo.
    · Confirmar wording de precio anual y consentimiento por mercado.
@@ -935,7 +935,7 @@
     webhookUrl: "https://n8n.sotomayorconsulting.com/webhook/leads-directos-tiktok-landing",
     tiktokCapiWebhookUrl: "https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones",
     tiktokPixelId: "D5KFDEBC77U6BL6T7LDG",
-    zcalBaseUrl: "https://zcal.co/t/agendar-asesoria-llc/30min",   // evento de 30 min (creado en Zcal)
+    zcalBaseUrl: "https://zcal.co/t/agendar-asesoria-llc/60min",   // evento "Sesión Estratégica" — dura 30 min; el slug sigue siendo /60min
     zcalPhoneParam: "smsPhone",                                    // built-in de Zcal (recordatorio SMS)
     zcalPhoneAnswerIndex: 0,                                       // pregunta "Teléfono (WhatsApp)" = a0
     whatsappUrl: "https://wa.link/jx59a9",

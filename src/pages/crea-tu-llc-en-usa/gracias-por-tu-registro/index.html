@@ -1,811 +1,1215 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agenda tu asesoría | Sotomayor Consulting</title>
-  <meta name="description" content="Tu registro fue recibido. Elige fecha y hora para tu asesoría con Sotomayor Consulting International." />
+<script>document.documentElement.classList.add('js')</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agenda tu asesoría | Sotomayor Consulting International</title>
+<meta name="description" content="Tu registro fue recibido. Elige fecha y hora para tu asesoría gratuita de 30 minutos: revisamos tu caso y sales con un plan claro. Firma boutique, 10 años, partner de Mercury y Relay." />
+<meta name="robots" content="noindex,nofollow" />
 
-  <link rel="icon" type="image/png" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-6.png" />
-  <link rel="shortcut icon" type="image/png" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-6.png" />
-  <link rel="apple-touch-icon" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-6.png" />
-  <meta name="theme-color" content="#f7fafb" />
+<!--
+  ==========================================================================
+  GRACIAS POR TU REGISTRO — /crea-tu-llc-en-usa/gracias-por-tu-registro/
+  Público: lead que llegó desde un formulario nativo (TikTok / Meta Lead Ads).
+  Objetivo único: que agende la reunión de asesoría de 30 min por Zoom.
+  Sistema visual alineado con /leads-landing/abrir-llc-primera-vez/ y
+  /leads-landing/corregir-llc-existente/ (navy #0E2438 + gold #C0872E, Poppins).
 
-  <!-- Versión: v21 | Opción B: calendario visible desde el inicio -->
+  FUNCIONAMIENTO
+   · No hay formulario: el lead ya se registró en el form nativo. El calendario
+     Zcal (evento de 30 min) está embebido y visible desde el hero.
+   · Si el flujo previo pasa name/email/phone por la URL, se prellenan en Zcal
+     (name, email, smsPhone, a0=teléfono).
+   · Tracking: GTM (GTM-TNRQGDM) + TikTok Pixel (D5KFDEBC77U6BL6T7LDG) + CAPI
+     server-side vía n8n (webhook/pixel-api-conversiones) + scaffold de Meta Pixel.
+     Eventos con event_id deduplicable: ViewContent (carga) · CompleteRegistration
+     (si el flujo previo pasa registration_confirmed=1 y lead_id) · Contact
+     (clic WhatsApp / abrir agenda) · Schedule (reserva confirmada en Zcal).
+   · Respeta ?qa=1  ?no_pixels=1.
 
-  <!-- Google Tag Manager -->
-  <script>
-    (function(w,d,s,l,i){
-      w[l]=w[l]||[];
-      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
-      var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),
-      dl=l!='dataLayer'?'&l='+l:'';
-      j.async=true;
-      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-      f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TNRQGDM');
-  </script>
-  <!-- End Google Tag Manager -->
+  ANTES DE PUBLICAR
+   · Confirmar que el evento Zcal de 30 min tiene "Teléfono (WhatsApp)" como
+     primera pregunta (a0). Si cambia, ajustar SOTO_ZCAL_PHONE_ANSWER_INDEX.
+   · Poner SOTO_META_PIXEL_ID real + rama Meta en el webhook de CAPI.
+   · n8n: cabeceras CORS en pixel-api-conversiones.
+   · GTM: tags/triggers para complete_registration y schedule → TikTok/Meta Ads.
+  ==========================================================================
+-->
 
-  <!-- TikTok Pixel Code -->
-  <script>
-    !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;
-      var ttq=w[t]=w[t]||[];
-      ttq.methods=[
-        "page","track","identify","instances","debug","on","off","once",
-        "ready","alias","group","enableCookie","disableCookie"
-      ];
-      ttq.setAndDefer=function(t,e){
-        t[e]=function(){
-          t.push([e].concat(Array.prototype.slice.call(arguments,0)));
-        };
-      };
-      for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
-      ttq.instance=function(t){
-        for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);
-        return e;
-      };
-      ttq.load=function(e,n){
-        var i="https://analytics.tiktok.com/i18n/pixel/events.js";
-        ttq._i=ttq._i||{};
-        ttq._i[e]=[];
-        ttq._i[e]._u=i;
-        ttq._t=ttq._t||{};
-        ttq._t[e]=+new Date;
-        ttq._o=ttq._o||{};
-        ttq._o[e]=n||{};
-        var o=document.createElement("script");
-        o.type="text/javascript";
-        o.async=true;
-        o.src=i+"?sdkid="+e+"&lib="+t;
-        var a=document.getElementsByTagName("script")[0];
-        a.parentNode.insertBefore(o,a);
-      };
-      ttq.load('D5KFDEBC77U6BL6T7LDG');
-      ttq.page();
-    }(window, document, 'ttq');
-  </script>
-  <!-- End TikTok Pixel Code -->
+<link rel="preconnect" href="https://www.googletagmanager.com" />
+<link rel="preconnect" href="https://analytics.tiktok.com" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://sotomayorconsulting.com" />
+<link rel="preconnect" href="https://zcal.co" />
+<link rel="preload" as="image" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" />
 
-  <style>
-    :root{
-      --navy:#06283f;
-      --navy-2:#0a3a55;
-      --teal:#0e8fa0;
-      --teal-2:#18a7ad;
-      --teal-soft:#eaf7f7;
-      --gold:#c79a2d;
-      --gold-soft:#fff7e4;
-      --ink:#102433;
-      --muted:#637587;
-      --line:#dfe8ed;
-      --bg:#f7fafb;
-      --white:#ffffff;
-      --success:#16a36d;
-      --shadow:0 18px 50px rgba(6,40,63,.10);
-      --shadow-soft:0 10px 30px rgba(6,40,63,.07);
-      --r-xl:30px;
-      --r-lg:22px;
-      --r-md:16px;
-    }
+<link rel="icon" type="image/png" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-6.png" />
+<link rel="apple-touch-icon" href="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-6.png" />
+<meta name="theme-color" content="#0e2438" />
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(circle at 92% 3%,rgba(14,143,160,.11),transparent 24%),
-        radial-gradient(circle at 2% 18%,rgba(199,154,45,.08),transparent 22%),
-        linear-gradient(180deg,#fff 0%,var(--bg) 44%,#fff 100%);
-      line-height:1.5;
-    }
-    a{color:inherit;text-decoration:none}
-    button{font:inherit}
-    .container{width:min(1180px,calc(100% - 32px));margin:auto}
+<script>
+  /* ---- Config de tracking (misma estructura que las landings de campaña) ---- */
+  window.SCI_TRACKING_CONFIG = {
+    page_name: "thank_you_crea_tu_llc_agenda",
+    page_category: "llc_advisory_meeting_lead_landing",
+    tiktok_pixel_id: "D5KFDEBC77U6BL6T7LDG",
+    gtm_id: "GTM-TNRQGDM",
+    meta_pixel_id: "__META_PIXEL_ID__", /* poner el Pixel ID real de Meta para activar Meta */
+    standard_events: {
+      view_content: "ViewContent",
+      contact: "Contact",
+      complete_registration: "CompleteRegistration",
+      schedule: "Schedule"
+    },
+    service_content: {
+      content_name: "Asesoría para LLC en EE. UU.",
+      description: "Reunión de 30 min: revisamos tu caso y sales con un plan — estado, estructura, banca y próximos pasos."
+    },
+    debug: false
+  };
+</script>
 
-    .site-header{
-      height:84px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:24px;
-      border-bottom:1px solid rgba(6,40,63,.07);
-    }
-    .brand img{width:252px;max-width:58vw;display:block}
-    .header-trust{display:flex;align-items:center;gap:11px;color:var(--navy);font-size:13px;font-weight:750}
-    .header-trust-icon{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:var(--teal-soft);color:var(--teal)}
-    .header-trust small{display:block;color:var(--muted);font-weight:600}
+<!-- Google Tag Manager -->
+<script>
+  (function(w,d,s,l,i){
+    w[l]=w[l]||[];
+    w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js', page_name:'thank_you_crea_tu_llc_agenda', page_category:'llc_advisory_meeting_lead_landing'});
+    var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),
+    dl=l!='dataLayer'?'&l='+l:'';
+    j.async=true;
+    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+    f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TNRQGDM');
+</script>
+<!-- End Google Tag Manager -->
 
-    .hero{padding:38px 0 30px;position:relative;overflow:hidden}
-    .hero::after{
-      content:"";
-      position:absolute;
-      right:-4%;
-      top:0;
-      width:42%;
-      height:88%;
-      background:linear-gradient(135deg,transparent 18%,rgba(14,143,160,.05) 18% 35%,transparent 35% 48%,rgba(6,40,63,.035) 48% 65%,transparent 65%);
-      pointer-events:none;
-    }
-    .hero-grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:44px;align-items:start;position:relative;z-index:1}
-    .hero-copy-wrap{padding:24px 0 0}
-    .status-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#ecf8f2;color:#08784e;font-size:13px;font-weight:850}
-    .status-dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--success);color:#fff;font-size:12px}
-    h1{margin:20px 0 0;color:var(--navy);font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:-.05em;max-width:640px}
-    .hero-copy{margin:20px 0 0;color:var(--muted);font-size:18px;max-width:620px}
-    .hero-points{display:grid;gap:10px;margin-top:24px;color:var(--navy);font-size:14px;font-weight:760}
-    .hero-points span{display:flex;align-items:flex-start;gap:9px}
-    .hero-points i{font-style:normal;color:var(--teal);font-weight:900}
-    .hero-action{
-      margin-top:28px;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:15px 22px;
-      border:0;
-      border-radius:14px;
-      background:linear-gradient(135deg,var(--teal),var(--teal-2));
-      color:#fff;
-      font-weight:850;
-      cursor:pointer;
-      box-shadow:0 14px 28px rgba(14,143,160,.22);
-      transition:.2s;
-    }
-    .hero-action:hover{transform:translateY(-2px)}
-    .hero-note{margin-top:14px;color:var(--muted);font-size:13px}
+<!-- TikTok Pixel Code -->
+<script>
+  !function (w, d, t) {
+    var qa = new URLSearchParams(w.location.search || "");
+    if (qa.get("qa") === "1" && qa.get("no_pixels") === "1") return;
+    w.TiktokAnalyticsObject=t;
+    var ttq=w[t]=w[t]||[];
+    ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
+    ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)));};};
+    for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+    ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e;};
+    ttq.load=function(e,n){
+      var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+      ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;
+      ttq._t=ttq._t||{};ttq._t[e]=+new Date;
+      ttq._o=ttq._o||{};ttq._o[e]=n||{};
+      var o=document.createElement("script");o.type="text/javascript";o.async=true;o.src=i+"?sdkid="+e+"&lib="+t;
+      var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a);
+    };
+    ttq.load('D5KFDEBC77U6BL6T7LDG');
+    ttq.page();
+  }(window, document, 'ttq');
+</script>
+<!-- End TikTok Pixel Code -->
 
-    .calendar-card{border:1px solid var(--line);border-radius:var(--r-xl);background:#fff;box-shadow:var(--shadow);overflow:hidden;scroll-margin-top:18px}
-    .calendar-header{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);background:#fbfdfe}
-    .calendar-header strong{color:var(--navy);font-size:16px}
-    .calendar-header span{color:var(--muted);font-size:13px}
-    .calendar-header a{color:var(--teal);font-size:14px;font-weight:900;white-space:nowrap}
-    .calendar-frame{width:100%;height:760px;border:0;display:block;background:#fff}
-    .calendar-fallback{padding:16px 22px 22px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
-    .calendar-fallback a{color:var(--teal);font-weight:900}
+<!-- Meta Pixel base code (se activa al poner meta_pixel_id real) -->
+<script>
+  (function () {
+    var c = window.SCI_TRACKING_CONFIG || {};
+    var qp = new URLSearchParams(location.search);
+    if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
+    if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", c.meta_pixel_id);
+    window.fbq("track", "PageView");
+  })();
+</script>
 
-    .value-section{padding:36px 0 18px}
-    .section-kicker{color:var(--teal);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em}
-    .section-title{margin:9px 0 0;color:var(--navy);font-size:clamp(30px,4vw,46px);line-height:1.05;letter-spacing:-.04em}
-    .section-subtitle{margin:12px 0 0;color:var(--muted);max-width:720px}
-    .value-grid{margin-top:27px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .value-card{min-height:210px;padding:23px;border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(255,255,255,.95);box-shadow:var(--shadow-soft)}
-    .value-icon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:var(--teal-soft);color:var(--teal);font-size:22px}
-    .value-card h3{margin:19px 0 8px;color:var(--navy);font-size:18px;line-height:1.18}
-    .value-card p{margin:0;color:var(--muted);font-size:14px}
-    .value-card.urgency{background:linear-gradient(145deg,#f0fbfb,#fff);border-color:#bfe6e6}
-    .value-card.urgency .value-icon{background:var(--navy);color:#fff}
-    .value-card.urgency strong{display:block;margin-top:14px;color:var(--teal);font-size:13px}
+<style>
+  /* ============================ TOKENS ============================ */
+  :root{
+    color-scheme: light;
+    --navy-900:#0a1a2a; --navy-800:#0e2438; --navy-700:#12314c; --navy-600:#1c3e5e;
+    --blue-500:#2a5580;
+    --gold-ink:#a9741f; --gold:#c0872e; --gold-cta:#d6a144; --gold-300:#e4c078; --gold-050:#faf3e4;
+    --paper:#ffffff; --mist:#f3f6fa;
+    --ink:#20303f; --ink-2:#33475a; --muted:#586b7b; --line:#e2e8ef; --line-strong:#cdd8e2;
+    --ok:#0f7a4b; --err:#b42318;
+    --shadow-sm:0 4px 14px rgba(14,36,56,.06);
+    --shadow-md:0 18px 44px rgba(14,36,56,.10);
+    --shadow-lg:0 34px 80px rgba(10,26,42,.16);
+    --font-display:"Poppins", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+    --font-body:"Open Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --container:1120px; --gutter:clamp(18px, 4vw, 40px);
+    --e-out: cubic-bezier(.16,1,.3,1);
+    --z-header:60; --z-stickybar:70;
+  }
 
-    .proof-section{padding:58px 0 26px;text-align:center}
-    .stats-grid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat-card{padding:23px 18px;border:1px solid var(--line);border-radius:var(--r-lg);background:#fff;box-shadow:var(--shadow-soft)}
-    .stat-card strong{display:block;color:var(--teal);font-size:34px;line-height:1}
-    .stat-card span{display:block;margin-top:9px;color:var(--navy);font-weight:800;font-size:14px}
-    .stat-card small{display:block;margin-top:5px;color:var(--muted)}
+  /* ============================ RESET ============================ */
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+  body{
+    margin:0;font-family:var(--font-body);
+    font-size:clamp(16px, .5vw + 14.7px, 17.5px);line-height:1.62;
+    color:var(--ink);background:var(--paper);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  button,input,select{font:inherit;color:inherit}
+  img,svg{max-width:100%;display:block}
+  [hidden]{display:none!important}
+  ::selection{background:var(--gold-300);color:var(--navy-900)}
+  :focus-visible{outline:2.5px solid var(--blue-500);outline-offset:3px;border-radius:6px}
 
-    .testimonial-carousel{margin-top:18px;position:relative;text-align:left}
-    .testimonial-viewport{overflow:hidden;border-radius:var(--r-lg)}
-    .testimonial-track{display:flex;transition:transform .55s cubic-bezier(.22,.61,.36,1);will-change:transform}
-    .testimonial-page{min-width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:2px}
-    .testimonial{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center;min-height:225px;padding:24px;border:1px solid var(--line);border-radius:var(--r-lg);background:#fff;box-shadow:var(--shadow-soft)}
-    .testimonial img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:4px solid var(--teal-soft)}
-    .testimonial blockquote{margin:0;color:var(--ink);font-size:15px;line-height:1.55}
-    .testimonial cite{display:block;margin-top:12px;color:var(--navy);font-style:normal;font-weight:900}
-    .testimonial cite small{display:block;color:var(--muted);font-weight:600}
-    .carousel-button{position:absolute;top:50%;z-index:2;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-soft);transform:translateY(-50%);font-size:20px;font-weight:900;transition:.2s}
-    .carousel-button:hover{background:var(--teal-soft);color:var(--teal)}
-    .carousel-button.prev{left:14px}.carousel-button.next{right:14px}
-    .carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:16px}
-    .carousel-dot{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:#cbd9df;cursor:pointer;transition:.2s}
-    .carousel-dot.is-active{width:26px;border-radius:999px;background:var(--teal)}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;color:var(--navy-800);letter-spacing:-.022em;line-height:1.1;text-wrap:balance;margin:0}
+  h2{font-size:clamp(1.7rem, 2.9vw, 2.5rem)}
+  h3{font-size:clamp(1.08rem, 1.4vw, 1.28rem);letter-spacing:-.012em;line-height:1.22}
+  p{margin:0;text-wrap:pretty}
+  .lede{font-size:clamp(1.02rem, 1.3vw, 1.16rem);color:var(--ink-2);line-height:1.6;max-width:58ch}
 
-    .review-section{padding:50px 0 62px}
-    .review-card{display:grid;grid-template-columns:.75fr 1.25fr;gap:34px;align-items:center;padding:36px;border-radius:var(--r-xl);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft)}
-    .review-list{display:grid;gap:0;border:1px solid var(--line);border-radius:18px;overflow:hidden}
-    .review-item{display:flex;align-items:center;gap:12px;padding:15px 17px;border-top:1px solid var(--line);font-weight:750;color:var(--navy)}
-    .review-item:first-child{border-top:0}
-    .review-check{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:var(--teal);color:#fff;font-size:13px}
+  /* ============================ LAYOUT ============================ */
+  .wrap{width:min(var(--container), 100% - (var(--gutter) * 2));margin-inline:auto}
+  section{padding-block:clamp(42px, 4.4vw, 64px)}
+  .section-head{max-width:56ch;margin-bottom:clamp(24px,3.2vw,40px)}
+  .section-head .kicker{
+    font-family:var(--font-display);font-weight:600;font-size:.8rem;color:var(--gold-ink);
+    letter-spacing:.03em;margin-bottom:11px;display:flex;align-items:center;gap:10px;
+  }
+  .section-head .kicker::before{content:"";width:24px;height:2px;background:var(--gold);border-radius:2px}
+  .section-head h2 + p{margin-top:13px}
 
-    .final-cta{margin-bottom:56px;padding:30px 34px;border-radius:var(--r-xl);background:linear-gradient(135deg,var(--navy),#0a5670);color:#fff;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;box-shadow:var(--shadow)}
-    .final-cta h2{margin:0;font-size:clamp(28px,3.6vw,42px);line-height:1.05;letter-spacing:-.04em}
-    .final-cta p{margin:10px 0 0;color:#c7dbe4}
-    .final-cta button{border:0;border-radius:14px;padding:15px 22px;background:#fff;color:var(--navy);font-weight:900;cursor:pointer;white-space:nowrap}
+  /* ============================ HEADER ============================ */
+  .header{
+    position:sticky;top:0;z-index:var(--z-header);
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  .header .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px}
+  .header .brand img{height:40px;width:auto}
+  @media (max-width:430px){ .header .brand img{height:34px} }
 
-    .footer{padding:32px 0 46px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
-    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:30px}
-    .footer img{width:230px;display:block;margin-bottom:14px}
-    .footer-links{display:flex;gap:18px;justify-content:flex-end;flex-wrap:wrap}
-    .footer-links a{color:var(--navy);font-weight:850}
-    .disclaimer{font-size:11.5px;max-width:830px}
+  /* ============================ BUTTONS ============================ */
+  .btn{
+    --_bg:var(--navy-800);--_fg:#fff;--_bd:var(--navy-800);
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-family:var(--font-display);font-weight:600;font-size:.96rem;
+    padding:14px 22px;border-radius:12px;cursor:pointer;text-align:center;
+    background:var(--_bg);color:var(--_fg);border:1.5px solid var(--_bd);
+    transition:transform .18s var(--e-out), box-shadow .25s var(--e-out), background-color .2s var(--e-out);
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .btn:active{transform:translateY(0)}
+  .btn--primary{--_bg:var(--gold-cta);--_fg:var(--navy-900);--_bd:var(--gold-cta);font-weight:700}
+  .btn--primary:hover{--_bg:var(--gold-300)}
+  .btn--ghost{--_bg:transparent;--_fg:var(--navy-800);--_bd:var(--line-strong)}
+  .btn--ghost:hover{--_bd:var(--navy-800)}
+  .btn--on-navy{--_bg:transparent;--_fg:#fff;--_bd:rgba(255,255,255,.3)}
+  .btn--on-navy:hover{--_bd:#fff;background:rgba(255,255,255,.06)}
+  .btn--sm{padding:10px 15px;font-size:.86rem;border-radius:10px;white-space:nowrap}
+  .btn svg{width:16px;height:16px;flex:none}
 
-    @media(max-width:980px){
-      .hero-grid,.review-card,.final-cta{grid-template-columns:1fr}
-      .hero-copy-wrap{padding-top:0}
-      .value-grid{grid-template-columns:repeat(2,1fr)}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .calendar-frame{height:720px}
-      .final-cta button{justify-self:start}
-    }
-    @media(max-width:680px){
-      .container{width:min(100% - 22px,1180px)}
-      .site-header{height:72px}
-      .header-trust{display:none}
-      .brand img{width:220px}
-      .hero{padding-top:24px}
-      h1{font-size:42px}
-      .hero-grid{gap:26px}
-      .calendar-card{border-radius:24px}
-      .calendar-header{flex-direction:column;align-items:flex-start}
-      .calendar-frame{height:680px}
-      .value-grid,.stats-grid{grid-template-columns:1fr}
-      .value-card{min-height:auto}
-      .testimonial-page{grid-template-columns:1fr;gap:12px}
-      .testimonial{grid-template-columns:58px 1fr;gap:14px;min-height:190px;padding:21px}
-      .testimonial img{width:58px;height:58px}
-      .carousel-button{width:36px;height:36px}
-      .carousel-button.prev{left:7px}.carousel-button.next{right:7px}
-      .review-card{padding:25px 21px;border-radius:24px}
-      .final-cta{padding:26px 22px;border-radius:24px}
-      .final-cta button{width:100%}
-      .footer-grid{grid-template-columns:1fr}
-      .footer-links{justify-content:flex-start}
-    }
-  </style>
+  /* ============================ HERO ============================ */
+  .hero{position:relative;overflow:hidden;padding-top:clamp(26px,3.4vw,44px);padding-bottom:0}
+  .hero .wrap{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.9fr);gap:clamp(28px,4vw,54px);align-items:start}
+  .hero-eyebrow{
+    font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.03em;
+    color:var(--gold-ink);display:inline-flex;align-items:center;gap:9px;margin-bottom:16px;
+  }
+  .hero-eyebrow::before{content:"";width:26px;height:2px;background:var(--gold);border-radius:2px}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:#ecf7f1;color:#0b6b45;font-family:var(--font-display);font-size:.78rem;font-weight:700;margin-bottom:14px}
+  .status-pill .dot{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--ok);color:#fff;font-size:11px}
+  .hero h1{font-size:clamp(2rem, 4.3vw, 3.05rem);font-weight:700;line-height:1.07;letter-spacing:-.028em;max-width:20ch}
+  .hero h1 .u{background:linear-gradient(transparent 76%, rgba(228,192,120,.55) 76%);padding-inline:.04em}
+  .hero p.lede{margin-top:18px}
+  .hero-obj{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:20px;font-size:.85rem;color:var(--muted)}
+  .hero-obj span{display:inline-flex;align-items:center;gap:6px}
+  .hero-obj svg{width:14px;height:14px;color:var(--ok);flex:none}
+  .hero-trust{margin-top:16px;font-size:.83rem;color:var(--muted);line-height:1.7}
+  .hero-trust b{color:var(--navy-800);font-family:var(--font-display);font-weight:600}
+  .hero-trust .stars{color:var(--gold);letter-spacing:1px}
+
+  /* ---- Booking card (calendario) ---- */
+  .book{
+    position:relative;border-radius:20px;overflow:hidden;
+    background:radial-gradient(120% 120% at 12% 0%, var(--navy-700), var(--navy-900) 72%);
+    color:#fff;padding:clamp(22px,2.6vw,30px);box-shadow:var(--shadow-lg);scroll-margin-top:84px;
+  }
+  .book .globe{position:absolute;inset:auto -20% -34% auto;width:78%;opacity:.42;pointer-events:none}
+  .book-badge{
+    display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:600;
+    font-size:.72rem;letter-spacing:.04em;color:var(--gold-300);
+    border:1px solid var(--navy-600);border-radius:999px;padding:5px 11px;margin-bottom:14px;position:relative;
+  }
+  .book h2{color:#fff;font-size:1.16rem;font-weight:600;letter-spacing:-.01em;position:relative}
+  .book .book-sub{color:rgba(255,255,255,.72);font-size:.86rem;margin-top:5px;position:relative}
+  .book-cal{position:relative}
+  .book-cal .cal-frame{margin-top:14px;border-radius:12px;overflow:hidden;background:#fff;min-height:560px}
+  .book-cal .cal-frame iframe{width:100%;min-height:560px;border:0;display:block}
+  .book-cal .cal-fallback{font-size:.8rem;color:rgba(255,255,255,.6);margin-top:10px;text-align:center}
+  .book-cal .cal-fallback a{color:var(--gold-300);font-weight:600}
+
+  @media (max-width:900px){
+    .hero .wrap{grid-template-columns:1fr;gap:26px}
+    .hero h1{max-width:22ch}
+    .book .globe{opacity:.3;width:60%}
+  }
+
+  /* ============================ PARTNERS AUTHORITY ============================ */
+  .partners-auth{background:var(--mist);border-block:1px solid var(--line)}
+  .partners-auth .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:clamp(24px,4vw,52px);align-items:center;padding-block:clamp(24px,3vw,34px)}
+  .partners-auth .pa-logos{display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding-right:clamp(20px,3vw,40px);border-right:1px solid var(--line-strong)}
+  .partners-auth .pa-badge{font-family:var(--font-display);font-weight:700;font-size:.68rem;letter-spacing:.08em;color:var(--gold-ink);background:var(--gold-050);border:1px solid var(--gold);border-radius:6px;padding:4px 9px}
+  .partner-logos{display:flex;align-items:center;gap:22px}
+  .logo-mono{color:var(--navy-700);display:block}
+  .logo-mono--mercury{height:24px;width:auto}
+  .logo-mono--relay{height:28px;width:auto}
+  .partners-auth h3{font-size:clamp(1.05rem,1.5vw,1.28rem);margin-bottom:10px}
+  .partners-auth .pa-points{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+  .partners-auth .pa-points li{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:.92rem;color:var(--ink-2);line-height:1.5}
+  .partners-auth .pa-points li svg{width:16px;height:16px;color:var(--gold-ink);margin-top:3px;flex:none}
+  .partners-auth .pa-note{margin-top:12px;font-size:.78rem;color:var(--muted);max-width:62ch}
+  @media (max-width:720px){
+    .partners-auth .wrap{grid-template-columns:1fr;gap:20px}
+    .partners-auth .pa-logos{flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px 24px;border-right:0;border-bottom:1px solid var(--line-strong);padding-right:0;padding-bottom:16px}
+  }
+
+  /* ============================ WHY-FIRST ============================ */
+  .why-first{background:var(--mist)}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(15px,2.4vw,26px);margin-top:4px}
+  .why-item{background:var(--paper);border:1px solid var(--line-strong);border-radius:15px;padding:22px 20px}
+  .why-item .ic{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:var(--gold-050);border:1.5px solid var(--gold);color:var(--gold-ink);margin-bottom:12px}
+  .why-item .ic svg{width:18px;height:18px}
+  .why-item h3{font-size:1rem;margin-bottom:6px}
+  .why-item p{font-size:.9rem;color:var(--ink-2);line-height:1.5}
+  .why-kicker{margin-top:clamp(20px,3vw,30px);font-family:var(--font-display);font-weight:600;color:var(--navy-800);font-size:1.02rem}
+  .why-cta{margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+  @media (max-width:760px){ .why-grid{grid-template-columns:1fr} }
+
+  /* ============================ REUNIÓN ============================ */
+  .meeting-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,48px);align-items:start}
+  .meeting-list{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:12px}
+  .meeting-list li{display:grid;grid-template-columns:26px 1fr;gap:12px;font-size:.95rem;color:var(--ink-2);line-height:1.5}
+  .meeting-list b{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--gold-050);color:var(--navy-800);border:1.5px solid var(--gold);font-family:var(--font-display);font-weight:700;font-size:.8rem}
+  .meeting-card{background:var(--mist);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .meeting-card h3{margin-bottom:12px}
+  .meeting-card .row{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+  .meeting-card .row:last-child{border-bottom:0}
+  .meeting-card .row b{color:var(--navy-800);font-family:var(--font-display);font-weight:600}
+  .meeting-card .btn{margin-top:16px;width:100%}
+  @media (max-width:800px){ .meeting-grid{grid-template-columns:1fr;gap:26px} }
+
+  /* ============================ CÓMO FUNCIONA ============================ */
+  .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(15px,2.4vw,24px);counter-reset:s}
+  .step{position:relative;padding:22px 20px;border:1px solid var(--line-strong);border-radius:15px;background:var(--paper);box-shadow:var(--shadow-sm)}
+  .step::before{
+    counter-increment:s;content:counter(s);
+    font-family:var(--font-display);font-weight:700;font-size:.88rem;
+    width:30px;height:30px;display:grid;place-items:center;border-radius:9px;
+    background:var(--gold-050);color:var(--navy-800);border:1.5px solid var(--gold);margin-bottom:13px;
+  }
+  .step h3{margin-bottom:7px}
+  .step p{font-size:.9rem;color:var(--ink-2);line-height:1.55}
+  .step .meta{margin-top:9px;font-size:.8rem;color:var(--muted)}
+  @media (max-width:760px){ .steps-row{grid-template-columns:1fr} }
+
+  /* ============================ PLANES ============================ */
+  .plans{background:var(--mist)}
+  .plans-note{font-size:.9rem;color:var(--ink-2);margin-top:12px}
+  .plans-note b{color:var(--navy-800)}
+  .plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:24px}
+  .pcard{background:var(--paper);border:1px solid var(--line-strong);border-radius:14px;padding:18px 18px 20px}
+  .pcard--fav{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-050)}
+  .pcard .fav{font-family:var(--font-display);font-weight:700;font-size:.62rem;letter-spacing:.08em;color:var(--navy-900);background:var(--gold-cta);border-radius:5px;padding:3px 7px}
+  .pcard h3{font-size:1rem;margin:8px 0 2px}
+  .pcard .price{font-family:var(--font-display);font-weight:700;font-size:1.4rem;color:var(--navy-800);letter-spacing:-.02em}
+  .pcard .price small{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:0}
+  .pcard p{font-size:.82rem;color:var(--ink-2);line-height:1.45;margin-top:8px}
+  .plans-cta{margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .plans-cta p{font-size:.9rem;color:var(--ink-2)}
+
+  /* ============================ CONFIANZA ============================ */
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(13px,2.2vw,22px);margin-bottom:clamp(28px,3.6vw,42px)}
+  .stat{border-top:2px solid var(--gold);padding-top:14px}
+  .stat .n{font-family:var(--font-display);font-weight:700;font-size:clamp(1.45rem,2.3vw,1.9rem);color:var(--navy-800);letter-spacing:-.02em}
+  .stat .l{font-size:.82rem;color:var(--muted);margin-top:3px}
+  @media (max-width:640px){ .stat-row{grid-template-columns:1fr 1fr} }
+  .reviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:13px}
+  .review{border:1px solid var(--line-strong);border-radius:13px;padding:19px;background:var(--paper);box-shadow:var(--shadow-sm)}
+  .review blockquote{margin:0;font-size:.94rem;line-height:1.55;color:var(--ink)}
+  .review blockquote::before{content:"\201C";color:var(--gold-ink);font-family:var(--font-display);font-weight:700;font-size:1.5em;line-height:0;margin-right:2px}
+  .review cite{display:block;margin-top:11px;font-style:normal;font-size:.79rem;color:var(--muted)}
+  .review cite .flag{margin-right:5px}
+  .review cite a{color:var(--blue-500)}
+  .rating-line{display:flex;align-items:center;gap:9px;margin-bottom:15px;font-size:.88rem;color:var(--muted)}
+  .rating-line .stars{color:var(--gold);letter-spacing:2px;font-size:1rem}
+  .rating-line a{color:var(--blue-500);font-weight:600}
+  .partner-line{margin-top:24px;font-size:.84rem;color:var(--muted);display:flex;align-items:center;flex-wrap:wrap;gap:14px 26px}
+  .partner-line b{color:var(--navy-800);font-family:var(--font-display);font-weight:600}
+
+  /* ============================ SUITE ============================ */
+  .suite{background:var(--navy-800);color:#fff}
+  .suite h2{color:#fff} .suite .kicker{color:var(--gold-300)} .suite .kicker::before{background:var(--gold-300)}
+  .suite .lede{color:rgba(255,255,255,.8)}
+  .suite-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+  .suite-chips span{font-family:var(--font-display);font-weight:600;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1px solid var(--navy-600);color:rgba(255,255,255,.85)}
+  .suite-note{margin-top:16px;font-size:.84rem;color:rgba(255,255,255,.55)}
+
+  /* ============================ FAQ ============================ */
+  .faq{max-width:820px}
+  .faq details{border-bottom:1px solid var(--line-strong)}
+  .faq summary{list-style:none;cursor:pointer;padding:19px 40px 19px 0;position:relative;font-family:var(--font-display);font-weight:600;font-size:.98rem;color:var(--navy-800)}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-family:var(--font-display);font-weight:600;font-size:1.3rem;color:var(--gold-ink);transition:transform .25s var(--e-out)}
+  .faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+  .faq .a{padding:0 0 21px;font-size:.93rem;color:var(--ink-2);line-height:1.62;max-width:72ch}
+  .faq .a a{color:var(--blue-500);font-weight:600}
+
+  /* ============================ FINAL ============================ */
+  .final{background:radial-gradient(120% 120% at 50% 0%, var(--navy-700), var(--navy-900));color:#fff;text-align:center}
+  .final h2{color:#fff;max-width:20ch;margin-inline:auto}
+  .final p{margin:13px auto 0;color:rgba(255,255,255,.78);max-width:50ch}
+  .final .cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}
+  .cta-note{display:block;margin-top:9px;font-size:.8rem;color:var(--muted)}
+  .cta-note.on-navy-note{color:rgba(255,255,255,.6)}
+
+  /* ============================ FOOTER ============================ */
+  .footer{background:var(--navy-900);color:rgba(255,255,255,.7);padding-block:clamp(34px,4.5vw,54px);font-size:.84rem;line-height:1.6}
+  .footer .wrap{display:grid;gap:18px}
+  .footer img{height:34px;width:auto}
+  .footer .disclaimer{max-width:82ch;color:rgba(255,255,255,.46);font-size:.78rem}
+  .footer .foot-links{display:flex;gap:16px;flex-wrap:wrap}
+  .footer .foot-links a:hover{color:#fff}
+
+  /* ============================ STICKY MOBILE BAR ============================ */
+  .stickybar{
+    position:fixed;left:0;right:0;bottom:0;z-index:var(--z-stickybar);
+    display:none;gap:10px;padding:10px 14px;
+    background:rgba(255,255,255,.96);border-top:1px solid var(--line-strong);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 -8px 24px rgba(14,36,56,.1);
+  }
+  .stickybar .btn{flex:1;padding:13px 12px}
+  .stickybar .btn--wa{flex:0 0 52px;padding:13px 0}
+  @media (max-width:820px){
+    .stickybar.is-on{display:flex}
+    body{padding-bottom:66px}
+  }
+
+  /* ============================ MOTION ============================ */
+  .js .reveal{opacity:0;transform:translateY(16px)}
+  .js .reveal.is-in{opacity:1;transform:none;transition:opacity .7s var(--e-out), transform .7s var(--e-out)}
+  .js .reveal.d1{transition-delay:.06s} .js .reveal.d2{transition-delay:.12s} .js .reveal.d3{transition-delay:.18s}
+  @media (prefers-reduced-motion: reduce){
+    .js .reveal{opacity:1;transform:none;transition:none}
+    .btn,.step,.pcard{transition:none}
+  }
+</style>
 </head>
 <body>
-  <!-- Google Tag Manager noscript -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNRQGDM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
-  <!-- End Google Tag Manager noscript -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNRQGDM" height="0" width="0" style="display:none;visibility:hidden" title="gtm"></iframe></noscript>
 
-  <header class="container site-header">
+<header class="header">
+  <div class="wrap">
     <a class="brand" href="https://sotomayorconsulting.com/" aria-label="Sotomayor Consulting International">
-      <img src="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International">
+      <img src="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International" width="200" height="40" />
     </a>
-    <div class="header-trust">
-      <span class="header-trust-icon">✓</span>
-      <span>Asesoría especializada<small>Estructuración internacional</small></span>
+    <a class="btn btn--primary btn--sm" href="#agendar" data-scroll-calendar data-cta="header">Elegir horario</a>
+  </div>
+</header>
+
+<main id="inicio">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="status-pill reveal"><span class="dot">&#10003;</span> Registro recibido</span>
+        <h1 class="reveal d1" id="hero-h1">Ya casi está. Elige el horario de tu <span class="u">asesoría de 30&nbsp;minutos</span>.</h1>
+        <p class="lede reveal d2" id="hero-sub">Es una asesoría <strong>gratuita</strong> de 30 minutos, por Zoom. Revisamos tu caso —estructura, estado, banca y cumplimiento— y sales con una <strong>recomendación clara</strong> y los próximos pasos. Sin costo y sin compromiso.</p>
+        <div class="hero-obj reveal d2">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Gratuita</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>30 minutos</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Por Zoom</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>En español</span>
+        </div>
+        <p class="hero-trust reveal d3">
+          <b>+5.000 empresas</b> incorporadas &middot; <b>10 años</b> &middot; <b>Partner de Mercury &amp; Relay</b><br>
+          <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4,3/5 en Trustpilot con reseñas verificadas
+        </p>
+      </div>
+
+      <aside class="book" id="agendar" aria-label="Agenda tu asesoría gratuita">
+        <svg class="globe" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="78" stroke="#fff" stroke-opacity=".35"/>
+          <ellipse cx="100" cy="100" rx="30" ry="78" stroke="#fff" stroke-opacity=".25"/>
+          <ellipse cx="100" cy="100" rx="58" ry="78" stroke="#fff" stroke-opacity=".18"/>
+          <path d="M24 78h152M30 122h140M22 100h156" stroke="#fff" stroke-opacity=".2"/>
+          <path d="M40 66c30 26 90 26 120 0" stroke="#e4c078" stroke-width="1.5"/>
+          <path d="M46 138c28-22 82-22 108 4" stroke="#e4c078" stroke-width="1.5"/>
+          <g fill="#e4c078"><circle cx="40" cy="66" r="3.4"/><circle cx="160" cy="66" r="3.4"/></g>
+          <g fill="#fff"><circle cx="100" cy="22" r="3"/><circle cx="22" cy="100" r="3"/><circle cx="178" cy="100" r="3"/></g>
+        </svg>
+
+        <div class="book-cal">
+          <span class="book-badge">Asesoría gratuita &middot; 30 min</span>
+          <h2>Elige tu horario</h2>
+          <p class="book-sub">Selecciona la fecha y la hora que mejor te queden. Zcal te pedirá tus datos para confirmar la reserva.</p>
+          <div class="cal-frame" id="cal-frame">
+            <iframe
+              id="zcalFrame"
+              title="Calendario de reserva — Sotomayor Consulting"
+              src="https://zcal.co/t/agendar-asesoria-llc/60min?embed=1"
+              loading="eager"
+              allow="clipboard-write; fullscreen">
+            </iframe>
+          </div>
+          <p class="cal-fallback">¿No carga? <a id="cal-open" href="https://zcal.co/t/agendar-asesoria-llc/60min" target="_blank" rel="noopener" data-track-schedule>Abre el calendario en una pestaña nueva</a>.</p>
+        </div>
+      </aside>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy-wrap">
-          <div class="status-pill"><span class="status-dot">✓</span> Registro completado</div>
-          <h1>Gracias por registrarte. Elige ahora el horario para tu asesoría.</h1>
-          <p class="hero-copy">Revisa la disponibilidad y reserva una sesión para analizar tu caso, resolver tus principales dudas y definir los próximos pasos para tu LLC.</p>
-
-          <div class="hero-points">
-            <span><i>✓</i> Sesión online de aproximadamente 60 minutos</span>
-            <span><i>✓</i> Revisión personalizada de tu situación</span>
-            <span><i>✓</i> Orientación sobre estructura, banca y cumplimiento</span>
-          </div>
-
-          <button class="hero-action" type="button" data-scroll-calendar>
-            Elegir fecha y hora ↓
-          </button>
-          <p class="hero-note">Para confirmar la reserva, Zcal te solicitará tus datos de contacto.</p>
+  <!-- ============ PARTNERS OFICIALES ============ -->
+  <section class="partners-auth" aria-label="Partners de banca oficiales">
+    <div class="wrap">
+      <div class="pa-logos">
+        <span class="pa-badge">PARTNERS OFICIALES</span>
+        <div class="partner-logos">
+          <svg class="logo-mono logo-mono--mercury" viewBox="0 0 139 32" fill="none" role="img" aria-label="Mercury"><title>Mercury</title><path fill="currentColor" d="M16 0C7.19155 0 0.0241327 7.1379 0 15.9397V16.0121C0 24.838 7.19155 32 16 32C24.8326 32 32 24.8139 32 16.0121C32 7.16202 24.8326 0 16 0ZM11.994 1.51922C13.2006 1.18161 14.4796 0.988696 15.8069 0.964582C15.8793 0.964582 15.9276 0.964582 16 0.964582C16.0724 0.964582 16.1448 0.964582 16.1931 0.964582C18.2443 1.03693 20.006 2.33911 20.7541 4.12359C20.9231 4.50942 21.0196 4.89525 21.092 5.32931C21.1403 5.57046 21.1403 5.83572 21.1403 6.10098C21.1403 7.25848 20.7541 8.31952 20.1267 9.18764C19.451 8.77769 18.7029 8.4642 17.9306 8.27129C18.5339 7.74077 18.8959 6.9691 18.8959 6.10098C18.8959 5.474 18.7029 4.89525 18.3409 4.41296C17.81 3.68953 16.9653 3.20723 16 3.20723C14.3107 3.20723 12.7179 3.52072 11.2459 4.12359C10.8356 4.29239 10.4495 4.48531 10.0633 4.67822C7.79487 5.88395 5.91252 7.74077 4.70588 10.0317C3.45098 10.321 2.34087 10.9962 1.52036 11.9367C2.94419 6.89676 6.92609 2.91786 11.994 1.51922ZM22.1056 5.88395C23.7466 6.87264 25.1222 8.24717 26.1116 9.88696C26.0392 9.88696 25.9668 9.88696 25.8944 9.88696C24.543 9.88696 23.2881 10.321 22.2745 11.0927C21.8884 10.5863 21.4299 10.1281 20.9231 9.74228C21.6712 8.72947 22.1297 7.47551 22.1297 6.12509C22.1056 6.02864 22.1056 5.95629 22.1056 5.88395ZM27.5837 13.6488C27.1011 13.3112 26.5219 13.0942 25.8944 13.0942C25.0256 13.0942 24.2534 13.4559 23.7225 14.0588C23.264 14.5652 22.9985 15.2404 22.9985 15.9879C22.9985 17.2419 22.6606 18.4235 22.0814 19.4363C21.9125 19.7257 21.7436 19.991 21.5264 20.2562C21.1644 20.7385 20.73 21.1485 20.2715 21.5102C19.6923 20.9314 18.9925 20.4732 18.1961 20.1839C19.0407 19.7498 19.7406 19.0505 20.175 18.2065C20.537 17.5554 20.73 16.7837 20.73 15.9879C20.73 14.6616 21.2368 13.4559 22.0573 12.5396C22.2745 12.2984 22.5158 12.0814 22.7813 11.8644C23.6501 11.2133 24.7119 10.8515 25.8703 10.8515C26.1357 10.8515 26.4012 10.8757 26.6425 10.8998C27.0769 11.7679 27.3906 12.6842 27.5837 13.6488ZM27.825 15.8915C27.825 15.9156 27.825 15.9638 27.825 15.9879C27.825 16.0121 27.825 16.0603 27.825 16.0844C27.7768 17.0972 26.9321 17.9171 25.8944 17.9171C24.8326 17.9171 23.9638 17.049 23.9638 15.9879C23.9638 14.9269 24.8326 14.0588 25.8944 14.0588C26.9321 14.0588 27.7768 14.8787 27.825 15.8915ZM20.9231 22.2577C21.4299 21.8719 21.8884 21.4137 22.2745 20.9073C23.2881 21.6549 24.543 22.0889 25.8944 22.0889C25.9668 22.0889 26.0392 22.0889 26.1116 22.0889C25.1222 23.7287 23.7466 25.1032 22.1056 26.0919C22.1056 26.0196 22.1056 25.9473 22.1056 25.8749C22.1056 24.5245 21.6712 23.2705 20.9231 22.2577ZM17.9306 23.7287C17.4238 23.2705 16.7481 23.0053 16.0241 23.0053C14.7692 23.0053 13.5867 22.6677 12.5732 22.0889C12.2836 21.9201 12.0181 21.7513 11.7526 21.5343C11.27 21.1726 10.8356 20.7385 10.4736 20.2562C11.0528 19.6775 11.5113 18.9781 11.825 18.2065C12.2594 19.0505 12.9593 19.7498 13.8281 20.208C14.4796 20.5697 15.2519 20.7626 16.0483 20.7626C17.3756 20.7626 18.5822 21.269 19.4992 22.0889C19.7406 22.306 19.9578 22.5471 20.175 22.8124C20.8265 23.6805 21.1885 24.7415 21.1885 25.899C21.1885 26.1643 21.1644 26.4054 21.1403 26.6707C20.2715 27.0806 19.3544 27.3941 18.3891 27.587C18.727 27.1047 18.9442 26.526 18.9442 25.899C18.8959 25.0309 18.5098 24.2592 17.9306 23.7287ZM17.9306 25.899C17.9306 26.8877 17.1825 27.7076 16.2172 27.8041C16.1448 27.8041 16.0965 27.8041 16.0241 27.8041C15.9517 27.8041 15.8793 27.8041 15.8311 27.8041C14.8658 27.7076 14.1176 26.8877 14.1176 25.899C14.1176 24.838 14.9864 23.9699 16.0483 23.9699C17.0618 23.9699 17.9306 24.838 17.9306 25.899ZM9.89442 26.0919C8.25339 25.1032 6.85369 23.7046 5.86425 22.0648C5.93665 22.0648 6.03318 22.0648 6.10558 22.0648C7.45701 22.0648 8.71192 21.6307 9.70136 20.8832C10.1116 21.3896 10.5701 21.8478 11.0769 22.2577C10.3288 23.2705 9.87029 24.5245 9.87029 25.8749C9.89442 25.9714 9.89442 26.0437 9.89442 26.0919ZM6.10558 18.8576C6.95023 18.8576 7.72247 18.4959 8.25339 17.893C8.27753 17.8689 8.30166 17.8207 8.32579 17.7965C8.37406 17.7242 8.42232 17.676 8.47059 17.6036C8.49472 17.5795 8.51885 17.5313 8.51885 17.5072C8.54299 17.483 8.54299 17.4589 8.56712 17.4348C8.59125 17.3866 8.61538 17.3384 8.66365 17.2901C8.66365 17.2901 8.66365 17.2901 8.66365 17.266C8.68778 17.2419 8.68778 17.1937 8.71192 17.1696C8.73605 17.1213 8.73605 17.0972 8.76018 17.049C8.76018 17.0249 8.78431 17.0008 8.78431 16.9766C8.80845 16.9525 8.80845 16.9043 8.80845 16.8802C8.83258 16.832 8.83258 16.7596 8.85671 16.7114C8.85671 16.7114 8.85671 16.7114 8.85671 16.6873C8.85671 16.6631 8.88084 16.639 8.88084 16.5908C8.88084 16.5667 8.90498 16.5426 8.90498 16.5185V16.4943C8.90498 16.4702 8.90498 16.4461 8.90498 16.422C8.90498 16.3979 8.90498 16.3738 8.90498 16.3497C8.90498 16.3014 8.90498 16.2532 8.92911 16.205C8.92911 16.1809 8.92911 16.1567 8.92911 16.1326C8.92911 16.0844 8.92911 16.0603 8.92911 16.0121V15.9879C8.92911 14.734 9.26697 13.5524 9.84615 12.5396C10.0151 12.2502 10.184 11.9849 10.4012 11.7197C10.7632 11.2615 11.1735 10.8274 11.6561 10.4657C12.2353 11.0445 12.9351 11.5026 13.7315 11.8161C12.8869 12.2502 12.187 12.9495 11.7526 13.7935C11.3906 14.4446 11.1976 15.1922 11.1976 15.9879V16.0121C11.1976 17.3384 10.6667 18.5441 9.84615 19.4363C9.62896 19.6775 9.38763 19.8945 9.12217 20.0874C8.25339 20.7144 7.21569 21.1002 6.05731 21.1002C5.79185 21.1002 5.52639 21.0761 5.26093 21.052C4.85068 20.1839 4.53695 19.2675 4.34389 18.3029C4.89894 18.6647 5.47813 18.8576 6.10558 18.8576ZM4.17496 15.9879C4.17496 15.9397 4.17496 15.9156 4.17496 15.8674C4.22323 14.8546 5.06787 14.0347 6.10558 14.0347C7.16742 14.0347 8.0362 14.9028 8.0362 15.9638V15.9879C8.01207 17.0249 7.16742 17.8689 6.10558 17.8689C5.04374 17.893 4.19909 17.049 4.17496 15.9879ZM11.0769 9.74228C10.5701 10.1281 10.1357 10.5863 9.74962 11.0686C8.73605 10.321 7.48115 9.86285 6.10558 9.86285C6.03318 9.86285 5.96078 9.86285 5.91252 9.86285C6.90196 8.24717 8.27753 6.87264 9.89442 5.88395C9.89442 5.95629 9.89442 6.02864 9.89442 6.10098C9.89442 7.45139 10.3288 8.70535 11.0769 9.74228ZM14.0935 8.27129C14.6003 8.72946 15.276 8.99473 16.0241 8.99473C17.279 8.99473 18.4615 9.33233 19.4751 9.91108C19.7647 10.0799 20.0302 10.2487 20.2956 10.4657C20.7783 10.8274 21.1885 11.2615 21.5505 11.7197C20.9713 12.2984 20.5128 12.9977 20.2232 13.7935C19.7888 12.9495 19.089 12.2502 18.2443 11.8161C17.5928 11.4544 16.8205 11.2615 16.0241 11.2615C14.6968 11.2615 13.4902 10.7551 12.5732 9.93519C12.3318 9.71816 12.1146 9.47702 11.8974 9.21176C11.2459 8.34363 10.8839 7.28259 10.8839 6.12509C10.8839 5.85983 10.908 5.59457 10.9321 5.35343C11.8009 4.94348 12.7179 4.62999 13.6833 4.43708C13.3454 4.91937 13.1282 5.49812 13.1282 6.12509C13.1041 6.9691 13.4902 7.74077 14.0935 8.27129ZM14.0694 6.10098C14.0694 5.06405 14.8899 4.22005 15.9035 4.17182C15.9276 4.17182 15.9759 4.17182 16 4.17182C16.0241 4.17182 16.0724 4.17182 16.0965 4.17182C17.1101 4.22005 17.9306 5.06405 17.9306 6.10098C17.9306 7.16202 17.0618 8.03014 16 8.03014C14.9382 8.03014 14.0694 7.16202 14.0694 6.10098ZM19.7888 15.9879C19.7888 18.0859 18.0995 19.7739 16 19.7739C13.9005 19.7739 12.2112 18.0859 12.2112 15.9879V15.9638C12.2353 13.89 13.9246 12.202 16 12.202C18.0754 12.202 19.7888 13.9141 19.7888 15.9879ZM1.49623 19.9668C1.15837 18.7611 0.989442 17.5072 0.965309 16.205C0.965309 16.1326 0.965309 16.0844 0.965309 16.0121V15.9638C0.965309 15.8915 0.965309 15.8433 0.965309 15.7709C1.06184 13.7212 2.34087 11.9849 4.15083 11.2374C4.53695 11.0927 4.92308 10.9721 5.35747 10.8998C5.59879 10.8515 5.86425 10.8515 6.10558 10.8515C7.26395 10.8515 8.32579 11.2374 9.19457 11.8885C8.78431 12.5637 8.47059 13.3112 8.27753 14.0829C7.74661 13.48 6.97436 13.1183 6.10558 13.1183C5.47813 13.1183 4.89894 13.3112 4.41629 13.6488C3.69231 14.1794 3.20965 15.0234 3.20965 15.9638V16.0121C3.20965 17.676 3.52338 19.2675 4.10256 20.7144C4.27149 21.1243 4.44042 21.5102 4.65762 21.896C5.86425 24.211 7.74661 26.0919 10.0392 27.2977C10.3288 28.5516 11.0287 29.6609 11.9698 30.4808C6.90196 29.0821 2.89593 25.055 1.49623 19.9668ZM20.0302 30.4808C18.8235 30.8184 17.5445 31.0113 16.2172 31.0113C16.1448 31.0113 16.0965 31.0113 16.0241 31.0113C15.9517 31.0113 15.8793 31.0113 15.8311 31.0113C13.7798 30.939 12.0181 29.6368 11.27 27.8523C11.1011 27.4665 11.0045 27.0806 10.9321 26.6466C10.8839 26.4054 10.8839 26.1402 10.8839 25.8749C10.8839 24.7174 11.27 23.6564 11.8974 22.7882C12.5732 23.1982 13.3213 23.5117 14.0935 23.7046C13.4902 24.2351 13.1282 25.0068 13.1282 25.8749C13.1282 26.5019 13.3213 27.0806 13.6833 27.5629C14.1659 28.2381 14.914 28.6963 15.7828 28.7687H15.8069C15.8793 28.7687 15.9517 28.7687 16.0241 28.7687C16.0965 28.7687 16.1689 28.7687 16.2413 28.7687H16.2655C17.8582 28.7445 19.3786 28.4069 20.7783 27.8523C21.1885 27.6835 21.5747 27.5147 21.9608 27.2977C24.2534 26.0919 26.1357 24.211 27.3424 21.9201C28.5973 21.6307 29.7074 20.9314 30.5038 19.991C29.1041 25.0791 25.098 29.0821 20.0302 30.4808ZM31.0347 15.9879C31.0347 16.0603 31.0347 16.1085 31.0347 16.1809C30.9623 18.2306 29.6591 19.9668 27.8733 20.7144C27.4872 20.8832 27.1011 20.9797 26.6667 21.052C26.4253 21.1002 26.1599 21.1002 25.8944 21.1002C24.736 21.1002 23.6742 20.7144 22.8296 20.0874C23.2398 19.4122 23.5535 18.6647 23.7466 17.893C24.2775 18.4959 25.0498 18.8576 25.9186 18.8576C26.546 18.8576 27.1252 18.6405 27.6078 18.3029C28.3318 17.7724 28.8145 16.9284 28.8145 15.9638C28.8145 14.2999 28.5008 12.6843 27.8974 11.2133C27.7285 10.8033 27.5354 10.4175 27.3424 10.0317C26.1357 7.74077 24.2534 5.85983 21.9608 4.65411C21.6712 3.40015 20.9713 2.29088 20.0302 1.47099C25.098 2.86963 29.1041 6.87265 30.5038 11.9367C30.8416 13.1424 31.0347 14.4205 31.0347 15.7468C31.0347 15.8433 31.0347 15.9156 31.0347 15.9879Z"></path><path fill="currentColor" fill-rule="evenodd" d="M44.248 10.172H47.4L50.344 18.22H50.392L53.304 10.172H56.472V21.5H54.472V12.396H54.44L51 21.5H49.592L46.2 12.396H46.168V21.5H44.248V10.172ZM61.9902 10.172H69.4942V11.932H64.0062V14.812H69.2062V16.508H64.0062V19.708H69.7822V21.5H61.9902V10.172ZM78.4364 15.052C78.7244 15.052 79.0124 15.0307 79.3004 14.988C79.5885 14.9453 79.8471 14.8653 80.0764 14.748C80.3058 14.6307 80.4951 14.4627 80.6444 14.244C80.7938 14.0253 80.8684 13.7453 80.8684 13.404C80.8684 13.0947 80.7991 12.8413 80.6604 12.644C80.5218 12.4467 80.3458 12.2893 80.1325 12.172C79.9191 12.0547 79.6764 11.9747 79.4044 11.932C79.1324 11.8893 78.8685 11.868 78.6124 11.868H76.7884V15.052H78.4364ZM74.7724 10.172H78.7084C79.2418 10.172 79.7591 10.228 80.2604 10.34C80.7618 10.452 81.2071 10.636 81.5964 10.892C81.9858 11.148 82.2978 11.484 82.5324 11.9C82.7671 12.316 82.8844 12.8227 82.8844 13.42C82.8844 14.2413 82.6525 14.9107 82.1884 15.428C81.7244 15.9453 81.0925 16.2947 80.2924 16.476L83.3164 21.5H80.8844L78.2604 16.7H76.7884V21.5H74.7724V10.172ZM96.0347 12.828C95.736 12.4227 95.3467 12.1267 94.8667 11.94C94.3867 11.7533 93.9173 11.66 93.4587 11.66C92.872 11.66 92.3387 11.7667 91.8587 11.98C91.3787 12.1933 90.9653 12.4867 90.6187 12.86C90.272 13.2333 90.0053 13.6707 89.8187 14.172C89.632 14.6733 89.5387 15.2173 89.5387 15.804C89.5387 16.4227 89.6293 16.988 89.8107 17.5C89.992 18.012 90.2507 18.452 90.5867 18.82C90.9227 19.188 91.3253 19.4733 91.7947 19.676C92.264 19.8787 92.792 19.98 93.3787 19.98C93.9867 19.98 94.5253 19.86 94.9947 19.62C95.464 19.38 95.8427 19.0627 96.1307 18.668L97.7467 19.804C97.2453 20.4333 96.632 20.9213 95.9067 21.268C95.1813 21.6147 94.3333 21.788 93.3627 21.788C92.4773 21.788 91.664 21.6413 90.9227 21.348C90.1813 21.0547 89.544 20.644 89.0107 20.116C88.4773 19.588 88.0613 18.9587 87.7627 18.228C87.464 17.4973 87.3147 16.6893 87.3147 15.804C87.3147 14.8973 87.472 14.0787 87.7867 13.348C88.1013 12.6173 88.5333 11.996 89.0827 11.484C89.632 10.972 90.28 10.5773 91.0267 10.3C91.7733 10.0227 92.584 9.884 93.4587 9.884C93.8213 9.884 94.2 9.91867 94.5947 9.988C94.9893 10.0573 95.368 10.164 95.7307 10.308C96.0933 10.452 96.4347 10.6307 96.7547 10.844C97.0747 11.0573 97.3467 11.3133 97.5707 11.612L96.0347 12.828ZM111.041 17.34C111.041 18.0227 110.924 18.6387 110.689 19.188C110.454 19.7373 110.134 20.204 109.729 20.588C109.324 20.972 108.844 21.268 108.289 21.476C107.734 21.684 107.132 21.788 106.481 21.788C105.83 21.788 105.228 21.684 104.673 21.476C104.118 21.268 103.636 20.972 103.225 20.588C102.814 20.204 102.494 19.7373 102.265 19.188C102.036 18.6387 101.921 18.0227 101.921 17.34V10.172H103.937V17.26C103.937 17.5907 103.98 17.9187 104.065 18.244C104.15 18.5693 104.292 18.86 104.489 19.116C104.686 19.372 104.948 19.58 105.273 19.74C105.598 19.9 106.001 19.98 106.481 19.98C106.961 19.98 107.364 19.9 107.689 19.74C108.014 19.58 108.276 19.372 108.473 19.116C108.67 18.86 108.812 18.5693 108.897 18.244C108.982 17.9187 109.025 17.5907 109.025 17.26V10.172H111.041V17.34ZM120.127 15.052C120.415 15.052 120.703 15.0307 120.991 14.988C121.279 14.9453 121.538 14.8653 121.767 14.748C121.996 14.6307 122.186 14.4627 122.335 14.244C122.484 14.0253 122.559 13.7453 122.559 13.404C122.559 13.0947 122.49 12.8413 122.351 12.644C122.212 12.4467 122.036 12.2893 121.823 12.172C121.61 12.0547 121.367 11.9747 121.095 11.932C120.823 11.8893 120.559 11.868 120.303 11.868H118.479V15.052H120.127ZM116.463 10.172H120.399C120.932 10.172 121.45 10.228 121.951 10.34C122.452 10.452 122.898 10.636 123.287 10.892C123.676 11.148 123.988 11.484 124.223 11.9C124.458 12.316 124.575 12.8227 124.575 13.42C124.575 14.2413 124.343 14.9107 123.879 15.428C123.415 15.9453 122.783 16.2947 121.983 16.476L125.007 21.5H122.575L119.951 16.7H118.479V21.5H116.463V10.172ZM132.173 16.588L127.917 10.172H130.381L133.229 14.94L136.109 10.172H138.445L134.189 16.588V21.5H132.173V16.588Z" clip-rule="evenodd"></path></svg>
+          <svg class="logo-mono logo-mono--relay" viewBox="0 0 121 62" fill="none" role="img" aria-label="Relay"><title>Relay</title><path fill="currentColor" d="M14.7125 36.8154C19.9685 41.4223 35.5022 49.1116 35.7533 49.2289C37.7787 50.2173 34.5983 55.0587 33.0081 55.0252C30.2294 55.0252 13.5408 44.9738 7.89977 39.948C7.46457 43.7118 7.30786 47.5025 7.43104 51.2894C7.43104 52.5458 5.4224 52.5793 3.48069 52.6966C1.53898 52.8138 0.132925 52.6966 0.0324915 51.7082C-0.586846 32.1917 7.7156 12.8092 19.1482 3.51165C26.212 -2.23441 38.2975 -1.3968 36.5064 9.52574C35.0167 18.5553 26.279 31.0693 14.7459 36.8154H14.7125ZM9.33929 32.6105C22.0106 28.3889 33.5269 9.77703 29.8444 6.59408C26.1618 3.41113 13.909 14.7357 9.33929 32.6105ZM118.527 21.3361C116.97 20.7833 114.811 20.7498 114.526 22.0732C112.601 30.751 109.27 40.2663 105.37 39.0602C103.696 38.5241 102.625 36.6813 106.274 25.4907C106.676 24.2343 105.722 23.6312 104.299 23.0952C102.876 22.5591 101.269 22.8104 100.951 23.6982C97.0509 33.3141 93.9374 38.7754 91.1253 38.2225C87.9784 37.586 92.7155 27.6015 93.4185 26.1608C94.1216 24.7201 92.2636 23.983 91.3429 23.6145C90.4223 23.2459 88.9158 22.6093 88.3969 23.6145C88.196 23.9495 87.7441 24.8709 87.4763 25.407C87.6269 21.4367 83.8272 19.1583 79.7764 20.9173C72.3946 24.1338 68.4275 32.309 67.9253 37.1337C67.624 39.9648 68.3605 43.1477 71.1726 44.4879C76.4454 46.984 82.237 40.6684 83.8272 37.3514C83.6598 41.3218 86.2209 43.7676 89.4682 43.6503C93.904 43.4995 97.1011 39.1607 98.005 37.2342C97.3019 43.7843 103.512 46.2804 108.048 43.0975C105.364 48.2849 101.985 53.0812 98.005 57.3537C96.8667 58.6101 98.4402 60.1849 99.0094 60.7042C99.9467 61.6256 101.319 62.3795 102.123 61.7931C104.55 60.1179 109.321 54.7906 114.627 44.3539C117.553 38.0595 119.662 31.4163 120.904 24.5861C121.239 22.9109 120.753 22.09 118.594 21.3361H118.527ZM75.0728 38.3231C73.717 37.3682 75.0728 33.1801 76.6463 30.7008C78.8223 27.099 82.17 24.4353 83.6096 25.5745C85.8359 27.2497 82.7559 31.6891 81.1824 34.3192C79.609 36.9493 76.8304 39.5627 75.0728 38.3231ZM56.8609 34.1015C51.7388 42.5949 45.1437 45.2418 40.574 45.3758C39.2161 45.4417 37.86 45.2148 36.5974 44.7107C35.3347 44.2065 34.1951 43.4367 33.2555 42.4535C32.3159 41.4702 31.5983 40.2965 31.1513 39.0116C30.7043 37.7267 30.5383 36.3607 30.6646 35.0061C30.8703 31.9592 31.9185 29.0295 33.6921 26.5445C35.4656 24.0595 37.8947 22.117 40.7079 20.9341C46.2819 18.8568 51.3538 22.9276 50.2658 27.635C49.9892 29.0308 49.4373 30.3573 48.6425 31.537C47.8477 32.7168 46.8258 33.7262 45.6367 34.5061C44.4475 35.286 43.1149 35.8208 41.7168 36.0792C40.3187 36.3377 38.8831 36.3145 37.4941 36.0112C37.7786 39.3617 41.3608 41.2212 46.4159 38.6246C49.7637 36.9494 53.4796 33.5989 56.9948 25.1222C59.606 18.7563 63.3221 5.6727 64.9792 2.77454C65.4647 1.93692 67.1888 2.17147 68.6618 2.89182C70.1348 3.61217 71.6413 4.65079 71.1726 5.95748C68.1176 13.6802 65.7701 21.6649 64.159 29.8129C62.8403 36.4679 63.006 43.3322 64.6444 49.9157C65.0127 51.3062 63.2552 52.1773 62.1839 52.395C61.5372 52.5873 60.8465 52.571 60.2096 52.3485C59.5727 52.126 59.0219 51.7086 58.6352 51.1554C55.8566 46.1297 56.1578 39.948 56.8107 34.135L56.8609 34.1015ZM37.3769 32.2252C42.5324 33.9004 47.1021 28.2549 45.5119 25.9598C43.9217 23.6647 38.0632 26.1943 37.3769 32.2252Z"/></svg>
         </div>
-
-        <section class="calendar-card" id="calendarCard" aria-labelledby="calendarTitle">
-          <div class="calendar-header">
-            <div>
-              <strong id="calendarTitle">Selecciona fecha y hora</strong>
-              <span>Los horarios se muestran según disponibilidad.</span>
-            </div>
-            <a id="calendarExternalLink" href="https://zcal.co/t/agendar-asesoria-llc/60min" target="_blank" rel="noopener" data-track-schedule>Ver agenda completa</a>
-          </div>
-
-          <iframe
-            id="zcalFrame"
-            class="calendar-frame"
-            title="Agenda asesoría LLC Sotomayor Consulting"
-            src="https://zcal.co/t/agendar-asesoria-llc/60min?embed=1"
-            loading="eager"
-            allow="camera; microphone; fullscreen">
-          </iframe>
-
-          <div class="calendar-fallback">
-            Si el calendario no carga correctamente,
-            <a href="https://zcal.co/t/agendar-asesoria-llc/60min" target="_blank" rel="noopener" data-track-schedule>abre la agenda aquí</a>.
-          </div>
-        </section>
       </div>
-    </section>
-
-    <section class="container value-section">
-      <div class="section-kicker">Valor de la asesoría</div>
-      <h2 class="section-title">Una conversación enfocada en tu caso.</h2>
-      <p class="section-subtitle">La reunión está diseñada para darte claridad antes de tomar decisiones sobre tu estructura y operación en Estados Unidos.</p>
-
-      <div class="value-grid">
-        <article class="value-card">
-          <div class="value-icon">◎</div>
-          <h3>Evaluación personalizada</h3>
-          <p>Revisamos tu actividad, residencia y objetivos para orientar el siguiente paso.</p>
-        </article>
-        <article class="value-card">
-          <div class="value-icon">▤</div>
-          <h3>Estructura, costos y proceso</h3>
-          <p>Aclaramos opciones, requisitos, tiempos estimados y posibles dependencias.</p>
-        </article>
-        <article class="value-card">
-          <div class="value-icon">▥</div>
-          <h3>Banca, cobros y operación</h3>
-          <p>Conversamos sobre cuentas, pasarelas de pago y operación internacional.</p>
-        </article>
-        <article class="value-card urgency">
-          <div class="value-icon">◷</div>
-          <h3>Reserva el horario que mejor te convenga</h3>
-          <p>La disponibilidad puede cambiar. Elige ahora la fecha que mejor se adapte a tu agenda.</p>
-          <strong>Horarios sujetos a disponibilidad</strong>
-        </article>
+      <div class="pa-text">
+        <h3>Partners oficiales de Mercury y Relay para banking empresarial</h3>
+        <ul class="pa-points">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Preparamos tu solicitud con los criterios que estas fintech aprueban — antes de aplicar.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Acompañamiento directo en la apertura, accesos del equipo y orden de cuentas.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Si tu cuenta queda en revisión, sabemos qué documenta y pide cada una.</li>
+        </ul>
+        <p class="pa-note">Mercury y Relay son bancos de terceros; Sotomayor Consulting no es banco. Actuamos como partner para preparar y acompañar tu onboarding con ellos.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="container proof-section" id="prueba-social">
-      <div class="section-kicker">Confianza</div>
-      <h2 class="section-title">Acompañamiento profesional y cercano.</h2>
-
-      <div class="stats-grid">
-        <div class="stat-card"><strong>10+</strong><span>Años de experiencia</span><small>En consultoría empresarial.</small></div>
-        <div class="stat-card"><strong>97%</strong><span>Satisfacción</span><small>Según experiencia reportada.</small></div>
-        <div class="stat-card"><strong>Global</strong><span>Atención internacional</span><small>Para negocios de Latinoamérica.</small></div>
-        <div class="stat-card"><strong>4.2/5</strong><span>Valoración pública</span><small>Referencia de Trustpilot.</small></div>
+  <!-- ============ QUÉ SACAS DE LA REUNIÓN ============ -->
+  <section class="why-first">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Qué sacas de la reunión</span>
+        <h2>Ya diste el primer paso. En la reunión lo convertimos en un plan.</h2>
+        <p class="lede">30 minutos, por Zoom, sin costo. Sales con decisiones concretas — no con una cotización genérica.</p>
       </div>
-
-      <div class="testimonial-carousel" id="testimonialCarousel" aria-label="Testimonios de clientes">
-        <button class="carousel-button prev" type="button" aria-label="Testimonios anteriores">‹</button>
-        <div class="testimonial-viewport">
-          <div class="testimonial-track">
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=85" alt="Retrato de Andrés"><div><blockquote>“La asesoría fue clara y práctica. Entendí qué estructura podía adaptarse mejor a mi negocio y cuáles eran los pasos reales para avanzar.”</blockquote><cite>Andrés G.<small>Emprendedor, Colombia</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=85" alt="Retrato de María"><div><blockquote>“Me explicaron todo de manera sencilla y transparente. Salí de la reunión con una ruta clara y con mucha más seguridad para decidir.”</blockquote><cite>María P.<small>Consultora, México</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=240&q=85" alt="Retrato de Valentina"><div><blockquote>“Tenía dudas sobre banca, cobros y obligaciones. La asesoría me ayudó a entender qué debía preparar y en qué orden hacerlo.”</blockquote><cite>Valentina R.<small>Fundadora de e-commerce, Chile</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=240&q=85" alt="Retrato de Daniel"><div><blockquote>“Analizaron mi caso antes de recomendar una solución. Fue una conversación profesional, directa y enfocada en mis objetivos.”</blockquote><cite>Daniel M.<small>Consultor digital, Ecuador</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=240&q=85" alt="Retrato de Camila"><div><blockquote>“El acompañamiento fue cercano y ordenado. Entendí los costos, los tiempos y las decisiones que debía tomar antes de avanzar.”</blockquote><cite>Camila S.<small>Emprendedora, Perú</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=85" alt="Retrato de Sofía"><div><blockquote>“Llegué con muchas preguntas y terminé con prioridades concretas. La explicación fue sencilla y sin tecnicismos innecesarios.”</blockquote><cite>Sofía L.<small>Diseñadora y empresaria, Argentina</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=240&q=85" alt="Retrato de Mateo"><div><blockquote>“Me ayudaron a comparar alternativas y entender cuál tenía más sentido para mi actividad y mi forma de cobrar.”</blockquote><cite>Mateo C.<small>Profesional independiente, Costa Rica</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=240&q=85" alt="Retrato de Gabriela"><div><blockquote>“La reunión fue puntual y muy útil. Ahora sé qué documentos necesito y cuáles son los próximos pasos para organizar mi operación.”</blockquote><cite>Gabriela T.<small>Emprendedora, Panamá</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?auto=format&fit=crop&w=240&q=85" alt="Retrato de Nicolás"><div><blockquote>“Valoré la transparencia con los tiempos y costos. No sentí presión; recibí información concreta para tomar una mejor decisión.”</blockquote><cite>Nicolás A.<small>Director de agencia, Uruguay</small></cite></div></article>
-            <article class="testimonial"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=240&q=85" alt="Retrato de Laura"><div><blockquote>“Fue una asesoría cercana y profesional. Pudimos aclarar dudas sobre la LLC, la cuenta bancaria y la operación internacional.”</blockquote><cite>Laura V.<small>Consultora, República Dominicana</small></cite></div></article>
-          </div>
+      <div class="why-grid">
+        <div class="why-item reveal">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+          <h3>Un plan claro para tu caso</h3>
+          <p>Estado recomendado, el costo real (plan anual + tasa del estado que elijas) y los próximos pasos concretos.</p>
         </div>
-        <button class="carousel-button next" type="button" aria-label="Siguientes testimonios">›</button>
-        <div class="carousel-dots" aria-label="Seleccionar grupo de testimonios"></div>
+        <div class="why-item reveal d1">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-4Z"/></svg></span>
+          <h3>Evitas el error caro</h3>
+          <p>Una estructura o un estado equivocado cuesta miles corregirlo. Lo revisamos antes de que pagues nada.</p>
+        </div>
+        <div class="why-item reveal d2">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <h3>Si una LLC no es lo tuyo, te lo decimos</h3>
+          <p>Si tu caso pide otra estructura u otra jurisdicción, te lo decimos en la reunión — gratis y sin insistir.</p>
+        </div>
       </div>
-    </section>
+      <p class="why-kicker reveal">No hacemos llamadas de venta. Priorizamos una reunión de trabajo sobre tu caso.</p>
+      <div class="why-cta reveal">
+        <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="why-first">Elegir mi horario</a>
+        <span class="cta-note">Gratis &middot; sin compromiso &middot; 30 min</span>
+      </div>
+    </div>
+  </section>
 
-    <section class="container review-section">
-      <div class="review-card">
+  <!-- ============ QUÉ REVISAMOS ============ -->
+  <section id="reunion">
+    <div class="wrap">
+      <div class="meeting-grid">
+        <div class="reveal">
+          <div class="section-head" style="margin-bottom:0">
+            <span class="kicker">La reunión de 30 minutos</span>
+            <h2>Qué revisamos contigo</h2>
+          </div>
+          <ul class="meeting-list">
+            <li><b>1</b><span>Tu país de residencia, tu actividad, tus socios y hacia dónde va el proyecto.</span></li>
+            <li><b>2</b><span>Si una LLC es la estructura correcta — y si no, qué conviene en su lugar.</span></li>
+            <li><b>3</b><span>El estado adecuado y el costo real: plan anual + tasa del estado (varía por jurisdicción).</span></li>
+            <li><b>4</b><span>El plan que se ajusta a tu caso y los próximos pasos concretos.</span></li>
+          </ul>
+        </div>
+        <div class="meeting-card reveal d1">
+          <h3>Detalles</h3>
+          <div class="row"><b>Duración</b><span>30 minutos</span></div>
+          <div class="row"><b>Modalidad</b><span>Online, por Zoom</span></div>
+          <div class="row"><b>Costo</b><span>Gratuita, sin compromiso</span></div>
+          <div class="row"><b>Con quién</b><span>Un asesor de la firma, en español</span></div>
+          <div class="row"><b>Si no es tu caso</b><span>Te lo decimos en la reunión. Sin costo.</span></div>
+          <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="meeting">Elegir horario</a>
+          <span class="cta-note" style="text-align:center">Gratis &middot; sin compromiso &middot; 30 min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO FUNCIONA ============ -->
+  <section id="como">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Cómo funciona</span>
+        <h2>Del primer contacto a tu LLC activa</h2>
+      </div>
+      <div class="steps-row">
+        <div class="step reveal">
+          <h3>Asesoría de 30 min</h3>
+          <p>Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.</p>
+          <p class="meta">Online &middot; sin compromiso</p>
+        </div>
+        <div class="step reveal d1">
+          <h3>Eliges tu plan</h3>
+          <p>Completas el formulario guiado en nuestra app. Pasaporte y comprobante de domicilio se piden de forma progresiva.</p>
+          <p class="meta">Pago seguro con Stripe</p>
+        </div>
+        <div class="step reveal d2">
+          <h3>Constituimos tu LLC</h3>
+          <p>Registro ante el estado, EIN, agente residente y documentos. Preparamos el onboarding con Mercury o Relay.</p>
+          <p class="meta">Estado: 5–7 días hábiles &middot; EIN: 2–6 semanas</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLANES ============ -->
+  <section class="plans" id="planes">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Planes</span>
+        <h2>Planes con renovación anual</h2>
+        <p class="plans-note"><b>Los planes son anuales, desde USD 350</b> (Básico). La <b>tasa del estado</b> se paga aparte y varía según la jurisdicción. El costo exacto de la renovación —según el plan y el estado que elijas— lo ves con número en la reunión.</p>
+      </div>
+      <div class="plans-grid reveal">
+        <div class="pcard">
+          <h3>Básico</h3>
+          <div class="price">USD 350 <small>/ año</small></div>
+          <p>Constitución ante el estado, EIN y agente residente.</p>
+        </div>
+        <div class="pcard">
+          <h3>Estándar</h3>
+          <div class="price">USD 600 <small>/ año</small></div>
+          <p>Suma Operating Agreement, consultas ilimitadas y exención BE-13.</p>
+        </div>
+        <div class="pcard pcard--fav">
+          <span class="fav">FAVORITO</span>
+          <h3>Business</h3>
+          <div class="price">USD 950 <small>/ año</small></div>
+          <p>Planificación legal-tributaria, acompañamiento bancario y EIN acelerado.</p>
+        </div>
+        <div class="pcard">
+          <h3>Diseño <small style="font-weight:600;color:var(--muted);font-size:.68rem">· upgrade</small></h3>
+          <div class="price">USD 350 <small>/ único</small></div>
+          <p>Planificación y diseño de la LLC para ir paso a paso.</p>
+        </div>
+      </div>
+      <div class="plans-cta reveal">
         <div>
-          <div class="section-kicker">Asesoría inicial</div>
-          <h2 class="section-title">¿Qué revisaremos contigo?</h2>
-          <p class="section-subtitle">Una conversación estratégica para darte claridad y ayudarte a tomar una decisión informada.</p>
+          <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="plans">Ver qué plan me conviene</a>
+          <span class="cta-note">Gratis &middot; sin compromiso &middot; 30 min</span>
         </div>
-        <div class="review-list">
-          <div class="review-item"><span class="review-check">✓</span>Tu actividad, país de residencia y objetivos</div>
-          <div class="review-item"><span class="review-check">✓</span>Si una LLC se adapta a tu caso</div>
-          <div class="review-item"><span class="review-check">✓</span>Requisitos, costos y tiempos estimados</div>
-          <div class="review-item"><span class="review-check">✓</span>Próximos pasos recomendados</div>
-        </div>
+        <p>Te lo recomendamos en la asesoría de 30 min, según tu caso.</p>
       </div>
-    </section>
-
-    <section class="container final-cta">
-      <div>
-        <h2>Da el siguiente paso con claridad.</h2>
-        <p>Tu registro ya está listo. Solo falta elegir la fecha y hora que mejor se adapte a ti.</p>
-      </div>
-      <button type="button" data-scroll-calendar>Elegir fecha y hora →</button>
-    </section>
-  </main>
-
-  <footer class="container footer">
-    <div class="footer-grid">
-      <div>
-        <img src="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International">
-        <p>Consultoría estratégica para emprendedores, inversionistas y negocios internacionales que buscan estructurar correctamente su operación en Estados Unidos.</p>
-        <p class="disclaimer">Sotomayor Consulting International no es banco, entidad financiera, cooperativa de ahorro y crédito ni institución sujeta a supervisión de organismos regulatorios financieros. Nuestros servicios se enfocan en consultoría, acompañamiento estratégico y gestión de trámites relacionados con constitución de empresas, apertura de cuentas bancarias internacionales y asesoría comercial.</p>
-      </div>
-      <nav class="footer-links" aria-label="Enlaces legales">
-        <a href="https://sotomayorconsulting.com/politica-de-privacidad/">Privacidad</a>
-        <a href="https://sotomayorconsulting.com/terminos-de-servicio/">Términos</a>
-        <a href="#calendarCard" data-scroll-calendar>Agendar</a>
-      </nav>
     </div>
-  </footer>
+  </section>
 
-  <script>
-    window.dataLayer = window.dataLayer || [];
+  <!-- ============ CONFIANZA ============ -->
+  <section class="trust">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Confianza</span>
+        <h2>10 años estructurando negocios internacionales</h2>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat"><div class="n">5.000</div><div class="l">empresas incorporadas</div></div>
+        <div class="stat"><div class="n">1.354</div><div class="l">proyectos realizados</div></div>
+        <div class="stat"><div class="n">97 %</div><div class="l">de satisfacción</div></div>
+        <div class="stat"><div class="n">10</div><div class="l">años de experiencia</div></div>
+      </div>
+      <div class="rating-line reveal">
+        <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+        <span>4,3 / 5 en Trustpilot &middot; <a href="https://www.trustpilot.com/review/sotomayorconsulting.com" target="_blank" rel="noopener">reseñas verificadas ↗</a></span>
+      </div>
+      <div class="reviews reveal d1">
+        <figure class="review">
+          <blockquote>A pesar de la distancia, me evaluaron como si estuvieran en la oficina de al lado.</blockquote>
+          <cite><span class="flag">🇧🇴</span>Trustpilot &middot; Bolivia &middot; abril de 2025 — <a href="https://www.trustpilot.com/review/sotomayorconsulting.com" target="_blank" rel="noopener">Leer ↗</a></cite>
+        </figure>
+        <figure class="review">
+          <blockquote>El equipo fue muy profesional, aclaró las dudas y recomendó lo mejor para la empresa.</blockquote>
+          <cite><span class="flag">🇪🇨</span>Trustpilot &middot; Ecuador &middot; julio de 2026 — <a href="https://www.trustpilot.com/review/sotomayorconsulting.com" target="_blank" rel="noopener">Leer ↗</a></cite>
+        </figure>
+        <figure class="review">
+          <blockquote>Servicio recomendado para crear una LLC en Estados Unidos; destacaron la calidad del equipo profesional.</blockquote>
+          <cite><span class="flag">🇨🇴</span>Trustpilot &middot; Colombia &middot; junio de 2026 — <a href="https://www.trustpilot.com/review/sotomayorconsulting.com" target="_blank" rel="noopener">Leer ↗</a></cite>
+        </figure>
+      </div>
+      <div class="partner-line reveal">
+        <b>Partners de banca:</b>
+        <div class="partner-logos">
+          <svg class="logo-mono logo-mono--mercury" viewBox="0 0 139 32" fill="none" role="img" aria-label="Mercury"><title>Mercury</title><path fill="currentColor" d="M16 0C7.19155 0 0.0241327 7.1379 0 15.9397V16.0121C0 24.838 7.19155 32 16 32C24.8326 32 32 24.8139 32 16.0121C32 7.16202 24.8326 0 16 0ZM11.994 1.51922C13.2006 1.18161 14.4796 0.988696 15.8069 0.964582C15.8793 0.964582 15.9276 0.964582 16 0.964582C16.0724 0.964582 16.1448 0.964582 16.1931 0.964582C18.2443 1.03693 20.006 2.33911 20.7541 4.12359C20.9231 4.50942 21.0196 4.89525 21.092 5.32931C21.1403 5.57046 21.1403 5.83572 21.1403 6.10098C21.1403 7.25848 20.7541 8.31952 20.1267 9.18764C19.451 8.77769 18.7029 8.4642 17.9306 8.27129C18.5339 7.74077 18.8959 6.9691 18.8959 6.10098C18.8959 5.474 18.7029 4.89525 18.3409 4.41296C17.81 3.68953 16.9653 3.20723 16 3.20723C14.3107 3.20723 12.7179 3.52072 11.2459 4.12359C10.8356 4.29239 10.4495 4.48531 10.0633 4.67822C7.79487 5.88395 5.91252 7.74077 4.70588 10.0317C3.45098 10.321 2.34087 10.9962 1.52036 11.9367C2.94419 6.89676 6.92609 2.91786 11.994 1.51922ZM22.1056 5.88395C23.7466 6.87264 25.1222 8.24717 26.1116 9.88696C26.0392 9.88696 25.9668 9.88696 25.8944 9.88696C24.543 9.88696 23.2881 10.321 22.2745 11.0927C21.8884 10.5863 21.4299 10.1281 20.9231 9.74228C21.6712 8.72947 22.1297 7.47551 22.1297 6.12509C22.1056 6.02864 22.1056 5.95629 22.1056 5.88395ZM27.5837 13.6488C27.1011 13.3112 26.5219 13.0942 25.8944 13.0942C25.0256 13.0942 24.2534 13.4559 23.7225 14.0588C23.264 14.5652 22.9985 15.2404 22.9985 15.9879C22.9985 17.2419 22.6606 18.4235 22.0814 19.4363C21.9125 19.7257 21.7436 19.991 21.5264 20.2562C21.1644 20.7385 20.73 21.1485 20.2715 21.5102C19.6923 20.9314 18.9925 20.4732 18.1961 20.1839C19.0407 19.7498 19.7406 19.0505 20.175 18.2065C20.537 17.5554 20.73 16.7837 20.73 15.9879C20.73 14.6616 21.2368 13.4559 22.0573 12.5396C22.2745 12.2984 22.5158 12.0814 22.7813 11.8644C23.6501 11.2133 24.7119 10.8515 25.8703 10.8515C26.1357 10.8515 26.4012 10.8757 26.6425 10.8998C27.0769 11.7679 27.3906 12.6842 27.5837 13.6488ZM27.825 15.8915C27.825 15.9156 27.825 15.9638 27.825 15.9879C27.825 16.0121 27.825 16.0603 27.825 16.0844C27.7768 17.0972 26.9321 17.9171 25.8944 17.9171C24.8326 17.9171 23.9638 17.049 23.9638 15.9879C23.9638 14.9269 24.8326 14.0588 25.8944 14.0588C26.9321 14.0588 27.7768 14.8787 27.825 15.8915ZM20.9231 22.2577C21.4299 21.8719 21.8884 21.4137 22.2745 20.9073C23.2881 21.6549 24.543 22.0889 25.8944 22.0889C25.9668 22.0889 26.0392 22.0889 26.1116 22.0889C25.1222 23.7287 23.7466 25.1032 22.1056 26.0919C22.1056 26.0196 22.1056 25.9473 22.1056 25.8749C22.1056 24.5245 21.6712 23.2705 20.9231 22.2577ZM17.9306 23.7287C17.4238 23.2705 16.7481 23.0053 16.0241 23.0053C14.7692 23.0053 13.5867 22.6677 12.5732 22.0889C12.2836 21.9201 12.0181 21.7513 11.7526 21.5343C11.27 21.1726 10.8356 20.7385 10.4736 20.2562C11.0528 19.6775 11.5113 18.9781 11.825 18.2065C12.2594 19.0505 12.9593 19.7498 13.8281 20.208C14.4796 20.5697 15.2519 20.7626 16.0483 20.7626C17.3756 20.7626 18.5822 21.269 19.4992 22.0889C19.7406 22.306 19.9578 22.5471 20.175 22.8124C20.8265 23.6805 21.1885 24.7415 21.1885 25.899C21.1885 26.1643 21.1644 26.4054 21.1403 26.6707C20.2715 27.0806 19.3544 27.3941 18.3891 27.587C18.727 27.1047 18.9442 26.526 18.9442 25.899C18.8959 25.0309 18.5098 24.2592 17.9306 23.7287ZM17.9306 25.899C17.9306 26.8877 17.1825 27.7076 16.2172 27.8041C16.1448 27.8041 16.0965 27.8041 16.0241 27.8041C15.9517 27.8041 15.8793 27.8041 15.8311 27.8041C14.8658 27.7076 14.1176 26.8877 14.1176 25.899C14.1176 24.838 14.9864 23.9699 16.0483 23.9699C17.0618 23.9699 17.9306 24.838 17.9306 25.899ZM9.89442 26.0919C8.25339 25.1032 6.85369 23.7046 5.86425 22.0648C5.93665 22.0648 6.03318 22.0648 6.10558 22.0648C7.45701 22.0648 8.71192 21.6307 9.70136 20.8832C10.1116 21.3896 10.5701 21.8478 11.0769 22.2577C10.3288 23.2705 9.87029 24.5245 9.87029 25.8749C9.89442 25.9714 9.89442 26.0437 9.89442 26.0919ZM6.10558 18.8576C6.95023 18.8576 7.72247 18.4959 8.25339 17.893C8.27753 17.8689 8.30166 17.8207 8.32579 17.7965C8.37406 17.7242 8.42232 17.676 8.47059 17.6036C8.49472 17.5795 8.51885 17.5313 8.51885 17.5072C8.54299 17.483 8.54299 17.4589 8.56712 17.4348C8.59125 17.3866 8.61538 17.3384 8.66365 17.2901C8.66365 17.2901 8.66365 17.2901 8.66365 17.266C8.68778 17.2419 8.68778 17.1937 8.71192 17.1696C8.73605 17.1213 8.73605 17.0972 8.76018 17.049C8.76018 17.0249 8.78431 17.0008 8.78431 16.9766C8.80845 16.9525 8.80845 16.9043 8.80845 16.8802C8.83258 16.832 8.83258 16.7596 8.85671 16.7114C8.85671 16.7114 8.85671 16.7114 8.85671 16.6873C8.85671 16.6631 8.88084 16.639 8.88084 16.5908C8.88084 16.5667 8.90498 16.5426 8.90498 16.5185V16.4943C8.90498 16.4702 8.90498 16.4461 8.90498 16.422C8.90498 16.3979 8.90498 16.3738 8.90498 16.3497C8.90498 16.3014 8.90498 16.2532 8.92911 16.205C8.92911 16.1809 8.92911 16.1567 8.92911 16.1326C8.92911 16.0844 8.92911 16.0603 8.92911 16.0121V15.9879C8.92911 14.734 9.26697 13.5524 9.84615 12.5396C10.0151 12.2502 10.184 11.9849 10.4012 11.7197C10.7632 11.2615 11.1735 10.8274 11.6561 10.4657C12.2353 11.0445 12.9351 11.5026 13.7315 11.8161C12.8869 12.2502 12.187 12.9495 11.7526 13.7935C11.3906 14.4446 11.1976 15.1922 11.1976 15.9879V16.0121C11.1976 17.3384 10.6667 18.5441 9.84615 19.4363C9.62896 19.6775 9.38763 19.8945 9.12217 20.0874C8.25339 20.7144 7.21569 21.1002 6.05731 21.1002C5.79185 21.1002 5.52639 21.0761 5.26093 21.052C4.85068 20.1839 4.53695 19.2675 4.34389 18.3029C4.89894 18.6647 5.47813 18.8576 6.10558 18.8576ZM4.17496 15.9879C4.17496 15.9397 4.17496 15.9156 4.17496 15.8674C4.22323 14.8546 5.06787 14.0347 6.10558 14.0347C7.16742 14.0347 8.0362 14.9028 8.0362 15.9638V15.9879C8.01207 17.0249 7.16742 17.8689 6.10558 17.8689C5.04374 17.893 4.19909 17.049 4.17496 15.9879ZM11.0769 9.74228C10.5701 10.1281 10.1357 10.5863 9.74962 11.0686C8.73605 10.321 7.48115 9.86285 6.10558 9.86285C6.03318 9.86285 5.96078 9.86285 5.91252 9.86285C6.90196 8.24717 8.27753 6.87264 9.89442 5.88395C9.89442 5.95629 9.89442 6.02864 9.89442 6.10098C9.89442 7.45139 10.3288 8.70535 11.0769 9.74228ZM14.0935 8.27129C14.6003 8.72946 15.276 8.99473 16.0241 8.99473C17.279 8.99473 18.4615 9.33233 19.4751 9.91108C19.7647 10.0799 20.0302 10.2487 20.2956 10.4657C20.7783 10.8274 21.1885 11.2615 21.5505 11.7197C20.9713 12.2984 20.5128 12.9977 20.2232 13.7935C19.7888 12.9495 19.089 12.2502 18.2443 11.8161C17.5928 11.4544 16.8205 11.2615 16.0241 11.2615C14.6968 11.2615 13.4902 10.7551 12.5732 9.93519C12.3318 9.71816 12.1146 9.47702 11.8974 9.21176C11.2459 8.34363 10.8839 7.28259 10.8839 6.12509C10.8839 5.85983 10.908 5.59457 10.9321 5.35343C11.8009 4.94348 12.7179 4.62999 13.6833 4.43708C13.3454 4.91937 13.1282 5.49812 13.1282 6.12509C13.1041 6.9691 13.4902 7.74077 14.0935 8.27129ZM14.0694 6.10098C14.0694 5.06405 14.8899 4.22005 15.9035 4.17182C15.9276 4.17182 15.9759 4.17182 16 4.17182C16.0241 4.17182 16.0724 4.17182 16.0965 4.17182C17.1101 4.22005 17.9306 5.06405 17.9306 6.10098C17.9306 7.16202 17.0618 8.03014 16 8.03014C14.9382 8.03014 14.0694 7.16202 14.0694 6.10098ZM19.7888 15.9879C19.7888 18.0859 18.0995 19.7739 16 19.7739C13.9005 19.7739 12.2112 18.0859 12.2112 15.9879V15.9638C12.2353 13.89 13.9246 12.202 16 12.202C18.0754 12.202 19.7888 13.9141 19.7888 15.9879ZM1.49623 19.9668C1.15837 18.7611 0.989442 17.5072 0.965309 16.205C0.965309 16.1326 0.965309 16.0844 0.965309 16.0121V15.9638C0.965309 15.8915 0.965309 15.8433 0.965309 15.7709C1.06184 13.7212 2.34087 11.9849 4.15083 11.2374C4.53695 11.0927 4.92308 10.9721 5.35747 10.8998C5.59879 10.8515 5.86425 10.8515 6.10558 10.8515C7.26395 10.8515 8.32579 11.2374 9.19457 11.8885C8.78431 12.5637 8.47059 13.3112 8.27753 14.0829C7.74661 13.48 6.97436 13.1183 6.10558 13.1183C5.47813 13.1183 4.89894 13.3112 4.41629 13.6488C3.69231 14.1794 3.20965 15.0234 3.20965 15.9638V16.0121C3.20965 17.676 3.52338 19.2675 4.10256 20.7144C4.27149 21.1243 4.44042 21.5102 4.65762 21.896C5.86425 24.211 7.74661 26.0919 10.0392 27.2977C10.3288 28.5516 11.0287 29.6609 11.9698 30.4808C6.90196 29.0821 2.89593 25.055 1.49623 19.9668ZM20.0302 30.4808C18.8235 30.8184 17.5445 31.0113 16.2172 31.0113C16.1448 31.0113 16.0965 31.0113 16.0241 31.0113C15.9517 31.0113 15.8793 31.0113 15.8311 31.0113C13.7798 30.939 12.0181 29.6368 11.27 27.8523C11.1011 27.4665 11.0045 27.0806 10.9321 26.6466C10.8839 26.4054 10.8839 26.1402 10.8839 25.8749C10.8839 24.7174 11.27 23.6564 11.8974 22.7882C12.5732 23.1982 13.3213 23.5117 14.0935 23.7046C13.4902 24.2351 13.1282 25.0068 13.1282 25.8749C13.1282 26.5019 13.3213 27.0806 13.6833 27.5629C14.1659 28.2381 14.914 28.6963 15.7828 28.7687H15.8069C15.8793 28.7687 15.9517 28.7687 16.0241 28.7687C16.0965 28.7687 16.1689 28.7687 16.2413 28.7687H16.2655C17.8582 28.7445 19.3786 28.4069 20.7783 27.8523C21.1885 27.6835 21.5747 27.5147 21.9608 27.2977C24.2534 26.0919 26.1357 24.211 27.3424 21.9201C28.5973 21.6307 29.7074 20.9314 30.5038 19.991C29.1041 25.0791 25.098 29.0821 20.0302 30.4808ZM31.0347 15.9879C31.0347 16.0603 31.0347 16.1085 31.0347 16.1809C30.9623 18.2306 29.6591 19.9668 27.8733 20.7144C27.4872 20.8832 27.1011 20.9797 26.6667 21.052C26.4253 21.1002 26.1599 21.1002 25.8944 21.1002C24.736 21.1002 23.6742 20.7144 22.8296 20.0874C23.2398 19.4122 23.5535 18.6647 23.7466 17.893C24.2775 18.4959 25.0498 18.8576 25.9186 18.8576C26.546 18.8576 27.1252 18.6405 27.6078 18.3029C28.3318 17.7724 28.8145 16.9284 28.8145 15.9638C28.8145 14.2999 28.5008 12.6843 27.8974 11.2133C27.7285 10.8033 27.5354 10.4175 27.3424 10.0317C26.1357 7.74077 24.2534 5.85983 21.9608 4.65411C21.6712 3.40015 20.9713 2.29088 20.0302 1.47099C25.098 2.86963 29.1041 6.87265 30.5038 11.9367C30.8416 13.1424 31.0347 14.4205 31.0347 15.7468C31.0347 15.8433 31.0347 15.9156 31.0347 15.9879Z"></path><path fill="currentColor" fill-rule="evenodd" d="M44.248 10.172H47.4L50.344 18.22H50.392L53.304 10.172H56.472V21.5H54.472V12.396H54.44L51 21.5H49.592L46.2 12.396H46.168V21.5H44.248V10.172ZM61.9902 10.172H69.4942V11.932H64.0062V14.812H69.2062V16.508H64.0062V19.708H69.7822V21.5H61.9902V10.172ZM78.4364 15.052C78.7244 15.052 79.0124 15.0307 79.3004 14.988C79.5885 14.9453 79.8471 14.8653 80.0764 14.748C80.3058 14.6307 80.4951 14.4627 80.6444 14.244C80.7938 14.0253 80.8684 13.7453 80.8684 13.404C80.8684 13.0947 80.7991 12.8413 80.6604 12.644C80.5218 12.4467 80.3458 12.2893 80.1325 12.172C79.9191 12.0547 79.6764 11.9747 79.4044 11.932C79.1324 11.8893 78.8685 11.868 78.6124 11.868H76.7884V15.052H78.4364ZM74.7724 10.172H78.7084C79.2418 10.172 79.7591 10.228 80.2604 10.34C80.7618 10.452 81.2071 10.636 81.5964 10.892C81.9858 11.148 82.2978 11.484 82.5324 11.9C82.7671 12.316 82.8844 12.8227 82.8844 13.42C82.8844 14.2413 82.6525 14.9107 82.1884 15.428C81.7244 15.9453 81.0925 16.2947 80.2924 16.476L83.3164 21.5H80.8844L78.2604 16.7H76.7884V21.5H74.7724V10.172ZM96.0347 12.828C95.736 12.4227 95.3467 12.1267 94.8667 11.94C94.3867 11.7533 93.9173 11.66 93.4587 11.66C92.872 11.66 92.3387 11.7667 91.8587 11.98C91.3787 12.1933 90.9653 12.4867 90.6187 12.86C90.272 13.2333 90.0053 13.6707 89.8187 14.172C89.632 14.6733 89.5387 15.2173 89.5387 15.804C89.5387 16.4227 89.6293 16.988 89.8107 17.5C89.992 18.012 90.2507 18.452 90.5867 18.82C90.9227 19.188 91.3253 19.4733 91.7947 19.676C92.264 19.8787 92.792 19.98 93.3787 19.98C93.9867 19.98 94.5253 19.86 94.9947 19.62C95.464 19.38 95.8427 19.0627 96.1307 18.668L97.7467 19.804C97.2453 20.4333 96.632 20.9213 95.9067 21.268C95.1813 21.6147 94.3333 21.788 93.3627 21.788C92.4773 21.788 91.664 21.6413 90.9227 21.348C90.1813 21.0547 89.544 20.644 89.0107 20.116C88.4773 19.588 88.0613 18.9587 87.7627 18.228C87.464 17.4973 87.3147 16.6893 87.3147 15.804C87.3147 14.8973 87.472 14.0787 87.7867 13.348C88.1013 12.6173 88.5333 11.996 89.0827 11.484C89.632 10.972 90.28 10.5773 91.0267 10.3C91.7733 10.0227 92.584 9.884 93.4587 9.884C93.8213 9.884 94.2 9.91867 94.5947 9.988C94.9893 10.0573 95.368 10.164 95.7307 10.308C96.0933 10.452 96.4347 10.6307 96.7547 10.844C97.0747 11.0573 97.3467 11.3133 97.5707 11.612L96.0347 12.828ZM111.041 17.34C111.041 18.0227 110.924 18.6387 110.689 19.188C110.454 19.7373 110.134 20.204 109.729 20.588C109.324 20.972 108.844 21.268 108.289 21.476C107.734 21.684 107.132 21.788 106.481 21.788C105.83 21.788 105.228 21.684 104.673 21.476C104.118 21.268 103.636 20.972 103.225 20.588C102.814 20.204 102.494 19.7373 102.265 19.188C102.036 18.6387 101.921 18.0227 101.921 17.34V10.172H103.937V17.26C103.937 17.5907 103.98 17.9187 104.065 18.244C104.15 18.5693 104.292 18.86 104.489 19.116C104.686 19.372 104.948 19.58 105.273 19.74C105.598 19.9 106.001 19.98 106.481 19.98C106.961 19.98 107.364 19.9 107.689 19.74C108.014 19.58 108.276 19.372 108.473 19.116C108.67 18.86 108.812 18.5693 108.897 18.244C108.982 17.9187 109.025 17.5907 109.025 17.26V10.172H111.041V17.34ZM120.127 15.052C120.415 15.052 120.703 15.0307 120.991 14.988C121.279 14.9453 121.538 14.8653 121.767 14.748C121.996 14.6307 122.186 14.4627 122.335 14.244C122.484 14.0253 122.559 13.7453 122.559 13.404C122.559 13.0947 122.49 12.8413 122.351 12.644C122.212 12.4467 122.036 12.2893 121.823 12.172C121.61 12.0547 121.367 11.9747 121.095 11.932C120.823 11.8893 120.559 11.868 120.303 11.868H118.479V15.052H120.127ZM116.463 10.172H120.399C120.932 10.172 121.45 10.228 121.951 10.34C122.452 10.452 122.898 10.636 123.287 10.892C123.676 11.148 123.988 11.484 124.223 11.9C124.458 12.316 124.575 12.8227 124.575 13.42C124.575 14.2413 124.343 14.9107 123.879 15.428C123.415 15.9453 122.783 16.2947 121.983 16.476L125.007 21.5H122.575L119.951 16.7H118.479V21.5H116.463V10.172ZM132.173 16.588L127.917 10.172H130.381L133.229 14.94L136.109 10.172H138.445L134.189 16.588V21.5H132.173V16.588Z" clip-rule="evenodd"></path></svg>
+          <svg class="logo-mono logo-mono--relay" viewBox="0 0 121 62" fill="none" role="img" aria-label="Relay"><title>Relay</title><path fill="currentColor" d="M14.7125 36.8154C19.9685 41.4223 35.5022 49.1116 35.7533 49.2289C37.7787 50.2173 34.5983 55.0587 33.0081 55.0252C30.2294 55.0252 13.5408 44.9738 7.89977 39.948C7.46457 43.7118 7.30786 47.5025 7.43104 51.2894C7.43104 52.5458 5.4224 52.5793 3.48069 52.6966C1.53898 52.8138 0.132925 52.6966 0.0324915 51.7082C-0.586846 32.1917 7.7156 12.8092 19.1482 3.51165C26.212 -2.23441 38.2975 -1.3968 36.5064 9.52574C35.0167 18.5553 26.279 31.0693 14.7459 36.8154H14.7125ZM9.33929 32.6105C22.0106 28.3889 33.5269 9.77703 29.8444 6.59408C26.1618 3.41113 13.909 14.7357 9.33929 32.6105ZM118.527 21.3361C116.97 20.7833 114.811 20.7498 114.526 22.0732C112.601 30.751 109.27 40.2663 105.37 39.0602C103.696 38.5241 102.625 36.6813 106.274 25.4907C106.676 24.2343 105.722 23.6312 104.299 23.0952C102.876 22.5591 101.269 22.8104 100.951 23.6982C97.0509 33.3141 93.9374 38.7754 91.1253 38.2225C87.9784 37.586 92.7155 27.6015 93.4185 26.1608C94.1216 24.7201 92.2636 23.983 91.3429 23.6145C90.4223 23.2459 88.9158 22.6093 88.3969 23.6145C88.196 23.9495 87.7441 24.8709 87.4763 25.407C87.6269 21.4367 83.8272 19.1583 79.7764 20.9173C72.3946 24.1338 68.4275 32.309 67.9253 37.1337C67.624 39.9648 68.3605 43.1477 71.1726 44.4879C76.4454 46.984 82.237 40.6684 83.8272 37.3514C83.6598 41.3218 86.2209 43.7676 89.4682 43.6503C93.904 43.4995 97.1011 39.1607 98.005 37.2342C97.3019 43.7843 103.512 46.2804 108.048 43.0975C105.364 48.2849 101.985 53.0812 98.005 57.3537C96.8667 58.6101 98.4402 60.1849 99.0094 60.7042C99.9467 61.6256 101.319 62.3795 102.123 61.7931C104.55 60.1179 109.321 54.7906 114.627 44.3539C117.553 38.0595 119.662 31.4163 120.904 24.5861C121.239 22.9109 120.753 22.09 118.594 21.3361H118.527ZM75.0728 38.3231C73.717 37.3682 75.0728 33.1801 76.6463 30.7008C78.8223 27.099 82.17 24.4353 83.6096 25.5745C85.8359 27.2497 82.7559 31.6891 81.1824 34.3192C79.609 36.9493 76.8304 39.5627 75.0728 38.3231ZM56.8609 34.1015C51.7388 42.5949 45.1437 45.2418 40.574 45.3758C39.2161 45.4417 37.86 45.2148 36.5974 44.7107C35.3347 44.2065 34.1951 43.4367 33.2555 42.4535C32.3159 41.4702 31.5983 40.2965 31.1513 39.0116C30.7043 37.7267 30.5383 36.3607 30.6646 35.0061C30.8703 31.9592 31.9185 29.0295 33.6921 26.5445C35.4656 24.0595 37.8947 22.117 40.7079 20.9341C46.2819 18.8568 51.3538 22.9276 50.2658 27.635C49.9892 29.0308 49.4373 30.3573 48.6425 31.537C47.8477 32.7168 46.8258 33.7262 45.6367 34.5061C44.4475 35.286 43.1149 35.8208 41.7168 36.0792C40.3187 36.3377 38.8831 36.3145 37.4941 36.0112C37.7786 39.3617 41.3608 41.2212 46.4159 38.6246C49.7637 36.9494 53.4796 33.5989 56.9948 25.1222C59.606 18.7563 63.3221 5.6727 64.9792 2.77454C65.4647 1.93692 67.1888 2.17147 68.6618 2.89182C70.1348 3.61217 71.6413 4.65079 71.1726 5.95748C68.1176 13.6802 65.7701 21.6649 64.159 29.8129C62.8403 36.4679 63.006 43.3322 64.6444 49.9157C65.0127 51.3062 63.2552 52.1773 62.1839 52.395C61.5372 52.5873 60.8465 52.571 60.2096 52.3485C59.5727 52.126 59.0219 51.7086 58.6352 51.1554C55.8566 46.1297 56.1578 39.948 56.8107 34.135L56.8609 34.1015ZM37.3769 32.2252C42.5324 33.9004 47.1021 28.2549 45.5119 25.9598C43.9217 23.6647 38.0632 26.1943 37.3769 32.2252Z"/></svg>
+        </div>
+        <span style="font-size:.82rem">No somos banco: preparamos y acompañamos tu onboarding con ellos.</span>
+      </div>
+    </div>
+  </section>
 
-    const SOTO_TIKTOK_PIXEL_ID = 'D5KFDEBC77U6BL6T7LDG';
-    const SOTO_TIKTOK_EVENTS_API_WEBHOOK = 'https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones';
-    const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min';
+  <!-- ============ SUITE ============ -->
+  <section class="suite" id="servicios">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Una sola firma</span>
+        <h2>Cuando tu proyecto necesita más que una LLC</h2>
+        <p class="lede">Empiezas con la LLC y, si el caso lo pide, seguimos con el resto — con el mismo equipo y sin volver a explicar tu situación.</p>
+      </div>
+      <div class="suite-chips reveal d1">
+        <span>Holding y operativas en otras jurisdicciones</span>
+        <span>ITIN</span>
+        <span>Contabilidad y declaraciones (IRS)</span>
+        <span>Asesoría tributaria internacional</span>
+        <span>Registro y protección de marcas</span>
+        <span>Bienes raíces · Florida y Madrid</span>
+        <span>Servicios migratorios · EE. UU. y España</span>
+        <span>Web, Odoo y telefonía con número de EE. UU.</span>
+      </div>
+      <p class="suite-note reveal">Jurisdicciones: Reino Unido, Canadá, Panamá, Portugal, Chile, México, Belice, Islas Vírgenes Británicas, Islas Marshall.</p>
+    </div>
+  </section>
 
-    // Eventos no monetarios: sin content_type, value, currency ni contents.
-    const SOTO_EVENT_BASE = {
-      content_id: 'asesoria-llc-post-registro',
-      content_ids: ['asesoria-llc-post-registro'],
-      content_name: 'Gracias por tu registro - Asesoria LLC',
-      content_category: 'LLC USA'
+  <!-- ============ FAQ ============ -->
+  <section id="preguntas">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Preguntas frecuentes</span>
+        <h2>Antes de agendar</h2>
+      </div>
+      <div class="faq reveal">
+        <details open>
+          <summary>Ya llené el formulario, ¿por qué debo agendar una reunión?</summary>
+          <div class="a">El formulario nos dice que te interesa. La reunión de 30 minutos es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural.</div>
+        </details>
+        <details>
+          <summary>¿La asesoría tiene algún costo o compromiso?</summary>
+          <div class="a">No. Es gratuita y sin compromiso. No hacemos llamadas de venta: es una reunión de trabajo sobre tu caso.</div>
+        </details>
+        <details>
+          <summary>¿Es legal tener una LLC siendo no residente?</summary>
+          <div class="a">Sí. Una LLC de no residente es una estructura legal y la usan personas de todo el mundo para operar internacionalmente. Lo importante es armarla y mantenerla bien; ese es el objetivo de la asesoría.</div>
+        </details>
+        <details>
+          <summary>¿Cuánto cuesta abrir una LLC?</summary>
+          <div class="a">Los planes son anuales: desde USD 350 (Básico: constitución + EIN + agente residente), USD 600 (Estándar: añade Operating Agreement y consultas ilimitadas) y USD 950 (Business: planificación legal-tributaria y acompañamiento bancario). La tasa del estado se paga aparte y varía según la jurisdicción. El costo exacto de la renovación —según el plan y el estado— se detalla con número en la reunión.</div>
+        </details>
+        <details>
+          <summary>¿Qué requisitos necesito?</summary>
+          <div class="a">Solo pasaporte vigente de cada socio y un comprobante de domicilio reciente. Los pedimos de forma progresiva al completar el formulario. No necesitas residir en EE. UU., ni visa, SSN o ITIN para constituir.</div>
+        </details>
+        <details>
+          <summary>¿Cuánto tarda el proceso?</summary>
+          <div class="a">El registro ante el estado suele tomar de 5 a 7 días hábiles. El EIN, que gestiona el IRS federal, entre 2 y 6 semanas. Nos encargamos de todo el trámite y te mantenemos informado en cada etapa.</div>
+        </details>
+        <details>
+          <summary>¿Y si una LLC no es lo que me conviene?</summary>
+          <div class="a">Te lo decimos en la reunión, sin costo, y te orientamos sobre la alternativa (otra estructura, otra jurisdicción o esperar). No forzamos una LLC si tu caso pide otra cosa.</div>
+        </details>
+        <details>
+          <summary>¿Y si el servicio no llega a concretarse?</summary>
+          <div class="a">Puedes solicitar la devolución del pago cuando el servicio no se concreta. Es un proceso sujeto a revisión del caso y a nuestras políticas — puedes consultarlas en <a href="https://sotomayorconsulting.com/terminos-de-servicio/" target="_blank" rel="noopener">Términos</a> y <a href="https://sotomayorconsulting.com/politica-de-privacidad/" target="_blank" rel="noopener">Políticas</a>.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL ============ -->
+  <section class="final">
+    <div class="wrap">
+      <div class="reveal">
+        <h2>Solo falta un paso: elige tu horario</h2>
+        <p>Revisamos tu caso y sales con una recomendación clara: si la LLC te conviene, en qué estado y con qué plan. Sin costo y sin compromiso.</p>
+        <div class="cta-row">
+          <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="final">Elegir horario</a>
+          <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
+        </div>
+        <span class="cta-note on-navy-note" style="text-align:center">Gratis &middot; sin compromiso &middot; 30 min &middot; por Zoom</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <img src="https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-7.png" alt="Sotomayor Consulting International" width="180" height="34" />
+    <p class="disclaimer">
+      Sotomayor Consulting International no es un banco, entidad financiera ni presta servicios de crédito directo. Somos una empresa de consultoría que brinda asesoría y acompañamiento en constitución de empresas, apertura de cuentas, trámites y servicios tecnológicos.
+    </p>
+    <div class="foot-links">
+      <a href="https://sotomayorconsulting.com/politica-de-privacidad/" target="_blank" rel="noopener">Privacidad</a>
+      <a href="https://sotomayorconsulting.com/terminos-de-servicio/" target="_blank" rel="noopener">Términos</a>
+      <span>© 2026 Sotomayor Consulting International</span>
+    </div>
+  </div>
+</footer>
+
+<div class="stickybar" aria-hidden="true">
+  <a class="btn btn--ghost btn--wa" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="sticky-wa" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 5 5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3-1.3-5-4.4-5.2-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+  </a>
+  <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="sticky">Elegir horario · gratis</a>
+</div>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const SOTO_TIKTOK_PIXEL_ID = 'D5KFDEBC77U6BL6T7LDG';
+  const SOTO_TIKTOK_EVENTS_API_WEBHOOK = 'https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones';
+  const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min'; // evento "Sesión Estratégica" (30 min); el slug sigue siendo /60min
+  const SOTO_ZCAL_PHONE_ANSWER_INDEX = 0; // pregunta "Teléfono (WhatsApp)" = a0
+  const SOTO_META_PIXEL_ID = '__META_PIXEL_ID__'; // poner el Pixel ID real de Meta para activar Meta
+
+  // Eventos no monetarios: sin content_type, value, currency ni contents.
+  const SOTO_EVENT_BASE = {
+    content_id: 'asesoria-llc-post-registro',
+    content_ids: ['asesoria-llc-post-registro'],
+    content_name: 'Gracias por tu registro - Asesoria LLC',
+    content_category: 'LLC USA'
+  };
+
+  // Mapeo evento nativo -> nombre estándar de Meta.
+  const SOTO_META_EVENT_MAP = {
+    ViewContent: 'ViewContent',
+    CompleteRegistration: 'Lead',
+    Contact: 'Contact',
+    Schedule: 'Schedule'
+  };
+
+  const SOTO_TIKTOK_EVENT_CONFIG = {
+    PageView: {
+      send_to_pixel: false,
+      send_to_events_api: false,
+      dedupe_once_per_session: false,
+      description: 'Carga de pagina post registro'
+    },
+    ViewContent: {
+      send_to_pixel: true,
+      send_to_events_api: true,
+      dedupe_once_per_session: false,
+      description: 'Usuario visualiza pagina post registro con agenda visible'
+    },
+    CompleteRegistration: {
+      send_to_pixel: true,
+      send_to_events_api: true,
+      dedupe_once_per_session: true,
+      description: 'Registro confirmado por una señal verificable del flujo anterior'
+    },
+    Contact: {
+      send_to_pixel: true,
+      send_to_events_api: true,
+      dedupe_once_per_session: true,
+      description: 'Lead expresa intención de abrir la agenda de Zcal o WhatsApp'
+    },
+    Schedule: {
+      send_to_pixel: true,
+      send_to_events_api: true,
+      dedupe_once_per_session: true,
+      description: 'Reserva confirmada en el calendario de Zcal'
+    }
+  };
+
+  function sotoGetUrlParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get(name);
+    return value ? value.trim() : '';
+  }
+
+  function sotoIsValidTtclid(value) {
+    if (!value) return false;
+    const normalized = value.trim().toUpperCase();
+    const invalidValues = ['__CLICKID__','_CLICKID_','CLICKID','{{CLICKID}}','{CLICKID}','NULL','UNDEFINED'];
+    if (invalidValues.includes(normalized)) return false;
+    if (value.length < 10) return false;
+    return /^[a-zA-Z0-9._-]+$/.test(value);
+  }
+
+  function sotoGetCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : '';
+  }
+
+  function sotoSetCookie(name, value, days) {
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = name + '=' + encodeURIComponent(value) + '; Max-Age=' + maxAge + '; Path=/; SameSite=Lax; Secure';
+  }
+
+  function sotoGetStoredTtclid() {
+    const fromUrl = sotoGetUrlParam('ttclid');
+    if (sotoIsValidTtclid(fromUrl)) {
+      sotoSetCookie('soto_ttclid', fromUrl, 30);
+      localStorage.setItem('soto_ttclid', fromUrl);
+      return fromUrl;
+    }
+    const fromStorage = localStorage.getItem('soto_ttclid') || '';
+    if (sotoIsValidTtclid(fromStorage)) return fromStorage;
+    const fromCookie = sotoGetCookie('soto_ttclid');
+    return sotoIsValidTtclid(fromCookie) ? fromCookie : '';
+  }
+
+  function sotoGetOrCreateSessionId() {
+    const key = 'soto_session_id';
+    let sessionId = localStorage.getItem(key);
+    if (!sessionId) {
+      sessionId = 'soto_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      localStorage.setItem(key, sessionId);
+    }
+    return sessionId;
+  }
+
+  function sotoCreateEventId(eventName) {
+    const randomPart = window.crypto && window.crypto.randomUUID
+      ? window.crypto.randomUUID()
+      : Date.now() + '_' + Math.random().toString(36).slice(2);
+    return 'soto_' + eventName + '_' + randomPart;
+  }
+
+  function sotoGetConfirmedRegistration() {
+    const params = new URLSearchParams(window.location.search);
+    const isConfirmed = ['1', 'true', 'yes'].includes(
+      String(params.get('registration_confirmed') || '').trim().toLowerCase()
+    );
+    const leadId = String(params.get('lead_id') || '').trim();
+    const upstreamEventId = String(params.get('registration_event_id') || '').trim();
+
+    // La URL de gracias es pública: no basta con visitarla para contabilizar un registro.
+    // El flujo que redirige aquí debe enviar registration_confirmed=1 y un lead_id.
+    if (!isConfirmed || !leadId) return null;
+
+    return {
+      lead_id: leadId.slice(0, 160),
+      event_id: upstreamEventId.slice(0, 200) ||
+        ('soto_CompleteRegistration_' + leadId.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 160))
+    };
+  }
+
+  function sotoCollectUtmParams() {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_id','adgroup_id','ad_id','creative_id','placement'];
+    return keys.reduce(function(acc,key){
+      const value = params.get(key);
+      if (value) acc[key] = value;
+      return acc;
+    },{});
+  }
+
+  function sotoCleanEventPayload(payload) {
+    const clean = { ...payload };
+    delete clean.content_type;
+    delete clean.value;
+    delete clean.currency;
+    delete clean.price;
+    delete clean.quantity;
+    delete clean.contents;
+    return clean;
+  }
+
+  function sotoBuildTikTokEventsApiPayload(eventName, eventId, eventPayload) {
+    const ttclid = sotoGetStoredTtclid();
+    const ttp = sotoGetCookie('_ttp') || sotoGetCookie('ttp') || '';
+    const cleanProperties = sotoCleanEventPayload({ ...SOTO_EVENT_BASE, ...eventPayload });
+
+    return {
+      destination: 'tiktok_events_api',
+      pixel_code: SOTO_TIKTOK_PIXEL_ID,
+      event: eventName,
+      event_name: eventName,
+      event_id: eventId,
+      event_time: Math.floor(Date.now() / 1000),
+      timestamp_iso: new Date().toISOString(),
+      source: 'web',
+      event_source: 'thank_you_page_after_native_form',
+      action_source: 'website',
+      test_event_code: '',
+      user: {
+        ttclid: ttclid,
+        ttp: ttp,
+        user_agent: navigator.userAgent || '',
+        language: navigator.language || '',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+        soto_session_id: sotoGetOrCreateSessionId()
+      },
+      page: {
+        url: window.location.href,
+        path: window.location.pathname,
+        referrer: document.referrer || '',
+        title: document.title || ''
+      },
+      properties: cleanProperties,
+      attribution: {
+        ttclid_present: Boolean(ttclid),
+        ttp_present: Boolean(ttp),
+        utm: sotoCollectUtmParams()
+      },
+      server_notes: {
+        ip_capture: 'Capturar IP en n8n desde headers: cf-connecting-ip, x-forwarded-for o x-real-ip',
+        deduplication: 'Usar pixel_code + event + event_id para deduplicar Pixel y Events API'
+      }
+    };
+  }
+
+  function sotoSendToTikTokEventsApiWebhook(payload) {
+    const body = JSON.stringify(payload);
+    const blob = new Blob([body], { type:'text/plain;charset=UTF-8' });
+    if (navigator.sendBeacon) {
+      const queued = navigator.sendBeacon(SOTO_TIKTOK_EVENTS_API_WEBHOOK, blob);
+      if (queued) return;
+    }
+    fetch(SOTO_TIKTOK_EVENTS_API_WEBHOOK, {
+      method:'POST',
+      body:body,
+      headers:{'Content-Type':'text/plain;charset=UTF-8'},
+      keepalive:true,
+      mode:'no-cors'
+    }).catch(function(){});
+  }
+
+  function sotoTrack(eventName, payload = {}) {
+    const config = SOTO_TIKTOK_EVENT_CONFIG[eventName] || {
+      send_to_pixel:true,
+      send_to_events_api:true,
+      dedupe_once_per_session:false
     };
 
-    const SOTO_TIKTOK_EVENT_CONFIG = {
-      PageView: {
-        send_to_pixel: false,
-        send_to_events_api: false,
-        dedupe_once_per_session: false,
-        description: 'Carga de pagina post registro'
-      },
-      ViewContent: {
-        send_to_pixel: true,
-        send_to_events_api: true,
-        dedupe_once_per_session: false,
-        description: 'Usuario visualiza pagina post registro con agenda visible'
-      },
-      CompleteRegistration: {
-        send_to_pixel: true,
-        send_to_events_api: true,
-        dedupe_once_per_session: true,
-        description: 'Registro confirmado por una señal verificable del flujo anterior'
-      },
-      Contact: {
-        send_to_pixel: true,
-        send_to_events_api: true,
-        dedupe_once_per_session: true,
-        description: 'Lead expresa intención de abrir la agenda de Zcal'
-      }
-    };
+    const sessionDedupeKey = 'soto_event_fired_' + eventName;
+    if (config.dedupe_once_per_session && sessionStorage.getItem(sessionDedupeKey)) return;
 
-    function sotoGetUrlParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      const value = params.get(name);
-      return value ? value.trim() : '';
+    const eventId = payload.event_id || sotoCreateEventId(eventName);
+    const eventPayload = sotoCleanEventPayload({
+      ...SOTO_EVENT_BASE,
+      ...payload,
+      page_url:window.location.href,
+      page_path:window.location.pathname,
+      event_id:eventId,
+      ttclid:sotoGetStoredTtclid(),
+      ttp:sotoGetCookie('_ttp') || sotoGetCookie('ttp') || ''
+    });
+
+    window.dataLayer.push({
+      event:eventName,
+      event_source:'sotomayor_thank_you_page_v22',
+      event_id:eventId,
+      ...eventPayload
+    });
+
+    if (config.send_to_pixel && window.ttq && typeof window.ttq.track === 'function') {
+      window.ttq.track(eventName, eventPayload, { event_id:eventId });
     }
 
-    function sotoIsValidTtclid(value) {
-      if (!value) return false;
-      const normalized = value.trim().toUpperCase();
-      const invalidValues = ['__CLICKID__','_CLICKID_','CLICKID','{{CLICKID}}','{CLICKID}','NULL','UNDEFINED'];
-      if (invalidValues.includes(normalized)) return false;
-      if (value.length < 10) return false;
-      return /^[a-zA-Z0-9._-]+$/.test(value);
+    // Espejo en Meta Pixel (solo si fbq está cargado — requiere meta_pixel_id real).
+    if (config.send_to_pixel && window.fbq && SOTO_META_EVENT_MAP[eventName]) {
+      window.fbq('track', SOTO_META_EVENT_MAP[eventName], {
+        content_name: eventPayload.content_name || '',
+        content_category: eventPayload.content_category || ''
+      }, { eventID: eventId });
     }
 
-    function sotoGetCookie(name) {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      return match ? decodeURIComponent(match[2]) : '';
-    }
-
-    function sotoSetCookie(name, value, days) {
-      const maxAge = days * 24 * 60 * 60;
-      document.cookie = name + '=' + encodeURIComponent(value) + '; Max-Age=' + maxAge + '; Path=/; SameSite=Lax; Secure';
-    }
-
-    function sotoGetStoredTtclid() {
-      const fromUrl = sotoGetUrlParam('ttclid');
-      if (sotoIsValidTtclid(fromUrl)) {
-        sotoSetCookie('soto_ttclid', fromUrl, 30);
-        localStorage.setItem('soto_ttclid', fromUrl);
-        return fromUrl;
-      }
-      const fromStorage = localStorage.getItem('soto_ttclid') || '';
-      if (sotoIsValidTtclid(fromStorage)) return fromStorage;
-      const fromCookie = sotoGetCookie('soto_ttclid');
-      return sotoIsValidTtclid(fromCookie) ? fromCookie : '';
-    }
-
-    function sotoGetOrCreateSessionId() {
-      const key = 'soto_session_id';
-      let sessionId = localStorage.getItem(key);
-      if (!sessionId) {
-        sessionId = 'soto_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-        localStorage.setItem(key, sessionId);
-      }
-      return sessionId;
-    }
-
-    function sotoCreateEventId(eventName) {
-      const randomPart = window.crypto && window.crypto.randomUUID
-        ? window.crypto.randomUUID()
-        : Date.now() + '_' + Math.random().toString(36).slice(2);
-      return 'soto_' + eventName + '_' + randomPart;
-    }
-
-    function sotoGetConfirmedRegistration() {
-      const params = new URLSearchParams(window.location.search);
-      const isConfirmed = ['1', 'true', 'yes'].includes(
-        String(params.get('registration_confirmed') || '').trim().toLowerCase()
+    if (config.send_to_events_api) {
+      sotoSendToTikTokEventsApiWebhook(
+        sotoBuildTikTokEventsApiPayload(eventName,eventId,eventPayload)
       );
-      const leadId = String(params.get('lead_id') || '').trim();
-      const upstreamEventId = String(params.get('registration_event_id') || '').trim();
-
-      // La URL de gracias es pública: no basta con visitarla para contabilizar un registro.
-      // El flujo que redirige aquí debe enviar registration_confirmed=1 y un lead_id.
-      if (!isConfirmed || !leadId) return null;
-
-      return {
-        lead_id: leadId.slice(0, 160),
-        event_id: upstreamEventId.slice(0, 200) ||
-          ('soto_CompleteRegistration_' + leadId.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 160))
-      };
     }
 
-    function sotoCollectUtmParams() {
-      const params = new URLSearchParams(window.location.search);
-      const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_id','adgroup_id','ad_id','creative_id','placement'];
-      return keys.reduce(function(acc,key){
-        const value = params.get(key);
-        if (value) acc[key] = value;
-        return acc;
-      },{});
+    if (config.dedupe_once_per_session) {
+      sessionStorage.setItem(sessionDedupeKey,eventId);
     }
+  }
 
-    function sotoCleanEventPayload(payload) {
-      const clean = { ...payload };
-      delete clean.content_type;
-      delete clean.value;
-      delete clean.currency;
-      delete clean.price;
-      delete clean.quantity;
-      delete clean.contents;
-      return clean;
-    }
+  function sotoScrollToCalendar(source) {
+    const calendar = document.getElementById('agendar');
+    if (!calendar) return;
+    calendar.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' });
+    window.dataLayer.push({
+      event:'calendar_scroll_cta_clicked',
+      source_context:source || 'unknown'
+    });
+  }
 
-    function sotoBuildTikTokEventsApiPayload(eventName, eventId, eventPayload) {
-      const ttclid = sotoGetStoredTtclid();
-      const ttp = sotoGetCookie('_ttp') || sotoGetCookie('ttp') || '';
-      const cleanProperties = sotoCleanEventPayload({ ...SOTO_EVENT_BASE, ...eventPayload });
+  function sotoInitCalendarVisibilityTracking() {
+    const calendar = document.getElementById('agendar');
+    if (!calendar || !('IntersectionObserver' in window)) return;
 
-      return {
-        destination: 'tiktok_events_api',
-        pixel_code: SOTO_TIKTOK_PIXEL_ID,
-        event: eventName,
-        event_name: eventName,
-        event_id: eventId,
-        event_time: Math.floor(Date.now() / 1000),
-        timestamp_iso: new Date().toISOString(),
-        source: 'web',
-        event_source: 'thank_you_page_after_tiktok_native_form',
-        action_source: 'website',
-        test_event_code: '',
-        user: {
-          ttclid: ttclid,
-          ttp: ttp,
-          user_agent: navigator.userAgent || '',
-          language: navigator.language || '',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-          soto_session_id: sotoGetOrCreateSessionId()
-        },
-        page: {
-          url: window.location.href,
-          path: window.location.pathname,
-          referrer: document.referrer || '',
-          title: document.title || ''
-        },
-        properties: cleanProperties,
-        attribution: {
-          ttclid_present: Boolean(ttclid),
-          ttp_present: Boolean(ttp),
-          utm: sotoCollectUtmParams()
-        },
-        server_notes: {
-          ip_capture: 'Capturar IP en n8n desde headers: cf-connecting-ip, x-forwarded-for o x-real-ip',
-          deduplication: 'Usar pixel_code + event + event_id para deduplicar Pixel y Events API'
+    let fired = false;
+    const observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!fired && entry.isIntersecting && entry.intersectionRatio >= .35) {
+          fired = true;
+          window.dataLayer.push({
+            event:'calendar_visible',
+            source_context:'thank_you_above_fold'
+          });
+          observer.disconnect();
         }
-      };
+      });
+    },{threshold:[.35]});
+
+    observer.observe(calendar);
+  }
+
+  // Prefill del calendario Zcal si el flujo previo pasa datos por la URL.
+  function sotoPrefillCalendar() {
+    const frame = document.getElementById('zcalFrame');
+    const openLink = document.getElementById('cal-open');
+    if (!frame) return;
+
+    const p = new URLSearchParams(window.location.search);
+    const name = (p.get('name') || p.get('full_name') || '').trim();
+    const email = (p.get('email') || '').trim();
+    let phone = (p.get('phone') || p.get('smsPhone') || p.get('whatsapp') || '').trim();
+
+    if (!name && !email && !phone) return; // nada que prellenar: se queda el iframe estático
+
+    // Normaliza teléfono a E.164 básico (deja el + si viene, quita separadores).
+    if (phone) {
+      const hadPlus = phone.trim().charAt(0) === '+';
+      phone = phone.replace(/[^\d]/g, '');
+      phone = hadPlus ? ('+' + phone) : phone;
     }
 
-    function sotoSendToTikTokEventsApiWebhook(payload) {
-      const body = JSON.stringify(payload);
-      const blob = new Blob([body], { type:'text/plain;charset=UTF-8' });
-      if (navigator.sendBeacon) {
-        const queued = navigator.sendBeacon(SOTO_TIKTOK_EVENTS_API_WEBHOOK, blob);
-        if (queued) return;
-      }
-      fetch(SOTO_TIKTOK_EVENTS_API_WEBHOOK, {
-        method:'POST',
-        body:body,
-        headers:{'Content-Type':'text/plain;charset=UTF-8'},
-        keepalive:true,
-        mode:'no-cors'
-      }).catch(function(){});
+    const base = new URL(SOTO_DEFAULT_ZCAL_URL);
+    base.searchParams.set('embed', '1');
+    if (name) base.searchParams.set('name', name);
+    if (email) base.searchParams.set('email', email);
+    if (phone) {
+      base.searchParams.set('smsPhone', phone);
+      base.searchParams.set('a' + SOTO_ZCAL_PHONE_ANSWER_INDEX, phone);
     }
 
-    function sotoTrack(eventName, payload = {}) {
-      const config = SOTO_TIKTOK_EVENT_CONFIG[eventName] || {
-        send_to_pixel:true,
-        send_to_events_api:true,
-        dedupe_once_per_session:false
-      };
+    frame.src = base.toString();
 
-      const sessionDedupeKey = 'soto_event_fired_' + eventName;
-      if (config.dedupe_once_per_session && sessionStorage.getItem(sessionDedupeKey)) return;
+    // Link "abrir en pestaña nueva": mismos datos, sin embed=1.
+    const openUrl = new URL(SOTO_DEFAULT_ZCAL_URL);
+    base.searchParams.forEach(function (v, k) { if (k !== 'embed') openUrl.searchParams.set(k, v); });
+    if (openLink) openLink.href = openUrl.toString();
+  }
 
-      const eventId = payload.event_id || sotoCreateEventId(eventName);
-      const eventPayload = sotoCleanEventPayload({
-        ...SOTO_EVENT_BASE,
-        ...payload,
-        page_url:window.location.href,
-        page_path:window.location.pathname,
-        event_id:eventId,
-        ttclid:sotoGetStoredTtclid(),
-        ttp:sotoGetCookie('_ttp') || sotoGetCookie('ttp') || ''
+  function sotoInitScheduleTracking() {
+    const confirmed = sotoGetConfirmedRegistration() || {};
+    window.addEventListener('message', function onZcalMsg(e) {
+      const host = (e.origin || '').replace(/^https?:\/\//, '').split('/')[0];
+      if (!/zcal\.co$/.test(host)) return;
+      const d = e.data;
+      const isBooked = d === 'zcal:booking_completed' ||
+        (typeof d === 'string' && /book|schedul|complete/i.test(d)) ||
+        (d && typeof d === 'object' && /book|schedul|complete/i.test(JSON.stringify(d)));
+      if (!isBooked) return;
+      sotoTrack('Schedule', {
+        description: SOTO_TIKTOK_EVENT_CONFIG.Schedule.description,
+        conversion_path: 'schedule_confirmed',
+        event_stage: 'booking_completed',
+        lead_id: confirmed.lead_id || ''
       });
+      window.removeEventListener('message', onZcalMsg);
+    });
+  }
 
-      window.dataLayer.push({
-        event:eventName,
-        event_source:'sotomayor_thank_you_page_option_b',
-        event_id:eventId,
-        ...eventPayload
+  document.addEventListener('DOMContentLoaded',function(){
+    sotoGetStoredTtclid();
+    sotoPrefillCalendar();
+
+    /* ---------- reveal on scroll (visible por defecto sin JS) ---------- */
+    var revs = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      revs.forEach(function (el) { el.classList.add('is-in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+      revs.forEach(function (el) { io.observe(el); });
+      setTimeout(function () { revs.forEach(function (el) { el.classList.add('is-in'); }); }, 1500);
+    }
+
+    /* ---------- eventos ---------- */
+    sotoTrack('ViewContent', {
+      description:SOTO_TIKTOK_EVENT_CONFIG.ViewContent.description,
+      page_variant:'aligned_landing_system_v22'
+    });
+
+    const confirmedRegistration = sotoGetConfirmedRegistration();
+    if (confirmedRegistration) {
+      sotoTrack('CompleteRegistration', {
+        description:SOTO_TIKTOK_EVENT_CONFIG.CompleteRegistration.description,
+        form_context:'verified_lead_redirect',
+        ...confirmedRegistration
       });
+    }
 
-      if (config.send_to_pixel && window.ttq && typeof window.ttq.track === 'function') {
-        window.ttq.track(eventName, eventPayload, { event_id:eventId });
-      }
-
-      if (config.send_to_events_api) {
-        sotoSendToTikTokEventsApiWebhook(
-          sotoBuildTikTokEventsApiPayload(eventName,eventId,eventPayload)
+    document.querySelectorAll('[data-scroll-calendar]').forEach(function(element){
+      element.addEventListener('click',function(event){
+        if (element.tagName === 'A') event.preventDefault();
+        sotoScrollToCalendar(
+          element.closest('.final') ? 'final_cta' :
+          element.closest('.stickybar') ? 'sticky_bar' :
+          element.closest('.header') ? 'header' :
+          element.closest('.meeting-card') ? 'meeting_card' :
+          element.closest('.plans') ? 'plans' :
+          element.closest('.why-first') ? 'why_first' : 'other'
         );
-      }
-
-      if (config.dedupe_once_per_session) {
-        sessionStorage.setItem(sessionDedupeKey,eventId);
-      }
-    }
-
-    function sotoScrollToCalendar(source) {
-      const calendar = document.getElementById('calendarCard');
-      if (!calendar) return;
-      calendar.scrollIntoView({ behavior:'smooth', block:'center' });
-      window.dataLayer.push({
-        event:'calendar_scroll_cta_clicked',
-        source_context:source || 'unknown'
       });
-    }
+    });
 
-    function sotoInitCalendarVisibilityTracking() {
-      const calendar = document.getElementById('calendarCard');
-      if (!calendar || !('IntersectionObserver' in window)) return;
-
-      let fired = false;
-      const observer = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if (!fired && entry.isIntersecting && entry.intersectionRatio >= .35) {
-            fired = true;
-            window.dataLayer.push({
-              event:'calendar_visible',
-              source_context:'option_b_above_fold'
-            });
-            observer.disconnect();
-          }
-        });
-      },{threshold:[.35]});
-
-      observer.observe(calendar);
-    }
-
-    function sotoInitTestimonials() {
-      const carousel = document.getElementById('testimonialCarousel');
-      if (!carousel) return;
-
-      const track = carousel.querySelector('.testimonial-track');
-      const prev = carousel.querySelector('.prev');
-      const next = carousel.querySelector('.next');
-      const dots = carousel.querySelector('.carousel-dots');
-      const cards = Array.from(track.querySelectorAll('.testimonial'));
-
-      // Orden aleatorio en cada carga.
-      for (let i = cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
-      }
-
-      track.innerHTML = '';
-      const pages = [];
-      for (let i = 0; i < cards.length; i += 2) {
-        const page = document.createElement('div');
-        page.className = 'testimonial-page';
-        page.appendChild(cards[i]);
-        if (cards[i + 1]) page.appendChild(cards[i + 1]);
-        track.appendChild(page);
-        pages.push(page);
-      }
-
-      let index = 0;
-      let timer = null;
-      const intervalMs = 4000;
-
-      function render() {
-        track.style.transform = 'translateX(-' + (index * 100) + '%)';
-        Array.from(dots.children).forEach(function(dot,dotIndex){
-          dot.classList.toggle('is-active', dotIndex === index);
-          dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
-        });
-      }
-
-      function go(nextIndex) {
-        index = (nextIndex + pages.length) % pages.length;
-        render();
-      }
-
-      function stop() {
-        if (timer) window.clearInterval(timer);
-        timer = null;
-      }
-
-      function start() {
-        stop();
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          timer = window.setInterval(function(){ go(index + 1); }, intervalMs);
-        }
-      }
-
-      pages.forEach(function(_,dotIndex){
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'carousel-dot';
-        dot.setAttribute('aria-label','Mostrar testimonios ' + (dotIndex + 1));
-        dot.addEventListener('click',function(){ go(dotIndex); start(); });
-        dots.appendChild(dot);
-      });
-
-      prev.addEventListener('click',function(){ go(index - 1); start(); });
-      next.addEventListener('click',function(){ go(index + 1); start(); });
-      carousel.addEventListener('mouseenter',stop);
-      carousel.addEventListener('mouseleave',start);
-      carousel.addEventListener('focusin',stop);
-      carousel.addEventListener('focusout',start);
-
-      render();
-      start();
-    }
-
-    document.addEventListener('DOMContentLoaded',function(){
-      sotoGetStoredTtclid();
-
-      sotoTrack('ViewContent', {
-        description:SOTO_TIKTOK_EVENT_CONFIG.ViewContent.description,
-        page_variant:'option_b_calendar_visible'
-      });
-
-      const confirmedRegistration = sotoGetConfirmedRegistration();
-      if (confirmedRegistration) {
-        sotoTrack('CompleteRegistration', {
-          description:SOTO_TIKTOK_EVENT_CONFIG.CompleteRegistration.description,
-          form_context:'verified_lead_redirect',
-          ...confirmedRegistration
-        });
-      }
-
-      document.querySelectorAll('[data-scroll-calendar]').forEach(function(element){
-        element.addEventListener('click',function(event){
-          if (element.tagName === 'A') event.preventDefault();
-          sotoScrollToCalendar(element.closest('.final-cta') ? 'final_cta' : element.closest('.footer') ? 'footer' : 'hero_cta');
+    document.querySelectorAll('[data-track-schedule]').forEach(function(element){
+      element.addEventListener('click',function(){
+        sotoTrack('Contact', {
+          description:SOTO_TIKTOK_EVENT_CONFIG.Contact.description,
+          schedule_url:element.getAttribute('href') || SOTO_DEFAULT_ZCAL_URL,
+          contact_method:'zcal_agenda',
+          event_stage:'schedule_intent'
         });
       });
+    });
 
-      document.querySelectorAll('[data-track-schedule]').forEach(function(element){
-        element.addEventListener('click',function(){
+    document.querySelectorAll('a[data-cta]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        if (/wa\.link|whatsapp/i.test(a.href || '')) {
           sotoTrack('Contact', {
             description:SOTO_TIKTOK_EVENT_CONFIG.Contact.description,
-            schedule_url:element.getAttribute('href') || SOTO_DEFAULT_ZCAL_URL,
-            contact_method:'zcal_agenda',
-            event_stage:'schedule_intent'
+            contact_method:'whatsapp',
+            event_stage:'whatsapp_click',
+            content_name:'WhatsApp ' + (a.getAttribute('data-cta') || '')
           });
-        });
+        } else {
+          window.dataLayer.push({ event:'cta_click', cta:a.getAttribute('data-cta') || '', page_name:'thank_you_crea_tu_llc_agenda' });
+        }
       });
-
-      sotoInitCalendarVisibilityTracking();
-      sotoInitTestimonials();
     });
-  </script>
+
+    sotoInitCalendarVisibilityTracking();
+    sotoInitScheduleTracking();
+
+    /* ---------- sticky bar (solo móvil, la media query decide) ---------- */
+    var sticky = document.querySelector('.stickybar');
+    var bookCard = document.getElementById('agendar');
+    if (sticky && bookCard && 'IntersectionObserver' in window) {
+      var sio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { sticky.classList.toggle('is-on', !e.isIntersecting); });
+      }, { threshold: 0 });
+      sio.observe(bookCard);
+    }
+  });
+</script>
 </body>
 </html>

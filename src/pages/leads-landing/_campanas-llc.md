@@ -23,7 +23,9 @@ para que Astro no lo publique como ruta.
   → `POST` a `https://n8n.sotomayorconsulting.com/webhook/leads-directos-tiktok-landing`
   → n8n → Odoo (crm.lead). Luego se muestra el **calendario Zcal embebido** prellenado:
   `name`, `email`, `smsPhone` (recordatorio SMS) y **`a0`** (pregunta "Teléfono (WhatsApp)"
-  del evento — Zcal prefila las preguntas personalizadas por índice a0, a1, a2…).
+  = `customQuestionAnswers.0`, type tel — Zcal prefila las preguntas personalizadas por
+  índice a0, a1, a2…). Evento: **"Sesión Estratégica: Tu Empresa en EE. UU."**, dura 30 min,
+  pero su slug sigue siendo `.../agendar-asesoria-llc/60min` (el `/30min` no existe).
   El `lead_id` **no** viaja en la URL de Zcal; la reserva se reconcilia por email/teléfono
   en n8n (webhook de Zcal).
 - **Tracking:** GTM `GTM-TNRQGDM` + TikTok Pixel `D5KFDEBC77U6BL6T7LDG` + scaffold de
@@ -52,10 +54,10 @@ La campaña debe pasar el parámetro que coincide con el creativo.
 
 ## Antes de publicar (bloqueantes)
 
-1. **Evento Zcal de 30 min** — crear el evento y cambiar `CFG.zcalUrl` en ambos archivos
-   (hoy usan `.../agendar-asesoria-llc/60min`). Confirmar que la pregunta
-   "Teléfono (WhatsApp)" sigue siendo la **a0** del evento nuevo; si cambia de posición,
-   ajustar la asignación de `a0` en `goToCalendar()`.
+1. **Evento Zcal** — ✅ verificado (2026-09). El evento vive en el slug
+   `.../agendar-asesoria-llc/60min` (dura 30 min; el `/30min` da 404). "Teléfono (WhatsApp)"
+   es `customQuestionAnswers.0` = **a0** (type tel) y `name` / `email` / `smsPhone` / `a0`
+   prellenan bien. Los 3 archivos (2 landings + gracias-por-tu-registro) apuntan a `/60min`.
 2. **Meta Pixel ID** — reemplazar `__META_PIXEL_ID__` en `SCI_TRACKING_CONFIG` + token/acceso
    CAPI en n8n; añadir la rama Meta al webhook `pixel-api-conversiones`.
 3. **n8n** — (a) devolver `Access-Control-Allow-Origin` y responder al `OPTIONS` para que el
