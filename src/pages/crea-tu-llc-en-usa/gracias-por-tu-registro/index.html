@@ -24,8 +24,11 @@
    · Tracking: GTM (GTM-TNRQGDM) + TikTok Pixel (D5KFDEBC77U6BL6T7LDG) + CAPI
      server-side vía n8n (webhook/pixel-api-conversiones) + scaffold de Meta Pixel.
      Eventos con event_id deduplicable: ViewContent (carga) · CompleteRegistration
-     (si el flujo previo pasa registration_confirmed=1 y lead_id) · Contact
-     (clic WhatsApp / abrir agenda) · Schedule (reserva confirmada en Zcal).
+     (solo si el flujo previo pasa registration_confirmed=1 y lead_id) · Contact
+     (clic WhatsApp / abrir agenda externa = intención de agendar).
+   · La reserva confirmada NO se marca desde aquí (ver commit #32 y
+     tests/thank-you-events.test.mjs): la cita se reconcilia server-side por el
+     webhook de Zcal en n8n y sube como conversión offline.
    · Respeta ?qa=1  ?no_pixels=1.
 
   ANTES DE PUBLICAR
@@ -773,443 +776,416 @@
 </div>
 
 <script>
-  window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const SOTO_TIKTOK_PIXEL_ID = 'D5KFDEBC77U6BL6T7LDG';
-  const SOTO_TIKTOK_EVENTS_API_WEBHOOK = 'https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones';
-  const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min'; // evento "Sesión Estratégica" (30 min); el slug sigue siendo /60min
-  const SOTO_ZCAL_PHONE_ANSWER_INDEX = 0; // pregunta "Teléfono (WhatsApp)" = a0
-  const SOTO_META_PIXEL_ID = '__META_PIXEL_ID__'; // poner el Pixel ID real de Meta para activar Meta
+    const SOTO_TIKTOK_PIXEL_ID = 'D5KFDEBC77U6BL6T7LDG';
+    const SOTO_TIKTOK_EVENTS_API_WEBHOOK = 'https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones';
+    const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min'; // evento "Sesión Estratégica" (30 min); el slug sigue siendo /60min
+    const SOTO_ZCAL_PHONE_ANSWER_INDEX = 0; // pregunta "Teléfono (WhatsApp)" = a0
+    const SOTO_META_PIXEL_ID = '__META_PIXEL_ID__'; // poner el Pixel ID real de Meta para activar Meta
 
-  // Eventos no monetarios: sin content_type, value, currency ni contents.
-  const SOTO_EVENT_BASE = {
-    content_id: 'asesoria-llc-post-registro',
-    content_ids: ['asesoria-llc-post-registro'],
-    content_name: 'Gracias por tu registro - Asesoria LLC',
-    content_category: 'LLC USA'
-  };
-
-  // Mapeo evento nativo -> nombre estándar de Meta.
-  const SOTO_META_EVENT_MAP = {
-    ViewContent: 'ViewContent',
-    CompleteRegistration: 'Lead',
-    Contact: 'Contact',
-    Schedule: 'Schedule'
-  };
-
-  const SOTO_TIKTOK_EVENT_CONFIG = {
-    PageView: {
-      send_to_pixel: false,
-      send_to_events_api: false,
-      dedupe_once_per_session: false,
-      description: 'Carga de pagina post registro'
-    },
-    ViewContent: {
-      send_to_pixel: true,
-      send_to_events_api: true,
-      dedupe_once_per_session: false,
-      description: 'Usuario visualiza pagina post registro con agenda visible'
-    },
-    CompleteRegistration: {
-      send_to_pixel: true,
-      send_to_events_api: true,
-      dedupe_once_per_session: true,
-      description: 'Registro confirmado por una señal verificable del flujo anterior'
-    },
-    Contact: {
-      send_to_pixel: true,
-      send_to_events_api: true,
-      dedupe_once_per_session: true,
-      description: 'Lead expresa intención de abrir la agenda de Zcal o WhatsApp'
-    },
-    Schedule: {
-      send_to_pixel: true,
-      send_to_events_api: true,
-      dedupe_once_per_session: true,
-      description: 'Reserva confirmada en el calendario de Zcal'
-    }
-  };
-
-  function sotoGetUrlParam(name) {
-    const params = new URLSearchParams(window.location.search);
-    const value = params.get(name);
-    return value ? value.trim() : '';
-  }
-
-  function sotoIsValidTtclid(value) {
-    if (!value) return false;
-    const normalized = value.trim().toUpperCase();
-    const invalidValues = ['__CLICKID__','_CLICKID_','CLICKID','{{CLICKID}}','{CLICKID}','NULL','UNDEFINED'];
-    if (invalidValues.includes(normalized)) return false;
-    if (value.length < 10) return false;
-    return /^[a-zA-Z0-9._-]+$/.test(value);
-  }
-
-  function sotoGetCookie(name) {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? decodeURIComponent(match[2]) : '';
-  }
-
-  function sotoSetCookie(name, value, days) {
-    const maxAge = days * 24 * 60 * 60;
-    document.cookie = name + '=' + encodeURIComponent(value) + '; Max-Age=' + maxAge + '; Path=/; SameSite=Lax; Secure';
-  }
-
-  function sotoGetStoredTtclid() {
-    const fromUrl = sotoGetUrlParam('ttclid');
-    if (sotoIsValidTtclid(fromUrl)) {
-      sotoSetCookie('soto_ttclid', fromUrl, 30);
-      localStorage.setItem('soto_ttclid', fromUrl);
-      return fromUrl;
-    }
-    const fromStorage = localStorage.getItem('soto_ttclid') || '';
-    if (sotoIsValidTtclid(fromStorage)) return fromStorage;
-    const fromCookie = sotoGetCookie('soto_ttclid');
-    return sotoIsValidTtclid(fromCookie) ? fromCookie : '';
-  }
-
-  function sotoGetOrCreateSessionId() {
-    const key = 'soto_session_id';
-    let sessionId = localStorage.getItem(key);
-    if (!sessionId) {
-      sessionId = 'soto_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      localStorage.setItem(key, sessionId);
-    }
-    return sessionId;
-  }
-
-  function sotoCreateEventId(eventName) {
-    const randomPart = window.crypto && window.crypto.randomUUID
-      ? window.crypto.randomUUID()
-      : Date.now() + '_' + Math.random().toString(36).slice(2);
-    return 'soto_' + eventName + '_' + randomPart;
-  }
-
-  function sotoGetConfirmedRegistration() {
-    const params = new URLSearchParams(window.location.search);
-    const isConfirmed = ['1', 'true', 'yes'].includes(
-      String(params.get('registration_confirmed') || '').trim().toLowerCase()
-    );
-    const leadId = String(params.get('lead_id') || '').trim();
-    const upstreamEventId = String(params.get('registration_event_id') || '').trim();
-
-    // La URL de gracias es pública: no basta con visitarla para contabilizar un registro.
-    // El flujo que redirige aquí debe enviar registration_confirmed=1 y un lead_id.
-    if (!isConfirmed || !leadId) return null;
-
-    return {
-      lead_id: leadId.slice(0, 160),
-      event_id: upstreamEventId.slice(0, 200) ||
-        ('soto_CompleteRegistration_' + leadId.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 160))
+    // Eventos no monetarios: sin content_type, value, currency ni contents.
+    const SOTO_EVENT_BASE = {
+      content_id: 'asesoria-llc-post-registro',
+      content_ids: ['asesoria-llc-post-registro'],
+      content_name: 'Gracias por tu registro - Asesoria LLC',
+      content_category: 'LLC USA'
     };
-  }
 
-  function sotoCollectUtmParams() {
-    const params = new URLSearchParams(window.location.search);
-    const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_id','adgroup_id','ad_id','creative_id','placement'];
-    return keys.reduce(function(acc,key){
-      const value = params.get(key);
-      if (value) acc[key] = value;
-      return acc;
-    },{});
-  }
+    // Mapeo evento nativo -> nombre estándar de Meta.
+    const SOTO_META_EVENT_MAP = {
+      ViewContent: 'ViewContent',
+      CompleteRegistration: 'Lead',
+      Contact: 'Contact'
+    };
 
-  function sotoCleanEventPayload(payload) {
-    const clean = { ...payload };
-    delete clean.content_type;
-    delete clean.value;
-    delete clean.currency;
-    delete clean.price;
-    delete clean.quantity;
-    delete clean.contents;
-    return clean;
-  }
-
-  function sotoBuildTikTokEventsApiPayload(eventName, eventId, eventPayload) {
-    const ttclid = sotoGetStoredTtclid();
-    const ttp = sotoGetCookie('_ttp') || sotoGetCookie('ttp') || '';
-    const cleanProperties = sotoCleanEventPayload({ ...SOTO_EVENT_BASE, ...eventPayload });
-
-    return {
-      destination: 'tiktok_events_api',
-      pixel_code: SOTO_TIKTOK_PIXEL_ID,
-      event: eventName,
-      event_name: eventName,
-      event_id: eventId,
-      event_time: Math.floor(Date.now() / 1000),
-      timestamp_iso: new Date().toISOString(),
-      source: 'web',
-      event_source: 'thank_you_page_after_native_form',
-      action_source: 'website',
-      test_event_code: '',
-      user: {
-        ttclid: ttclid,
-        ttp: ttp,
-        user_agent: navigator.userAgent || '',
-        language: navigator.language || '',
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-        soto_session_id: sotoGetOrCreateSessionId()
+    const SOTO_TIKTOK_EVENT_CONFIG = {
+      PageView: {
+        send_to_pixel: false,
+        send_to_events_api: false,
+        dedupe_once_per_session: false,
+        description: 'Carga de pagina post registro'
       },
-      page: {
-        url: window.location.href,
-        path: window.location.pathname,
-        referrer: document.referrer || '',
-        title: document.title || ''
+      ViewContent: {
+        send_to_pixel: true,
+        send_to_events_api: true,
+        dedupe_once_per_session: false,
+        description: 'Usuario visualiza pagina post registro con agenda visible'
       },
-      properties: cleanProperties,
-      attribution: {
-        ttclid_present: Boolean(ttclid),
-        ttp_present: Boolean(ttp),
-        utm: sotoCollectUtmParams()
+      CompleteRegistration: {
+        send_to_pixel: true,
+        send_to_events_api: true,
+        dedupe_once_per_session: true,
+        description: 'Registro confirmado por una señal verificable del flujo anterior'
       },
-      server_notes: {
-        ip_capture: 'Capturar IP en n8n desde headers: cf-connecting-ip, x-forwarded-for o x-real-ip',
-        deduplication: 'Usar pixel_code + event + event_id para deduplicar Pixel y Events API'
+      Contact: {
+        send_to_pixel: true,
+        send_to_events_api: true,
+        dedupe_once_per_session: true,
+        description: 'Lead expresa intención de abrir la agenda de Zcal o WhatsApp'
       }
     };
-  }
 
-  function sotoSendToTikTokEventsApiWebhook(payload) {
-    const body = JSON.stringify(payload);
-    const blob = new Blob([body], { type:'text/plain;charset=UTF-8' });
-    if (navigator.sendBeacon) {
-      const queued = navigator.sendBeacon(SOTO_TIKTOK_EVENTS_API_WEBHOOK, blob);
-      if (queued) return;
-    }
-    fetch(SOTO_TIKTOK_EVENTS_API_WEBHOOK, {
-      method:'POST',
-      body:body,
-      headers:{'Content-Type':'text/plain;charset=UTF-8'},
-      keepalive:true,
-      mode:'no-cors'
-    }).catch(function(){});
-  }
-
-  function sotoTrack(eventName, payload = {}) {
-    const config = SOTO_TIKTOK_EVENT_CONFIG[eventName] || {
-      send_to_pixel:true,
-      send_to_events_api:true,
-      dedupe_once_per_session:false
-    };
-
-    const sessionDedupeKey = 'soto_event_fired_' + eventName;
-    if (config.dedupe_once_per_session && sessionStorage.getItem(sessionDedupeKey)) return;
-
-    const eventId = payload.event_id || sotoCreateEventId(eventName);
-    const eventPayload = sotoCleanEventPayload({
-      ...SOTO_EVENT_BASE,
-      ...payload,
-      page_url:window.location.href,
-      page_path:window.location.pathname,
-      event_id:eventId,
-      ttclid:sotoGetStoredTtclid(),
-      ttp:sotoGetCookie('_ttp') || sotoGetCookie('ttp') || ''
-    });
-
-    window.dataLayer.push({
-      event:eventName,
-      event_source:'sotomayor_thank_you_page_v22',
-      event_id:eventId,
-      ...eventPayload
-    });
-
-    if (config.send_to_pixel && window.ttq && typeof window.ttq.track === 'function') {
-      window.ttq.track(eventName, eventPayload, { event_id:eventId });
+    function sotoGetUrlParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      const value = params.get(name);
+      return value ? value.trim() : '';
     }
 
-    // Espejo en Meta Pixel (solo si fbq está cargado — requiere meta_pixel_id real).
-    if (config.send_to_pixel && window.fbq && SOTO_META_EVENT_MAP[eventName]) {
-      window.fbq('track', SOTO_META_EVENT_MAP[eventName], {
-        content_name: eventPayload.content_name || '',
-        content_category: eventPayload.content_category || ''
-      }, { eventID: eventId });
+    function sotoIsValidTtclid(value) {
+      if (!value) return false;
+      const normalized = value.trim().toUpperCase();
+      const invalidValues = ['__CLICKID__','_CLICKID_','CLICKID','{{CLICKID}}','{CLICKID}','NULL','UNDEFINED'];
+      if (invalidValues.includes(normalized)) return false;
+      if (value.length < 10) return false;
+      return /^[a-zA-Z0-9._-]+$/.test(value);
     }
 
-    if (config.send_to_events_api) {
-      sotoSendToTikTokEventsApiWebhook(
-        sotoBuildTikTokEventsApiPayload(eventName,eventId,eventPayload)
+    function sotoGetCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : '';
+    }
+
+    function sotoSetCookie(name, value, days) {
+      const maxAge = days * 24 * 60 * 60;
+      document.cookie = name + '=' + encodeURIComponent(value) + '; Max-Age=' + maxAge + '; Path=/; SameSite=Lax; Secure';
+    }
+
+    function sotoGetStoredTtclid() {
+      const fromUrl = sotoGetUrlParam('ttclid');
+      if (sotoIsValidTtclid(fromUrl)) {
+        sotoSetCookie('soto_ttclid', fromUrl, 30);
+        localStorage.setItem('soto_ttclid', fromUrl);
+        return fromUrl;
+      }
+      const fromStorage = localStorage.getItem('soto_ttclid') || '';
+      if (sotoIsValidTtclid(fromStorage)) return fromStorage;
+      const fromCookie = sotoGetCookie('soto_ttclid');
+      return sotoIsValidTtclid(fromCookie) ? fromCookie : '';
+    }
+
+    function sotoGetOrCreateSessionId() {
+      const key = 'soto_session_id';
+      let sessionId = localStorage.getItem(key);
+      if (!sessionId) {
+        sessionId = 'soto_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        localStorage.setItem(key, sessionId);
+      }
+      return sessionId;
+    }
+
+    function sotoCreateEventId(eventName) {
+      const randomPart = window.crypto && window.crypto.randomUUID
+        ? window.crypto.randomUUID()
+        : Date.now() + '_' + Math.random().toString(36).slice(2);
+      return 'soto_' + eventName + '_' + randomPart;
+    }
+
+    function sotoGetConfirmedRegistration() {
+      const params = new URLSearchParams(window.location.search);
+      const isConfirmed = ['1', 'true', 'yes'].includes(
+        String(params.get('registration_confirmed') || '').trim().toLowerCase()
       );
+      const leadId = String(params.get('lead_id') || '').trim();
+      const upstreamEventId = String(params.get('registration_event_id') || '').trim();
+
+      // La URL de gracias es pública: no basta con visitarla para contabilizar un registro.
+      // El flujo que redirige aquí debe enviar registration_confirmed=1 y un lead_id.
+      if (!isConfirmed || !leadId) return null;
+
+      return {
+        lead_id: leadId.slice(0, 160),
+        event_id: upstreamEventId.slice(0, 200) ||
+          ('soto_CompleteRegistration_' + leadId.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 160))
+      };
     }
 
-    if (config.dedupe_once_per_session) {
-      sessionStorage.setItem(sessionDedupeKey,eventId);
+    function sotoCollectUtmParams() {
+      const params = new URLSearchParams(window.location.search);
+      const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_id','adgroup_id','ad_id','creative_id','placement'];
+      return keys.reduce(function(acc,key){
+        const value = params.get(key);
+        if (value) acc[key] = value;
+        return acc;
+      },{});
     }
-  }
 
-  function sotoScrollToCalendar(source) {
-    const calendar = document.getElementById('agendar');
-    if (!calendar) return;
-    calendar.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' });
-    window.dataLayer.push({
-      event:'calendar_scroll_cta_clicked',
-      source_context:source || 'unknown'
-    });
-  }
+    function sotoCleanEventPayload(payload) {
+      const clean = { ...payload };
+      delete clean.content_type;
+      delete clean.value;
+      delete clean.currency;
+      delete clean.price;
+      delete clean.quantity;
+      delete clean.contents;
+      return clean;
+    }
 
-  function sotoInitCalendarVisibilityTracking() {
-    const calendar = document.getElementById('agendar');
-    if (!calendar || !('IntersectionObserver' in window)) return;
+    function sotoBuildTikTokEventsApiPayload(eventName, eventId, eventPayload) {
+      const ttclid = sotoGetStoredTtclid();
+      const ttp = sotoGetCookie('_ttp') || sotoGetCookie('ttp') || '';
+      const cleanProperties = sotoCleanEventPayload({ ...SOTO_EVENT_BASE, ...eventPayload });
 
-    let fired = false;
-    const observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (!fired && entry.isIntersecting && entry.intersectionRatio >= .35) {
-          fired = true;
-          window.dataLayer.push({
-            event:'calendar_visible',
-            source_context:'thank_you_above_fold'
-          });
-          observer.disconnect();
+      return {
+        destination: 'tiktok_events_api',
+        pixel_code: SOTO_TIKTOK_PIXEL_ID,
+        event: eventName,
+        event_name: eventName,
+        event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),
+        timestamp_iso: new Date().toISOString(),
+        source: 'web',
+        event_source: 'thank_you_page_after_native_form',
+        action_source: 'website',
+        test_event_code: '',
+        user: {
+          ttclid: ttclid,
+          ttp: ttp,
+          user_agent: navigator.userAgent || '',
+          language: navigator.language || '',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+          soto_session_id: sotoGetOrCreateSessionId()
+        },
+        page: {
+          url: window.location.href,
+          path: window.location.pathname,
+          referrer: document.referrer || '',
+          title: document.title || ''
+        },
+        properties: cleanProperties,
+        attribution: {
+          ttclid_present: Boolean(ttclid),
+          ttp_present: Boolean(ttp),
+          utm: sotoCollectUtmParams()
+        },
+        server_notes: {
+          ip_capture: 'Capturar IP en n8n desde headers: cf-connecting-ip, x-forwarded-for o x-real-ip',
+          deduplication: 'Usar pixel_code + event + event_id para deduplicar Pixel y Events API'
         }
+      };
+    }
+
+    function sotoSendToTikTokEventsApiWebhook(payload) {
+      const body = JSON.stringify(payload);
+      const blob = new Blob([body], { type:'text/plain;charset=UTF-8' });
+      if (navigator.sendBeacon) {
+        const queued = navigator.sendBeacon(SOTO_TIKTOK_EVENTS_API_WEBHOOK, blob);
+        if (queued) return;
+      }
+      fetch(SOTO_TIKTOK_EVENTS_API_WEBHOOK, {
+        method:'POST',
+        body:body,
+        headers:{'Content-Type':'text/plain;charset=UTF-8'},
+        keepalive:true,
+        mode:'no-cors'
+      }).catch(function(){});
+    }
+
+    function sotoTrack(eventName, payload = {}) {
+      const config = SOTO_TIKTOK_EVENT_CONFIG[eventName] || {
+        send_to_pixel:true,
+        send_to_events_api:true,
+        dedupe_once_per_session:false
+      };
+
+      const sessionDedupeKey = 'soto_event_fired_' + eventName;
+      if (config.dedupe_once_per_session && sessionStorage.getItem(sessionDedupeKey)) return;
+
+      const eventId = payload.event_id || sotoCreateEventId(eventName);
+      const eventPayload = sotoCleanEventPayload({
+        ...SOTO_EVENT_BASE,
+        ...payload,
+        page_url:window.location.href,
+        page_path:window.location.pathname,
+        event_id:eventId,
+        ttclid:sotoGetStoredTtclid(),
+        ttp:sotoGetCookie('_ttp') || sotoGetCookie('ttp') || ''
       });
-    },{threshold:[.35]});
 
-    observer.observe(calendar);
-  }
-
-  // Prefill del calendario Zcal si el flujo previo pasa datos por la URL.
-  function sotoPrefillCalendar() {
-    const frame = document.getElementById('zcalFrame');
-    const openLink = document.getElementById('cal-open');
-    if (!frame) return;
-
-    const p = new URLSearchParams(window.location.search);
-    const name = (p.get('name') || p.get('full_name') || '').trim();
-    const email = (p.get('email') || '').trim();
-    let phone = (p.get('phone') || p.get('smsPhone') || p.get('whatsapp') || '').trim();
-
-    if (!name && !email && !phone) return; // nada que prellenar: se queda el iframe estático
-
-    // Normaliza teléfono a E.164 básico (deja el + si viene, quita separadores).
-    if (phone) {
-      const hadPlus = phone.trim().charAt(0) === '+';
-      phone = phone.replace(/[^\d]/g, '');
-      phone = hadPlus ? ('+' + phone) : phone;
-    }
-
-    const base = new URL(SOTO_DEFAULT_ZCAL_URL);
-    base.searchParams.set('embed', '1');
-    if (name) base.searchParams.set('name', name);
-    if (email) base.searchParams.set('email', email);
-    if (phone) {
-      base.searchParams.set('smsPhone', phone);
-      base.searchParams.set('a' + SOTO_ZCAL_PHONE_ANSWER_INDEX, phone);
-    }
-
-    frame.src = base.toString();
-
-    // Link "abrir en pestaña nueva": mismos datos, sin embed=1.
-    const openUrl = new URL(SOTO_DEFAULT_ZCAL_URL);
-    base.searchParams.forEach(function (v, k) { if (k !== 'embed') openUrl.searchParams.set(k, v); });
-    if (openLink) openLink.href = openUrl.toString();
-  }
-
-  function sotoInitScheduleTracking() {
-    const confirmed = sotoGetConfirmedRegistration() || {};
-    window.addEventListener('message', function onZcalMsg(e) {
-      const host = (e.origin || '').replace(/^https?:\/\//, '').split('/')[0];
-      if (!/zcal\.co$/.test(host)) return;
-      const d = e.data;
-      const isBooked = d === 'zcal:booking_completed' ||
-        (typeof d === 'string' && /book|schedul|complete/i.test(d)) ||
-        (d && typeof d === 'object' && /book|schedul|complete/i.test(JSON.stringify(d)));
-      if (!isBooked) return;
-      sotoTrack('Schedule', {
-        description: SOTO_TIKTOK_EVENT_CONFIG.Schedule.description,
-        conversion_path: 'schedule_confirmed',
-        event_stage: 'booking_completed',
-        lead_id: confirmed.lead_id || ''
+      window.dataLayer.push({
+        event:eventName,
+        event_source:'sotomayor_thank_you_page_v22',
+        event_id:eventId,
+        ...eventPayload
       });
-      window.removeEventListener('message', onZcalMsg);
-    });
-  }
 
-  document.addEventListener('DOMContentLoaded',function(){
-    sotoGetStoredTtclid();
-    sotoPrefillCalendar();
+      if (config.send_to_pixel && window.ttq && typeof window.ttq.track === 'function') {
+        window.ttq.track(eventName, eventPayload, { event_id:eventId });
+      }
 
-    /* ---------- reveal on scroll (visible por defecto sin JS) ---------- */
-    var revs = document.querySelectorAll('.reveal');
-    if (reduce || !('IntersectionObserver' in window)) {
-      revs.forEach(function (el) { el.classList.add('is-in'); });
-    } else {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-      revs.forEach(function (el) { io.observe(el); });
-      setTimeout(function () { revs.forEach(function (el) { el.classList.add('is-in'); }); }, 1500);
-    }
+      // Espejo en Meta Pixel (solo si fbq está cargado — requiere meta_pixel_id real).
+      if (config.send_to_pixel && window.fbq && SOTO_META_EVENT_MAP[eventName]) {
+        window.fbq('track', SOTO_META_EVENT_MAP[eventName], {
+          content_name: eventPayload.content_name || '',
+          content_category: eventPayload.content_category || ''
+        }, { eventID: eventId });
+      }
 
-    /* ---------- eventos ---------- */
-    sotoTrack('ViewContent', {
-      description:SOTO_TIKTOK_EVENT_CONFIG.ViewContent.description,
-      page_variant:'aligned_landing_system_v22'
-    });
-
-    const confirmedRegistration = sotoGetConfirmedRegistration();
-    if (confirmedRegistration) {
-      sotoTrack('CompleteRegistration', {
-        description:SOTO_TIKTOK_EVENT_CONFIG.CompleteRegistration.description,
-        form_context:'verified_lead_redirect',
-        ...confirmedRegistration
-      });
-    }
-
-    document.querySelectorAll('[data-scroll-calendar]').forEach(function(element){
-      element.addEventListener('click',function(event){
-        if (element.tagName === 'A') event.preventDefault();
-        sotoScrollToCalendar(
-          element.closest('.final') ? 'final_cta' :
-          element.closest('.stickybar') ? 'sticky_bar' :
-          element.closest('.header') ? 'header' :
-          element.closest('.meeting-card') ? 'meeting_card' :
-          element.closest('.plans') ? 'plans' :
-          element.closest('.why-first') ? 'why_first' : 'other'
+      if (config.send_to_events_api) {
+        sotoSendToTikTokEventsApiWebhook(
+          sotoBuildTikTokEventsApiPayload(eventName,eventId,eventPayload)
         );
-      });
-    });
+      }
 
-    document.querySelectorAll('[data-track-schedule]').forEach(function(element){
-      element.addEventListener('click',function(){
-        sotoTrack('Contact', {
-          description:SOTO_TIKTOK_EVENT_CONFIG.Contact.description,
-          schedule_url:element.getAttribute('href') || SOTO_DEFAULT_ZCAL_URL,
-          contact_method:'zcal_agenda',
-          event_stage:'schedule_intent'
+      if (config.dedupe_once_per_session) {
+        sessionStorage.setItem(sessionDedupeKey,eventId);
+      }
+    }
+
+    function sotoScrollToCalendar(source) {
+      const calendar = document.getElementById('agendar');
+      if (!calendar) return;
+      calendar.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' });
+      window.dataLayer.push({
+        event:'calendar_scroll_cta_clicked',
+        source_context:source || 'unknown'
+      });
+    }
+
+    function sotoInitCalendarVisibilityTracking() {
+      const calendar = document.getElementById('agendar');
+      if (!calendar || !('IntersectionObserver' in window)) return;
+
+      let fired = false;
+      const observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (!fired && entry.isIntersecting && entry.intersectionRatio >= .35) {
+            fired = true;
+            window.dataLayer.push({
+              event:'calendar_visible',
+              source_context:'thank_you_above_fold'
+            });
+            observer.disconnect();
+          }
+        });
+      },{threshold:[.35]});
+
+      observer.observe(calendar);
+    }
+
+    // Prefill del calendario Zcal si el flujo previo pasa datos por la URL.
+    function sotoPrefillCalendar() {
+      const frame = document.getElementById('zcalFrame');
+      const openLink = document.getElementById('cal-open');
+      if (!frame) return;
+
+      const p = new URLSearchParams(window.location.search);
+      const name = (p.get('name') || p.get('full_name') || '').trim();
+      const email = (p.get('email') || '').trim();
+      let phone = (p.get('phone') || p.get('smsPhone') || p.get('whatsapp') || '').trim();
+
+      if (!name && !email && !phone) return; // nada que prellenar: se queda el iframe estático
+
+      // Normaliza teléfono a E.164 básico (deja el + si viene, quita separadores).
+      if (phone) {
+        const hadPlus = phone.trim().charAt(0) === '+';
+        phone = phone.replace(/[^\d]/g, '');
+        phone = hadPlus ? ('+' + phone) : phone;
+      }
+
+      const base = new URL(SOTO_DEFAULT_ZCAL_URL);
+      base.searchParams.set('embed', '1');
+      if (name) base.searchParams.set('name', name);
+      if (email) base.searchParams.set('email', email);
+      if (phone) {
+        base.searchParams.set('smsPhone', phone);
+        base.searchParams.set('a' + SOTO_ZCAL_PHONE_ANSWER_INDEX, phone);
+      }
+
+      frame.src = base.toString();
+
+      // Link "abrir en pestaña nueva": mismos datos, sin embed=1.
+      const openUrl = new URL(SOTO_DEFAULT_ZCAL_URL);
+      base.searchParams.forEach(function (v, k) { if (k !== 'embed') openUrl.searchParams.set(k, v); });
+      if (openLink) openLink.href = openUrl.toString();
+    }
+
+
+    document.addEventListener('DOMContentLoaded',function(){
+      sotoGetStoredTtclid();
+      sotoPrefillCalendar();
+
+      /* ---------- reveal on scroll (visible por defecto sin JS) ---------- */
+      var revs = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        revs.forEach(function (el) { el.classList.add('is-in'); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+        revs.forEach(function (el) { io.observe(el); });
+        setTimeout(function () { revs.forEach(function (el) { el.classList.add('is-in'); }); }, 1500);
+      }
+
+      /* ---------- eventos ---------- */
+      sotoTrack('ViewContent', {
+        description:SOTO_TIKTOK_EVENT_CONFIG.ViewContent.description,
+        page_variant:'aligned_landing_system_v22'
+      });
+
+      const confirmedRegistration = sotoGetConfirmedRegistration();
+      if (confirmedRegistration) {
+        sotoTrack('CompleteRegistration', {
+          description:SOTO_TIKTOK_EVENT_CONFIG.CompleteRegistration.description,
+          form_context:'verified_lead_redirect',
+          ...confirmedRegistration
+        });
+      }
+
+      document.querySelectorAll('[data-scroll-calendar]').forEach(function(element){
+        element.addEventListener('click',function(event){
+          if (element.tagName === 'A') event.preventDefault();
+          sotoScrollToCalendar(
+            element.closest('.final') ? 'final_cta' :
+            element.closest('.stickybar') ? 'sticky_bar' :
+            element.closest('.header') ? 'header' :
+            element.closest('.meeting-card') ? 'meeting_card' :
+            element.closest('.plans') ? 'plans' :
+            element.closest('.why-first') ? 'why_first' : 'other'
+          );
         });
       });
-    });
 
-    document.querySelectorAll('a[data-cta]').forEach(function (a) {
-      a.addEventListener('click', function () {
-        if (/wa\.link|whatsapp/i.test(a.href || '')) {
+      document.querySelectorAll('[data-track-schedule]').forEach(function(element){
+        element.addEventListener('click',function(){
           sotoTrack('Contact', {
             description:SOTO_TIKTOK_EVENT_CONFIG.Contact.description,
-            contact_method:'whatsapp',
-            event_stage:'whatsapp_click',
-            content_name:'WhatsApp ' + (a.getAttribute('data-cta') || '')
+            schedule_url:element.getAttribute('href') || SOTO_DEFAULT_ZCAL_URL,
+            contact_method:'zcal_agenda',
+            event_stage:'schedule_intent'
           });
-        } else {
-          window.dataLayer.push({ event:'cta_click', cta:a.getAttribute('data-cta') || '', page_name:'thank_you_crea_tu_llc_agenda' });
-        }
+        });
       });
+
+      document.querySelectorAll('a[data-cta]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          if (/wa\.link|whatsapp/i.test(a.href || '')) {
+            sotoTrack('Contact', {
+              description:SOTO_TIKTOK_EVENT_CONFIG.Contact.description,
+              contact_method:'whatsapp',
+              event_stage:'whatsapp_click',
+              content_name:'WhatsApp ' + (a.getAttribute('data-cta') || '')
+            });
+          } else {
+            window.dataLayer.push({ event:'cta_click', cta:a.getAttribute('data-cta') || '', page_name:'thank_you_crea_tu_llc_agenda' });
+          }
+        });
+      });
+
+      sotoInitCalendarVisibilityTracking();
+
+      /* ---------- sticky bar (solo móvil, la media query decide) ---------- */
+      var sticky = document.querySelector('.stickybar');
+      var bookCard = document.getElementById('agendar');
+      if (sticky && bookCard && 'IntersectionObserver' in window) {
+        var sio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { sticky.classList.toggle('is-on', !e.isIntersecting); });
+        }, { threshold: 0 });
+        sio.observe(bookCard);
+      }
     });
-
-    sotoInitCalendarVisibilityTracking();
-    sotoInitScheduleTracking();
-
-    /* ---------- sticky bar (solo móvil, la media query decide) ---------- */
-    var sticky = document.querySelector('.stickybar');
-    var bookCard = document.getElementById('agendar');
-    if (sticky && bookCard && 'IntersectionObserver' in window) {
-      var sio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { sticky.classList.toggle('is-on', !e.isIntersecting); });
-      }, { threshold: 0 });
-      sio.observe(bookCard);
-    }
-  });
 </script>
 </body>
 </html>
