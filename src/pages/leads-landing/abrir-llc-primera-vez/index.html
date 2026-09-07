@@ -85,7 +85,6 @@
     var pixelId = config.tiktok_pixel_id;
     var qaParams = new URLSearchParams(w.location.search || "");
     if (qaParams.get("qa") === "1" && qaParams.get("no_pixels") === "1") return;
-    if (!/(^|\.)sotomayorconsulting\.com$/i.test(w.location.hostname)) return; // guard: pixeles solo en produccion
     if (!pixelId) return;
     w.TiktokAnalyticsObject = t;
     var ttq = w[t] = w[t] || [];
@@ -110,7 +109,6 @@
     var c = window.SCI_TRACKING_CONFIG || {};
     var qp = new URLSearchParams(location.search);
     if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
-    if (!/(^|\.)sotomayorconsulting\.com$/i.test(location.hostname)) return; // guard: pixeles solo en produccion
     if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
@@ -975,8 +973,6 @@
   var QA_MODE = URL_PARAMS.get("qa") === "1";
   var QA_NO_PIXELS = QA_MODE && URL_PARAMS.get("no_pixels") === "1";
   var QA_NO_WEBHOOK = QA_MODE && URL_PARAMS.get("no_webhook") === "1";
-  // guard de entorno: POST a n8n y CAPI solo se ejecutan en *.sotomayorconsulting.com
-  var HOST_ALLOWS_LIVE = /(^|\.)sotomayorconsulting\.com$/i.test(location.hostname);
   var DEBUG = QA_MODE || !!(window.SCI_TRACKING_CONFIG && window.SCI_TRACKING_CONFIG.debug);
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1121,7 +1117,7 @@
 
   /* CAPI de TikTok server-side vía n8n (webhook pixel-api-conversiones), deduplicado por event_id */
   function sendTikTokConversionsApiEvent(eventName, payload) {
-    if (QA_NO_WEBHOOK || !HOST_ALLOWS_LIVE || !CONFIG.tiktokCapiWebhookUrl) return;
+    if (QA_NO_WEBHOOK || !CONFIG.tiktokCapiWebhookUrl) return;
     var c = getClickTrackingData();
     var evId = payload.event_id || buildEventId(eventName, payload);
     var eventTime = payload.event_time || Math.floor(Date.now() / 1000);
@@ -1543,7 +1539,6 @@
 
   async function sendLeadToWebhook(payload) {
     if (QA_NO_WEBHOOK) return { ok: false, duplicate: false, status: "qa_no_webhook" };
-    if (!HOST_ALLOWS_LIVE) return { ok: false, duplicate: false, status: "skipped_non_prod_host" };
     var guarded = Object.assign({}, payload, {
       backend_validation: {
         required_unique_keys: ["email", "phone_e164"],
@@ -1612,7 +1607,7 @@
     if (greet) greet.textContent = "Ya casi, " + payload.full_name.split(" ")[0] + ". Tus datos ya están cargados — solo elige el día y la hora.";
 
     var dn = document.getElementById("book-devnote");
-    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook" || res.status === "skipped_non_prod_host")) {
+    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
       dn.hidden = false;
       dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
     }
