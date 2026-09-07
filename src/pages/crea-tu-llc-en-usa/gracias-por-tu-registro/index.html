@@ -5,20 +5,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Agenda tu asesoría | Sotomayor Consulting International</title>
-<meta name="description" content="Tu registro fue recibido. Elige fecha y hora para tu asesoría gratuita de 30 minutos: revisamos tu caso y sales con un plan claro. Firma boutique, 10 años, partner de Mercury y Relay." />
+<meta name="description" content="Tu registro fue recibido. Elige fecha y hora para tu asesoría gratuita por Zoom (e-commerce, agencias, SaaS, consultores, inversionistas): revisamos tu caso y sales con un plan claro. Firma boutique, 10 años, partner de Mercury y Relay." />
 <meta name="robots" content="noindex,nofollow" />
 
 <!--
   ==========================================================================
   GRACIAS POR TU REGISTRO — /crea-tu-llc-en-usa/gracias-por-tu-registro/
   Público: lead que llegó desde un formulario nativo (TikTok / Meta Lead Ads).
-  Objetivo único: que agende la reunión de asesoría de 30 min por Zoom.
+  Objetivo único: que agende la reunión de asesoría por Zoom.
   Sistema visual alineado con /leads-landing/abrir-llc-primera-vez/ y
   /leads-landing/corregir-llc-existente/ (navy #0E2438 + gold #C0872E, Poppins).
 
   FUNCIONAMIENTO
    · No hay formulario: el lead ya se registró en el form nativo. El calendario
-     Zcal (evento de 30 min) está embebido y visible desde el hero.
+     Zcal está embebido y visible desde el hero.
    · Si el flujo previo pasa name/email/phone por la URL, se prellenan en Zcal
      (name, email, smsPhone, a0=teléfono).
    · Tracking: GTM (GTM-TNRQGDM) + TikTok Pixel (D5KFDEBC77U6BL6T7LDG) + CAPI
@@ -32,7 +32,7 @@
    · Respeta ?qa=1  ?no_pixels=1.
 
   ANTES DE PUBLICAR
-   · Confirmar que el evento Zcal de 30 min tiene "Teléfono (WhatsApp)" como
+   · Confirmar que el evento Zcal tiene "Teléfono (WhatsApp)" como
      primera pregunta (a0). Si cambia, ajustar SOTO_ZCAL_PHONE_ANSWER_INDEX.
    · Poner SOTO_META_PIXEL_ID real + rama Meta en el webhook de CAPI.
    · n8n: cabeceras CORS en pixel-api-conversiones.
@@ -69,7 +69,7 @@
     },
     service_content: {
       content_name: "Asesoría para LLC en EE. UU.",
-      description: "Reunión de 30 min: revisamos tu caso y sales con un plan — estado, estructura, banca y próximos pasos."
+      description: "Asesoría gratuita: revisamos tu caso y sales con un plan — estado, estructura, banca y próximos pasos."
     },
     debug: false
   };
@@ -95,6 +95,7 @@
   !function (w, d, t) {
     var qa = new URLSearchParams(w.location.search || "");
     if (qa.get("qa") === "1" && qa.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(w.location.hostname)) return; // guard: pixeles solo en produccion
     w.TiktokAnalyticsObject=t;
     var ttq=w[t]=w[t]||[];
     ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
@@ -121,6 +122,7 @@
     var c = window.SCI_TRACKING_CONFIG || {};
     var qp = new URLSearchParams(location.search);
     if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(location.hostname)) return; // guard: pixeles solo en produccion
     if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
@@ -404,6 +406,7 @@
 
   /* ============================ MOTION ============================ */
   .js .reveal{opacity:0;transform:translateY(16px)}
+  .js .hero .reveal{opacity:1;transform:none;transition:none}   /* hero visible en el primer paint — tráfico social no espera */
   .js .reveal.is-in{opacity:1;transform:none;transition:opacity .7s var(--e-out), transform .7s var(--e-out)}
   .js .reveal.d1{transition-delay:.06s} .js .reveal.d2{transition-delay:.12s} .js .reveal.d3{transition-delay:.18s}
   @media (prefers-reduced-motion: reduce){
@@ -431,11 +434,11 @@
     <div class="wrap">
       <div>
         <span class="status-pill reveal"><span class="dot">&#10003;</span> Registro recibido</span>
-        <h1 class="reveal d1" id="hero-h1">Ya casi está. Elige el horario de tu <span class="u">asesoría de 30&nbsp;minutos</span>.</h1>
-        <p class="lede reveal d2" id="hero-sub">Es una asesoría <strong>gratuita</strong> de 30 minutos, por Zoom. Revisamos tu caso —estructura, estado, banca y cumplimiento— y sales con una <strong>recomendación clara</strong> y los próximos pasos. Sin costo y sin compromiso.</p>
+        <h1 class="reveal d1" id="hero-h1">Ya casi está. Elige el horario de tu <span class="u">asesoría gratuita</span>.</h1>
+        <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> por Zoom para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>creadores</strong>, <strong>consultores</strong> e <strong>inversionistas</strong>. Revisamos tu caso —estructura, estado, banca y cumplimiento— y sales con una <strong>recomendación clara</strong> y los próximos pasos. Sin costo y sin compromiso.</p>
         <div class="hero-obj reveal d2">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Gratuita</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>30 minutos</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Enfocada en tu caso</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Por Zoom</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>En español</span>
         </div>
@@ -458,7 +461,7 @@
         </svg>
 
         <div class="book-cal">
-          <span class="book-badge">Asesoría gratuita &middot; 30 min</span>
+          <span class="book-badge">Asesoría gratuita &middot; por Zoom</span>
           <h2>Elige tu horario</h2>
           <p class="book-sub">Selecciona la fecha y la hora que mejor te queden. Zcal te pedirá tus datos para confirmar la reserva.</p>
           <div class="cal-frame" id="cal-frame">
@@ -504,7 +507,7 @@
       <div class="section-head reveal">
         <span class="kicker">Qué sacas de la reunión</span>
         <h2>Ya diste el primer paso. En la reunión lo convertimos en un plan.</h2>
-        <p class="lede">30 minutos, por Zoom, sin costo. Sales con decisiones concretas — no con una cotización genérica.</p>
+        <p class="lede">Por Zoom, sin costo. Sales con decisiones concretas — no con una cotización genérica.</p>
       </div>
       <div class="why-grid">
         <div class="why-item reveal">
@@ -526,7 +529,7 @@
       <p class="why-kicker reveal">No hacemos llamadas de venta. Priorizamos una reunión de trabajo sobre tu caso.</p>
       <div class="why-cta reveal">
         <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="why-first">Elegir mi horario</a>
-        <span class="cta-note">Gratis &middot; sin compromiso &middot; 30 min</span>
+        <span class="cta-note">Gratis &middot; sin compromiso &middot; por Zoom</span>
       </div>
     </div>
   </section>
@@ -537,7 +540,7 @@
       <div class="meeting-grid">
         <div class="reveal">
           <div class="section-head" style="margin-bottom:0">
-            <span class="kicker">La reunión de 30 minutos</span>
+            <span class="kicker">La reunión inicial</span>
             <h2>Qué revisamos contigo</h2>
           </div>
           <ul class="meeting-list">
@@ -549,13 +552,13 @@
         </div>
         <div class="meeting-card reveal d1">
           <h3>Detalles</h3>
-          <div class="row"><b>Duración</b><span>30 minutos</span></div>
+          <div class="row"><b>Para quién</b><span>Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas.</span></div>
           <div class="row"><b>Modalidad</b><span>Online, por Zoom</span></div>
           <div class="row"><b>Costo</b><span>Gratuita, sin compromiso</span></div>
           <div class="row"><b>Con quién</b><span>Un asesor de la firma, en español</span></div>
           <div class="row"><b>Si no es tu caso</b><span>Te lo decimos en la reunión. Sin costo.</span></div>
           <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="meeting">Elegir horario</a>
-          <span class="cta-note" style="text-align:center">Gratis &middot; sin compromiso &middot; 30 min</span>
+          <span class="cta-note" style="text-align:center">Gratis &middot; sin compromiso &middot; por Zoom</span>
         </div>
       </div>
     </div>
@@ -570,7 +573,7 @@
       </div>
       <div class="steps-row">
         <div class="step reveal">
-          <h3>Asesoría de 30 min</h3>
+          <h3>Asesoría inicial</h3>
           <p>Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.</p>
           <p class="meta">Online &middot; sin compromiso</p>
         </div>
@@ -622,9 +625,9 @@
       <div class="plans-cta reveal">
         <div>
           <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="plans">Ver qué plan me conviene</a>
-          <span class="cta-note">Gratis &middot; sin compromiso &middot; 30 min</span>
+          <span class="cta-note">Gratis &middot; sin compromiso &middot; por Zoom</span>
         </div>
-        <p>Te lo recomendamos en la asesoría de 30 min, según tu caso.</p>
+        <p>Te lo recomendamos en la asesoría, según tu caso.</p>
       </div>
     </div>
   </section>
@@ -703,7 +706,7 @@
       <div class="faq reveal">
         <details open>
           <summary>Ya llené el formulario, ¿por qué debo agendar una reunión?</summary>
-          <div class="a">El formulario nos dice que te interesa. La reunión de 30 minutos es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural.</div>
+          <div class="a">El formulario nos dice que te interesa. La reunión es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural.</div>
         </details>
         <details>
           <summary>¿La asesoría tiene algún costo o compromiso?</summary>
@@ -747,7 +750,7 @@
           <a class="btn btn--primary" href="#agendar" data-scroll-calendar data-cta="final">Elegir horario</a>
           <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
         </div>
-        <span class="cta-note on-navy-note" style="text-align:center">Gratis &middot; sin compromiso &middot; 30 min &middot; por Zoom</span>
+        <span class="cta-note on-navy-note" style="text-align:center">Gratis &middot; sin compromiso &middot; por Zoom</span>
       </div>
     </div>
   </section>
@@ -782,9 +785,11 @@
 
     const SOTO_TIKTOK_PIXEL_ID = 'D5KFDEBC77U6BL6T7LDG';
     const SOTO_TIKTOK_EVENTS_API_WEBHOOK = 'https://n8n.sotomayorconsulting.com/webhook/pixel-api-conversiones';
-    const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min'; // evento "Sesión Estratégica" (30 min); el slug sigue siendo /60min
+    const SOTO_DEFAULT_ZCAL_URL = 'https://zcal.co/t/agendar-asesoria-llc/60min'; // evento "Sesión Estratégica"; el slug es /60min
     const SOTO_ZCAL_PHONE_ANSWER_INDEX = 0; // pregunta "Teléfono (WhatsApp)" = a0
     const SOTO_META_PIXEL_ID = '__META_PIXEL_ID__'; // poner el Pixel ID real de Meta para activar Meta
+    // guard de entorno: el POST a n8n (CAPI) solo se ejecuta en *.sotomayorconsulting.com
+    const HOST_ALLOWS_LIVE = /(^|\.)sotomayorconsulting\.com$/i.test(location.hostname);
 
     // Eventos no monetarios: sin content_type, value, currency ni contents.
     const SOTO_EVENT_BASE = {
@@ -968,6 +973,7 @@
     }
 
     function sotoSendToTikTokEventsApiWebhook(payload) {
+      if (!HOST_ALLOWS_LIVE) return; // guard: n8n CAPI solo en produccion
       const body = JSON.stringify(payload);
       const blob = new Blob([body], { type:'text/plain;charset=UTF-8' });
       if (navigator.sendBeacon) {
