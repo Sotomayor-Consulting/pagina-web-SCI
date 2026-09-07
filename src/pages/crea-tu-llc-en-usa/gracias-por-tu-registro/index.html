@@ -196,6 +196,9 @@
   .header .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px}
   .header .brand img{height:40px;width:auto}
   @media (max-width:430px){ .header .brand img{height:34px} }
+  /* CTA del header: oculto mientras el CTA del hero está a la vista; aparece al pasar el hero */
+  .js .header [data-cta="header"]{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .2s var(--e-out), transform .2s var(--e-out), visibility .2s}
+  .js .header.cta-on [data-cta="header"]{opacity:1;visibility:visible;transform:none}
 
   /* ============================ BUTTONS ============================ */
   .btn{
@@ -230,6 +233,8 @@
   .hero h1{font-size:clamp(2rem, 4.3vw, 3.05rem);font-weight:700;line-height:1.07;letter-spacing:-.028em;max-width:20ch}
   .hero h1 .u{background:linear-gradient(transparent 76%, rgba(228,192,120,.55) 76%);padding-inline:.04em}
   .hero p.lede{margin-top:18px}
+  .hero > .wrap > div > .btn{margin-top:22px}
+  @media (max-width:900px){ .hero > .wrap > div > .btn{display:flex;width:100%;justify-content:center} }
   .hero-obj{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:20px;font-size:.85rem;color:var(--muted)}
   .hero-obj span{display:inline-flex;align-items:center;gap:6px}
   .hero-obj svg{width:14px;height:14px;color:var(--ok);flex:none}
@@ -261,6 +266,12 @@
     .hero .wrap{grid-template-columns:1fr;gap:26px}
     .hero h1{max-width:22ch}
     .book .globe{opacity:.3;width:60%}
+  }
+  /* Móvil: el calendario Zcal usa todo el ancho de la tarjeta y más alto, para llenar los campos sin scroll interno apretado */
+  @media (max-width:560px){
+    .hero .book{padding:16px}
+    .book-cal .cal-frame{margin-inline:-16px;border-radius:0;min-height:760px}
+    .book-cal .cal-frame iframe{min-height:760px}
   }
 
   /* ============================ PARTNERS AUTHORITY ============================ */
@@ -435,7 +446,8 @@
       <div>
         <span class="status-pill reveal"><span class="dot">&#10003;</span> Registro recibido</span>
         <h1 class="reveal d1" id="hero-h1">Ya casi está. Elige el horario de tu <span class="u">asesoría gratuita</span>.</h1>
-        <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> por Zoom para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>creadores</strong>, <strong>consultores</strong> e <strong>inversionistas</strong>. Revisamos tu caso —estructura, estado, banca y cumplimiento— y sales con una <strong>recomendación clara</strong> y los próximos pasos. Sin costo y sin compromiso.</p>
+        <p class="lede reveal d2" id="hero-sub">Solo falta un paso. Elige un horario y confirma tus datos de contacto para recibir el enlace de Zoom. Asesoría <strong>gratuita</strong> para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong> e <strong>inversionistas</strong>.</p>
+        <a class="btn btn--primary reveal d2" href="#agendar" data-scroll-calendar data-cta="hero">Elegir mi horario →</a>
         <div class="hero-obj reveal d2">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Gratuita</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Enfocada en tu caso</span>
@@ -463,7 +475,7 @@
         <div class="book-cal">
           <span class="book-badge">Asesoría gratuita &middot; por Zoom</span>
           <h2>Elige tu horario</h2>
-          <p class="book-sub">Selecciona la fecha y la hora que mejor te queden. Zcal te pedirá tus datos para confirmar la reserva.</p>
+          <p class="book-sub">Elige el día y la hora. En el último paso confirmas tu nombre, correo y WhatsApp — así te enviamos el enlace de Zoom y el recordatorio de la reunión.</p>
           <div class="cal-frame" id="cal-frame">
             <iframe
               id="zcalFrame"
@@ -1190,6 +1202,18 @@
           entries.forEach(function (e) { sticky.classList.toggle('is-on', !e.isIntersecting); });
         }, { threshold: 0 });
         sio.observe(bookCard);
+      }
+
+      /* ---------- CTA del header: aparece solo al pasar el CTA del hero (evita 2 CTA a la vez) ---------- */
+      var heroCta = document.querySelector('[data-cta="hero"]');
+      var headerEl = document.querySelector('.header');
+      if (heroCta && headerEl && 'IntersectionObserver' in window) {
+        var hio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { headerEl.classList.toggle('cta-on', !e.isIntersecting); });
+        }, { threshold: 0, rootMargin: '-70px 0px 0px 0px' });
+        hio.observe(heroCta);
+      } else if (headerEl) {
+        headerEl.classList.add('cta-on');
       }
     });
 </script>
