@@ -41,8 +41,9 @@ para que Astro no lo publique como ruta.
   El CAPI server-side lo hace n8n (`webhook/pixel-api-conversiones`) con el mismo `event_id`.
 - **Atribución:** captura `utm_*`, `ttclid`, `fbclid`, `_ttp`, `_fbp`, `_fbc` → payload → Odoo.
   Persiste en `sessionStorage` (sobrevive el salto A↔B).
-- **Guardas:** píxeles y `POST` a n8n **solo** en `*.sotomayorconsulting.com`. Desde local
-  se registra el payload en consola. Respetan `?qa=1` `?no_webhook=1` `?no_pixels=1`.
+- **Guardas:** píxeles (TikTok/Meta) y `POST` a n8n se ejecutan en **cualquier host**
+  (no hay guard de dominio: las landings pueden servirse desde GitHub Pages u otro host).
+  Para probar sin tocar producción, usar `?qa=1&no_pixels=1&no_webhook=1`.
 - **Selector de país:** custom con **imagen de bandera** (flagcdn) en el botón y en la lista;
   autoselecciona el país por idioma/zona horaria del navegador; el placeholder es un
   ejemplo de número por país. 19 países (LATAM + Centro América + Rep. Dominicana + US + ES).

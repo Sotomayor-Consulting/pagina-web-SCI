@@ -88,7 +88,6 @@
     var pixelId = config.tiktok_pixel_id;
     var qaParams = new URLSearchParams(w.location.search || "");
     if (qaParams.get("qa") === "1" && qaParams.get("no_pixels") === "1") return;
-    if (!/(^|\.)sotomayorconsulting\.com$/i.test(w.location.hostname)) return; // guard: pixeles solo en produccion
     if (!pixelId) return;
     w.TiktokAnalyticsObject = t;
     var ttq = w[t] = w[t] || [];
@@ -113,7 +112,6 @@
     var c = window.SCI_TRACKING_CONFIG || {};
     var qp = new URLSearchParams(location.search);
     if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
-    if (!/(^|\.)sotomayorconsulting\.com$/i.test(location.hostname)) return; // guard: pixeles solo en produccion
     if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
@@ -234,6 +232,7 @@
   .hero-trust{margin-top:16px;font-size:.83rem;color:var(--muted);line-height:1.7}
   .hero-trust b{color:var(--navy-800);font-family:var(--font-display);font-weight:600}
   .hero-trust .stars{color:var(--gold);letter-spacing:1px}
+  .hero-jump{display:none}   /* CTA de salto al form: solo en movil (ver @media 900) */
 
   /* ---- Booking card (form → Zcal) ---- */
   .book{
@@ -294,6 +293,9 @@
     .hero .wrap{grid-template-columns:1fr;gap:26px}
     .hero h1{max-width:22ch}
     .book .globe{opacity:.3;width:60%}
+    .hero-obj .hide-sm{display:none}                       /* menos chips antes del form en movil */
+    .hero-jump{display:flex;width:100%;justify-content:center;margin-top:18px}
+    .hero-trust{margin-top:12px;font-size:.8rem}
   }
 
   /* ============================ PAIN ============================ */
@@ -494,7 +496,7 @@
     <a class="brand" href="#inicio" aria-label="Sotomayor Consulting International">
       <img src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International" width="200" height="40" />
     </a>
-    <a class="btn btn--primary btn--sm" href="#agendar" data-cta="header">Agenda tu revisión</a>
+    <a class="btn btn--ghost btn--sm" href="#agendar" data-cta="header">Revisar gratis</a>
   </div>
 </header>
 
@@ -509,10 +511,11 @@
         <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> por Zoom para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong> e <strong>inversionistas</strong> con una LLC ya abierta: revisamos estado, elección fiscal, 5472/1120, BOI y banca — y te decimos <strong>qué corregir y en qué orden</strong>.</p>
         <div class="hero-obj reveal d2">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Revisión sin compromiso</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>La creaste tú o un proveedor anterior</span>
+          <span class="hide-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>La creaste tú o un proveedor anterior</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>En cualquier estado</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>En español</span>
+          <span class="hide-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>En español</span>
         </div>
+        <a class="btn btn--primary hero-jump" href="#agendar" data-cta="hero-jump">Agendar mi revisión gratis ↓</a>
         <p class="hero-trust reveal d3">
           <b>+5.000 empresas</b> incorporadas · <b>10 años</b> · <b>Partner de Mercury &amp; Relay</b><br>
           <span class="stars" aria-hidden="true">★★★★☆</span> 4,3/5 en Trustpilot con reseñas verificadas
@@ -641,7 +644,7 @@
         </div>
       </div>
       <div class="pain-cta reveal">
-        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar mi revisión gratuita</a>
+        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar revisión gratis</a>
         <span class="cta-note on-navy-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
@@ -673,10 +676,6 @@
         </div>
       </div>
       <p class="why-kicker reveal">Si tu proveedor anterior desapareció o nunca te explicó qué mantener, esta revisión te pone al día.</p>
-      <div class="why-cta reveal">
-        <a class="btn btn--primary" href="#agendar" data-cta="why-first">Agendar la revisión gratuita</a>
-        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
-      </div>
     </div>
   </section>
 
@@ -705,7 +704,7 @@
           <div class="row"><b>Costo</b><span>Gratuita, sin compromiso</span></div>
           <div class="row"><b>Con quién</b><span>Un asesor de la firma, en español</span></div>
           <div class="row"><b>Si no es tu caso</b><span>Te lo decimos en la reunión. Sin costo.</span></div>
-          <a class="btn btn--primary" href="#agendar" data-cta="meeting">Agendar ahora</a>
+          <a class="btn btn--primary" href="#agendar" data-cta="meeting">Agendar revisión gratis</a>
           <span class="cta-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
         </div>
       </div>
@@ -755,7 +754,7 @@
         <li>«Nunca escuché lo del reporte BOI y ahora leí que hay multa.»</li>
       </ul>
       <div class="why-cta reveal">
-        <a class="btn btn--primary" href="#agendar" data-cta="cases">Agendar la revisión gratuita</a>
+        <a class="btn btn--primary" href="#agendar" data-cta="cases">Agendar revisión gratis</a>
         <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
@@ -792,13 +791,7 @@
           <p>Agente residente, reporte anual del estado y contabilidad, para no volver a atrasarte.</p>
         </div>
       </div>
-      <div class="plans-cta reveal">
-        <div>
-          <a class="btn btn--primary" href="#agendar" data-cta="plans">Ver qué necesita mi LLC</a>
-          <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
-        </div>
-        <p>Te lo decimos en la revisión, según tu caso.</p>
-      </div>
+      <p class="plans-note reveal" style="margin-top:22px">Qué corregir y con qué costo lo defines en la revisión, según tu caso — sin costo. <a href="#agendar" data-cta="plans" style="color:var(--gold-ink);font-weight:700;white-space:nowrap">Agendar revisión gratis →</a></p>
     </div>
   </section>
 
@@ -911,6 +904,10 @@
           <div class="a">Puedes solicitar la devolución del pago cuando el servicio no se concreta. Es un proceso sujeto a revisión del caso y a nuestras políticas — puedes consultarlas en <a href="https://www.sotomayorconsulting.com/terminos" target="_blank" rel="noopener">Términos</a> y <a href="https://www.sotomayorconsulting.com/politicas" target="_blank" rel="noopener">Políticas</a>.</div>
         </details>
       </div>
+      <div class="why-cta reveal" style="justify-content:center;margin-top:28px">
+        <a class="btn btn--primary" href="#agendar" data-cta="faq">Agendar revisión gratis</a>
+        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
+      </div>
       <p class="lead-out reveal">¿Todavía no tienes LLC? <a href="../abrir-llc-primera-vez/" data-cta="cross-to-a">Ir a la asesoría para abrir tu primera LLC →</a></p>
     </div>
   </section>
@@ -922,7 +919,7 @@
         <h2>Agenda la revisión gratuita de tu LLC</h2>
         <p>Reunión por Zoom. Sales con un plan claro: qué corregir, en qué orden y con qué costo. Sin costo y sin compromiso.</p>
         <div class="cta-row">
-          <a class="btn btn--primary" href="#agendar" data-cta="final">Agendar ahora</a>
+          <a class="btn btn--primary" href="#agendar" data-cta="final">Agendar revisión gratis</a>
           <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
         </div>
         <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
@@ -950,7 +947,7 @@
   <a class="btn btn--ghost btn--wa" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="sticky-wa" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 5 5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3-1.3-5-4.4-5.2-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
   </a>
-  <a class="btn btn--primary" href="#agendar" data-cta="sticky">Revisar mi LLC · gratis</a>
+  <a class="btn btn--primary" href="#agendar" data-cta="sticky">Revisar gratis</a>
 </div>
 
 <script>
@@ -975,8 +972,6 @@
   var QA_MODE = URL_PARAMS.get("qa") === "1";
   var QA_NO_PIXELS = QA_MODE && URL_PARAMS.get("no_pixels") === "1";
   var QA_NO_WEBHOOK = QA_MODE && URL_PARAMS.get("no_webhook") === "1";
-  // guard de entorno: POST a n8n y CAPI solo se ejecutan en *.sotomayorconsulting.com
-  var HOST_ALLOWS_LIVE = /(^|\.)sotomayorconsulting\.com$/i.test(location.hostname);
   var DEBUG = QA_MODE || !!(window.SCI_TRACKING_CONFIG && window.SCI_TRACKING_CONFIG.debug);
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1121,7 +1116,7 @@
 
   /* CAPI de TikTok server-side vía n8n (webhook pixel-api-conversiones), deduplicado por event_id */
   function sendTikTokConversionsApiEvent(eventName, payload) {
-    if (QA_NO_WEBHOOK || !HOST_ALLOWS_LIVE || !CONFIG.tiktokCapiWebhookUrl) return;
+    if (QA_NO_WEBHOOK || !CONFIG.tiktokCapiWebhookUrl) return;
     var c = getClickTrackingData();
     var evId = payload.event_id || buildEventId(eventName, payload);
     var eventTime = payload.event_time || Math.floor(Date.now() / 1000);
@@ -1256,6 +1251,18 @@
       } else {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: "cta_click", cta: a.getAttribute("data-cta") || "", page_name: PAGE_NAME });
+        // CTA que salta al form: tras el scroll, enfoca el primer campo vacío
+        if ((a.getAttribute("href") || "") === "#agendar") {
+          setTimeout(function () {
+            var sf = document.getElementById("book-step-form");
+            if (!sf || sf.hidden) return;
+            var ids = ["f-name", "f-phone", "f-email"];
+            for (var i = 0; i < ids.length; i++) {
+              var el = document.getElementById(ids[i]);
+              if (el && !el.value) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } break; }
+            }
+          }, 500);
+        }
       }
     });
   });
@@ -1531,7 +1538,6 @@
 
   async function sendLeadToWebhook(payload) {
     if (QA_NO_WEBHOOK) return { ok: false, duplicate: false, status: "qa_no_webhook" };
-    if (!HOST_ALLOWS_LIVE) return { ok: false, duplicate: false, status: "skipped_non_prod_host" };
     var guarded = Object.assign({}, payload, {
       backend_validation: {
         required_unique_keys: ["email", "phone_e164"],
@@ -1600,7 +1606,7 @@
     if (greet) greet.textContent = "Ya casi, " + payload.full_name.split(" ")[0] + ". Tus datos ya están cargados — solo elige el día y la hora.";
 
     var dn = document.getElementById("book-devnote");
-    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook" || res.status === "skipped_non_prod_host")) {
+    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
       dn.hidden = false;
       dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
     }
