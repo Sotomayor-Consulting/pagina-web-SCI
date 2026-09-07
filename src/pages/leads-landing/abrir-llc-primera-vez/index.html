@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Asesoría para tu LLC en EE. UU. | Sotomayor Consulting International </title>
-<meta name="description" content="Agenda una asesoría gratuita de 30 minutos: revisamos tu caso y te decimos si una LLC en EE. UU. es lo que necesitas, en qué estado y con qué plan. Firma boutique, 10 años, partner de Mercury y Relay." />
+<meta name="description" content="Asesoría gratuita por Zoom para e-commerce, agencias, SaaS, creadores, consultores e inversionistas: te decimos si una LLC en EE. UU. es lo que necesitas, en qué estado y con qué plan. Firma boutique, 10 años, partner de Mercury y Relay." />
 <meta name="robots" content="noindex,nofollow" />
 
 <!--
@@ -16,7 +16,7 @@
   Doc del sistema: src/pages/leads-landing/_campanas-llc.md
 
   FUNCIONAMIENTO
-   · Objetivo único: agendar la reunión de asesoría de 30 min por Zoom. Un solo CTA.
+   · Objetivo único: agendar la asesoría gratuita por Zoom. Un solo CTA.
    · Formulario de 4 campos → POST al webhook n8n (leads-directos-tiktok-landing) → Odoo
      → calendario Zcal embebido y prellenado (name, email, a0=teléfono, smsPhone).
    · Tracking: GTM + TikTok Pixel + Meta Pixel (scaffold), eventos deduplicables (event_id).
@@ -57,7 +57,7 @@
     },
     service_content: {
       content_name: "Asesoría para LLC en EE. UU.",
-      description: "Reunión de 30 min: revisamos tu caso y te decimos si una LLC es lo que necesitas, en qué estado y con qué plan."
+      description: "Asesoría gratuita para e-commerce, agencias, SaaS, creadores, consultores e inversionistas: te decimos si una LLC es lo que necesitas, en qué estado y con qué plan."
     },
     debug: false
   };
@@ -85,6 +85,7 @@
     var pixelId = config.tiktok_pixel_id;
     var qaParams = new URLSearchParams(w.location.search || "");
     if (qaParams.get("qa") === "1" && qaParams.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(w.location.hostname)) return; // guard: pixeles solo en produccion
     if (!pixelId) return;
     w.TiktokAnalyticsObject = t;
     var ttq = w[t] = w[t] || [];
@@ -109,6 +110,7 @@
     var c = window.SCI_TRACKING_CONFIG || {};
     var qp = new URLSearchParams(location.search);
     if (qp.get("qa") === "1" && qp.get("no_pixels") === "1") return;
+    if (!/(^|\.)sotomayorconsulting\.com$/i.test(location.hostname)) return; // guard: pixeles solo en produccion
     if (!c.meta_pixel_id || c.meta_pixel_id.indexOf("__") === 0) return;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
@@ -473,6 +475,8 @@
   .js .reveal{opacity:0;transform:translateY(16px)}
   .js .reveal.is-in{opacity:1;transform:none;transition:opacity .7s var(--e-out), transform .7s var(--e-out)}
   .js .reveal.d1{transition-delay:.06s} .js .reveal.d2{transition-delay:.12s} .js .reveal.d3{transition-delay:.18s}
+  .js .hero .reveal{opacity:1;transform:none;transition:none}   /* hero visible en el primer paint — tráfico social no espera */
+  .cal-fallback--urgent{font-size:.95rem !important;font-weight:700 !important;color:var(--gold-300) !important}
   @media (prefers-reduced-motion: reduce){
     .js .reveal{opacity:1;transform:none;transition:none}
     .btn,.step,.pcard{transition:none}
@@ -487,7 +491,7 @@
     <a class="brand" href="#inicio" aria-label="Sotomayor Consulting International">
       <img src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png" alt="Sotomayor Consulting International" width="200" height="40" />
     </a>
-    <a class="btn btn--primary btn--sm" href="#agendar" data-cta="header">Agenda 30 min</a>
+    <a class="btn btn--primary btn--sm" href="#agendar" data-cta="header">Agenda tu asesoría</a>
   </div>
 </header>
 
@@ -498,8 +502,8 @@
     <div class="wrap">
       <div>
         <span class="hero-eyebrow reveal">Firma boutique legal, fiscal y tecnológica · 10 años</span>
-        <h1 class="reveal d1" id="hero-h1">Abre tu LLC en Estados Unidos <span class="u">sin errores</span>, con una asesoría de 30&nbsp;minutos.</h1>
-        <p class="lede reveal d2" id="hero-sub">Empieza por una asesoría <strong>gratuita</strong> de 30 minutos, por Zoom: revisamos tu caso y te decimos si una LLC es lo que necesitas, en qué estado conviene y con qué plan — <strong>antes de pagar nada</strong>. Si no es tu mejor opción, te lo decimos en la reunión, sin costo.</p>
+        <h1 class="reveal d1" id="hero-h1">Abre tu LLC en Estados Unidos <span class="u">sin errores</span>, con la estructura correcta desde el inicio.</h1>
+        <p class="lede reveal d2" id="hero-sub">Asesoría <strong>gratuita</strong> por Zoom para <strong>e-commerce</strong>, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>creadores</strong>, <strong>consultores</strong> e <strong>inversionistas</strong>: revisamos tu caso y te decimos si una LLC es lo que necesitas, en qué estado y con qué plan — <strong>antes de pagar nada</strong>.</p>
         <div class="hero-obj reveal d2">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Sin visa</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Sin SSN ni ITIN</span>
@@ -528,7 +532,7 @@
 
         <!-- PASO 1 -->
         <div id="book-step-form">
-          <span class="book-badge">Asesoría gratuita · 30 min</span>
+          <span class="book-badge">Asesoría gratuita · por Zoom</span>
           <h2>Agenda tu reunión</h2>
           <p class="book-sub">Sin costo, sin compromiso. Es el primer paso que recomendamos a todos. Déjanos tus datos y elige el horario en el siguiente paso.</p>
           <form id="lead-form" novalidate>
@@ -560,9 +564,9 @@
               <p class="err" id="e-email" role="status" aria-live="polite">Escribe un correo válido.</p>
             </div>
             <div class="field">
-              <label for="f-goal">¿Qué quieres resolver?</label>
-              <select id="f-goal" name="goal" required aria-describedby="e-goal">
-                <option value="" selected disabled>Elige una opción</option>
+              <label for="f-goal">¿Qué quieres resolver? <span style="color:var(--muted);font-weight:600">(opcional)</span></label>
+              <select id="f-goal" name="goal" aria-describedby="e-goal">
+                <option value="" selected>Prefiero decirlo en la reunión</option>
                 <option value="llc_nueva">Crear una LLC nueva</option>
                 <option value="ordenar_llc">Ordenar o corregir mi LLC actual</option>
                 <option value="banca_pagos">Banca, pagos o tributación</option>
@@ -578,11 +582,11 @@
 
         <!-- PASO 2 -->
         <div id="book-step-cal" class="book-cal" hidden>
-          <span class="book-badge">Último paso</span>
+          <span class="book-badge">Casi listo</span>
           <h2>Elige tu horario</h2>
-          <p class="book-sub" id="cal-greeting">Selecciona la fecha y la hora que mejor te queden.</p>
+          <p class="book-sub" id="cal-greeting">Tus datos ya están cargados — solo elige el día y la hora.</p>
           <div class="cal-frame" id="cal-frame"><!-- iframe Zcal se inyecta aquí tras el envío --></div>
-          <p class="cal-fallback">¿No carga? <a id="cal-open" href="#" target="_blank" rel="noopener">Abre el calendario en una pestaña nueva</a>.</p>
+          <p class="cal-fallback"><a id="cal-open" href="#" target="_blank" rel="noopener">Abrir el calendario en una pestaña nueva</a> (tus datos van igual de precargados).</p>
           <p class="book-devnote" id="book-devnote" hidden></p>
         </div>
       </aside>
@@ -611,13 +615,35 @@
     </div>
   </section>
 
+  <!-- ============ PARA TI SI ============ -->
+  <section class="why-first" style="background:var(--paper)">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Para quién es</span>
+        <h2>Esto es para ti si…</h2>
+      </div>
+      <ul class="qlist reveal">
+        <li>Vendes por <b>e-commerce</b> o <b>Amazon</b> y necesitas cuenta y pasarela en EE.&nbsp;UU.</li>
+        <li>Facturas a clientes de <b>EE.&nbsp;UU.</b> o Europa y quieres cobrar en dólares.</li>
+        <li>Cobras por <b>Stripe</b>, App Store o plataformas que piden una entidad de EE.&nbsp;UU.</li>
+        <li>Tienes una <b>agencia</b>, un <b>SaaS</b> o vendes <b>infoproductos</b> y facturas afuera.</li>
+        <li>Inviertes en <b>inmuebles</b> o <b>bolsa</b> en EE.&nbsp;UU. y quieres estructurarlo bien.</li>
+        <li>Quieres abrir cuenta en <b>Mercury</b> o <b>Relay</b> sin que te la rechacen.</li>
+      </ul>
+      <div class="why-cta reveal">
+        <a class="btn btn--primary" href="#agendar" data-cta="fit">Agendar asesoría gratis</a>
+        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ PAIN ============ -->
   <section class="pain">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="kicker">Por qué una reunión primero</span>
         <h2>Una LLC mal planteada cuesta miles de dólares</h2>
-        <p class="lede">La estructura equivocada, un formulario fuera de plazo o una cuenta bancaria rechazada se pagan caro. Media hora de asesoría evita el error antes de que ocurra.</p>
+        <p class="lede">La estructura equivocada, un formulario fuera de plazo o una cuenta bancaria rechazada se pagan caro. Una asesoría a tiempo evita el error antes de que ocurra.</p>
       </div>
       <div class="pain-grid">
         <div class="pain-item reveal">
@@ -634,8 +660,8 @@
         </div>
       </div>
       <div class="pain-cta reveal">
-        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar mi asesoría de 30 min</a>
-        <span class="cta-note on-navy-note">Gratis · sin compromiso · 30 min</span>
+        <a class="btn btn--primary" href="#agendar" data-cta="pain">Agendar mi asesoría gratuita</a>
+        <span class="cta-note on-navy-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -668,7 +694,7 @@
       <p class="why-kicker reveal">Otros te venden el plan primero. Nosotros revisamos tu caso primero — gratis.</p>
       <div class="why-cta reveal">
         <a class="btn btn--primary" href="#agendar" data-cta="why-first">Agendar la asesoría gratuita</a>
-        <span class="cta-note">Gratis · sin compromiso · 30 min</span>
+        <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -679,7 +705,7 @@
       <div class="meeting-grid">
         <div class="reveal">
           <div class="section-head" style="margin-bottom:0">
-            <span class="kicker">La reunión de 30 minutos</span>
+            <span class="kicker">La reunión inicial</span>
             <h2>Qué revisamos contigo</h2>
           </div>
           <ul class="meeting-list">
@@ -691,13 +717,14 @@
         </div>
         <div class="meeting-card reveal d1">
           <h3>Detalles</h3>
-          <div class="row"><b>Duración</b><span>30 minutos</span></div>
+          <div class="row"><b>Para quién</b><span>Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas.</span></div>
+          <div class="row"><b>Enfoque</b><span>Primero escuchamos todo tu proyecto; después hablamos de estructura y plan.</span></div>
           <div class="row"><b>Modalidad</b><span>Online, por Zoom</span></div>
           <div class="row"><b>Costo</b><span>Gratuita, sin compromiso</span></div>
           <div class="row"><b>Con quién</b><span>Un asesor de la firma, en español</span></div>
           <div class="row"><b>Si no es tu caso</b><span>Te lo decimos en la reunión. Sin costo.</span></div>
           <a class="btn btn--primary" href="#agendar" data-cta="meeting">Agendar ahora</a>
-          <span class="cta-note" style="text-align:center">Gratis · sin compromiso · 30 min</span>
+          <span class="cta-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
         </div>
       </div>
     </div>
@@ -712,7 +739,7 @@
       </div>
       <div class="steps-row">
         <div class="step reveal">
-          <h3>Asesoría de 30 min</h3>
+          <h3>Asesoría inicial</h3>
           <p>Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.</p>
           <p class="meta">Online · sin compromiso</p>
         </div>
@@ -764,9 +791,9 @@
       <div class="plans-cta reveal">
         <div>
           <a class="btn btn--primary" href="#agendar" data-cta="plans">Ver qué plan me conviene</a>
-          <span class="cta-note">Gratis · sin compromiso · 30 min</span>
+          <span class="cta-note">Gratis · sin compromiso · por Zoom</span>
         </div>
-        <p>Te lo recomendamos en la asesoría de 30 min, según tu caso.</p>
+        <p>Te lo recomendamos en la asesoría, según tu caso.</p>
       </div>
     </div>
   </section>
@@ -893,13 +920,13 @@
   <section class="final">
     <div class="wrap">
       <div class="reveal">
-        <h2>Tu primer paso es gratis: agenda la asesoría de 30 minutos</h2>
+        <h2>Tu primer paso es gratis: agenda tu asesoría</h2>
         <p>Revisamos tu caso y sales con una recomendación clara: si la LLC te conviene, en qué estado y con qué plan. Sin costo y sin compromiso.</p>
         <div class="cta-row">
           <a class="btn btn--primary" href="#agendar" data-cta="final">Agendar ahora</a>
           <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
         </div>
-        <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · 30 min · por Zoom</span>
+        <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
       </div>
     </div>
   </section>
@@ -924,7 +951,7 @@
   <a class="btn btn--ghost btn--wa" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="sticky-wa" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 5 5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3-1.3-5-4.4-5.2-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
   </a>
-  <a class="btn btn--primary" href="#agendar" data-cta="sticky">Agenda 30 min · gratis</a>
+  <a class="btn btn--primary" href="#agendar" data-cta="sticky">Agenda gratis</a>
 </div>
 
 <script>
@@ -949,6 +976,8 @@
   var QA_MODE = URL_PARAMS.get("qa") === "1";
   var QA_NO_PIXELS = QA_MODE && URL_PARAMS.get("no_pixels") === "1";
   var QA_NO_WEBHOOK = QA_MODE && URL_PARAMS.get("no_webhook") === "1";
+  // guard de entorno: POST a n8n y CAPI solo se ejecutan en *.sotomayorconsulting.com
+  var HOST_ALLOWS_LIVE = /(^|\.)sotomayorconsulting\.com$/i.test(location.hostname);
   var DEBUG = QA_MODE || !!(window.SCI_TRACKING_CONFIG && window.SCI_TRACKING_CONFIG.debug);
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1093,7 +1122,7 @@
 
   /* CAPI de TikTok server-side vía n8n (webhook pixel-api-conversiones), deduplicado por event_id */
   function sendTikTokConversionsApiEvent(eventName, payload) {
-    if (QA_NO_WEBHOOK || !CONFIG.tiktokCapiWebhookUrl) return;
+    if (QA_NO_WEBHOOK || !HOST_ALLOWS_LIVE || !CONFIG.tiktokCapiWebhookUrl) return;
     var c = getClickTrackingData();
     var evId = payload.event_id || buildEventId(eventName, payload);
     var eventTime = payload.event_time || Math.floor(Date.now() / 1000);
@@ -1166,34 +1195,26 @@
     } catch (e) {}
   }
 
-  /* ---------- atributos para el hook de mensaje (variantes por ?utm_content=/?hook=) ---------- */
-  var ATTR = {};
-  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "ttclid", "fbclid", "hook"].forEach(function (k) {
-    var v = URL_PARAMS.get(k); if (v) ATTR[k] = v;
-  });
-  try {
-    var storedAttr = JSON.parse(sessionStorage.getItem("sci_attr") || "{}");
-    ATTR = Object.assign({}, storedAttr, ATTR);
-    sessionStorage.setItem("sci_attr", JSON.stringify(ATTR));
-  } catch (e) {}
-
-  /* ---------- message match (hook / utm_content) ---------- */
+  /* ---------- message match (hook / utm_content) — SOLO parámetros de la visita actual ----------
+     El hook no se persiste: si el lead vuelve por otro creativo (o un link directo sin parámetro),
+     debe ver el mensaje de ESA visita, no el de un ad anterior. La atribución (utm/click ids) sí
+     se persiste, pero eso lo maneja getClickTrackingData() con su propio storage. */
   var HOOKS = {
     dolares: {
       h1: 'Cobra en dólares desde tu país con tu propia LLC en EE.&nbsp;UU.',
-      sub: 'Empieza por una asesoría gratuita de 30 minutos, por Zoom: te decimos si una LLC es lo que necesitas, en qué estado y con qué plan — antes de pagar nada. Si no es tu mejor opción, te lo decimos sin costo.'
+      sub: 'Asesoría gratuita por Zoom para e-commerce, agencias, SaaS, creadores, consultores e inversionistas: te decimos si una LLC es lo que necesitas, en qué estado y con qué plan — antes de pagar nada. Si no es tu mejor opción, te lo decimos sin costo.'
     },
     patrimonio: {
       h1: 'Protege tu patrimonio con una <span class="u">estructura bien diseñada</span> en EE.&nbsp;UU.',
-      sub: 'Empieza por una asesoría gratuita de 30 minutos: definimos si una LLC —o una estructura mayor— es lo correcto para tu caso, antes de pagar nada. Sin costo y sin compromiso.'
+      sub: 'Asesoría gratuita por Zoom para inversionistas, e-commerce, agencias, SaaS y consultores: definimos si una LLC —o una estructura mayor— es lo correcto para tu caso, antes de pagar nada. Sin costo y sin compromiso.'
     },
     ordenar: {
       h1: '¿Ya tienes una LLC? <span class="u">Ordénala</span> antes de que un error te cueste caro.',
-      sub: 'Empieza por una asesoría gratuita de 30 minutos, por Zoom: revisamos tu estructura actual —elección fiscal, cumplimiento, banca— y qué corregir primero. Sin costo y sin compromiso.'
+      sub: 'Asesoría gratuita por Zoom para e-commerce, agencias, SaaS, consultores e inversionistas: revisamos tu estructura actual —elección fiscal, cumplimiento, banca— y qué corregir primero. Sin costo y sin compromiso.'
     }
   };
   (function applyHook() {
-    var key = (ATTR.hook || ATTR.utm_content || "").toLowerCase().split(/[|_-]/)[0];
+    var key = (URL_PARAMS.get("hook") || URL_PARAMS.get("utm_content") || "").toLowerCase().split(/[|_-]/)[0];
     var h = HOOKS[key];
     if (!h) return;
     var h1 = document.getElementById("hero-h1");
@@ -1336,7 +1357,7 @@
       setActive(currentIndex());
       list.focus();
       document.addEventListener("click", onOutside, true);
-      window.addEventListener("scroll", closeList, true);
+      window.addEventListener("scroll", onScroll, true);
       window.addEventListener("resize", closeList);
     }
     function closeList() {
@@ -1344,10 +1365,15 @@
       open = false; list.hidden = true;
       btn.setAttribute("aria-expanded", "false");
       document.removeEventListener("click", onOutside, true);
-      window.removeEventListener("scroll", closeList, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", closeList);
     }
     function onOutside(e) { if (!root.contains(e.target)) closeList(); }
+    function onScroll(e) {
+      var t = e.target;
+      if (t === list || (t && t.nodeType === 1 && list.contains(t))) return;
+      closeList();
+    }
 
     btn.addEventListener("click", function () { open ? closeList() : openList(); });
     btn.addEventListener("keydown", function (e) {
@@ -1432,11 +1458,11 @@
       var goal = document.getElementById("f-goal").value;
 
       var ok = true;
-      showErr("name", false); showErr("phone", false); showErr("email", false); showErr("goal", false);
+      showErr("name", false); showErr("phone", false); showErr("email", false);
       if (name.length < 2) { showErr("name", true); ok = false; }
       if (phoneRaw.length < 7) { showErr("phone", true); ok = false; }
       if (!validEmail(email)) { showErr("email", true); ok = false; }
-      if (!goal) { showErr("goal", true); ok = false; }
+      // goal es opcional: si viene vacío, el backend lo trata como "sin especificar"
       if (!ok) { form.querySelector('[aria-invalid="true"]').focus(); return; }
 
       var phoneE164 = cc + phoneRaw;
@@ -1506,6 +1532,7 @@
 
   async function sendLeadToWebhook(payload) {
     if (QA_NO_WEBHOOK) return { ok: false, duplicate: false, status: "qa_no_webhook" };
+    if (!HOST_ALLOWS_LIVE) return { ok: false, duplicate: false, status: "skipped_non_prod_host" };
     var guarded = Object.assign({}, payload, {
       backend_validation: {
         required_unique_keys: ["email", "phone_e164"],
@@ -1563,12 +1590,18 @@
     iframe.setAttribute("allow", "clipboard-write");
     frame.appendChild(iframe);
 
+    // Si el iframe de Zcal no carga (ad-blocker, red corporativa, caída), realza el enlace de respaldo.
+    var fb = stepCal.querySelector(".cal-fallback");
+    var iframeLoaded = false;
+    iframe.addEventListener("load", function () { iframeLoaded = true; });
+    setTimeout(function () { if (!iframeLoaded && fb) fb.classList.add("cal-fallback--urgent"); }, 6000);
+
     document.getElementById("cal-open").href = u.toString();
     var greet = document.getElementById("cal-greeting");
-    if (greet) greet.textContent = "Gracias, " + payload.full_name.split(" ")[0] + ". Elige la fecha y la hora que mejor te queden.";
+    if (greet) greet.textContent = "Ya casi, " + payload.full_name.split(" ")[0] + ". Tus datos ya están cargados — solo elige el día y la hora.";
 
     var dn = document.getElementById("book-devnote");
-    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
+    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook" || res.status === "skipped_non_prod_host")) {
       dn.hidden = false;
       dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
     }
@@ -1577,12 +1610,16 @@
     stepCal.hidden = false;
     stepCal.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
 
-    // Confirmación de reserva de Zcal → evento Schedule
+    // Confirmación de reserva de Zcal → evento Schedule.
+    // Señal solo de cliente: es la mejor disponible aquí, pero la FIABLE es server-side
+    // (webhook de Zcal → n8n → CAPI). Mientras tanto, este listener acota a las formas de
+    // mensaje de "reserva confirmada" e ignora los mensajes de resize/height de Zcal.
     window.addEventListener("message", function onMsg(e) {
-      if (!/zcal\.co$/.test((e.origin || "").replace(/^https?:\/\//, "").split("/")[0])) return;
-      var d = e.data || {};
-      var isBooked = d === "zcal:booking_completed" ||
-        (typeof d === "object" && /book|schedul|complete/i.test(JSON.stringify(d)));
+      var host = (e.origin || "").replace(/^https?:\/\//, "").split("/")[0];
+      if (!/(^|\.)zcal\.co$/.test(host)) return;
+      var d = e.data;
+      var s = typeof d === "string" ? d : (d && typeof d === "object" ? JSON.stringify(d) : "");
+      var isBooked = /booking[_-]?(completed|confirmed|success)|schedule[_-]?confirmed|event[_-]?created|"?booked"?\s*[:=]\s*true|\bbooking_completed\b/i.test(s);
       if (isBooked) {
         trackAdsEvent("Schedule", {
           event_id: buildEventId("Schedule", { lead_id: payload.lead_id }),
