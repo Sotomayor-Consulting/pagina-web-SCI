@@ -5,8 +5,8 @@ import ogImageSrc from "@images/social.png";
 export const SITE = {
   title: "Sotomayor Consulting International",
   tagline: "Sotomayor Consulting International | Asesoría Global para Patrimonio y Negocios",
-  description: "Te ayudamos a construir, proteger y expandir tu patrimonio a nivel internacional. Ofrecemos soluciones integrales para tu crecimiento empresarial.",
-  description_short: "Te ayudamos a construir, proteger y expandir tu patrimonio a nivel internacional.",
+  description: "Expertos en Incorporar LLCs, empresas holding, trusts con miras a formar estructuras societarias eficientes.  Nuestro enfoque es apoyar la expansión internacional de negocios, planificación tributaria internacional y/o planificación patrimonial.",
+  description_short: "Expertos en Incorporar LLCs, empresas holding, trusts con miras a formar estructuras societarias eficientes",
   url: "https://sotomayorconsulting.com",
   author: "Sotomayor Consulting International",
   inLanguage: "es-EC"
@@ -37,7 +37,7 @@ export const OG = {
   type: "website",
   url: SITE.url,
   title: `${SITE.title}: : Asesoría Global para Patrimonio y Negocios`,
-  description: "Te ayudamos a construir, proteger y expandir tu patrimonio a nivel internacional. Ofrecemos soluciones integrales para tu crecimiento empresarial.",
+  description: "Expertos en Incorporar LLCs, empresas holding, trusts con miras a formar estructuras societarias eficientes. Nuestro enfoque es apoyar la expansión internacional de negocios, planificación tributaria internacional y/o planificación patrimonial.",
   image: ogImageSrc,
 };
 
