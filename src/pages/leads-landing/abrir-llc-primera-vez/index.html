@@ -214,7 +214,7 @@
 
   /* ============================ HERO ============================ */
   .hero{position:relative;overflow:hidden;padding-top:clamp(26px,3.4vw,44px);padding-bottom:0}
-  .hero .wrap{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.9fr);gap:clamp(28px,4vw,54px);align-items:start}
+  .hero .wrap{max-width:720px}   /* hero de 1 columna (modelo VSL): sin form arriba */
   .hero-eyebrow{
     font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.03em;
     color:var(--gold-ink);display:inline-flex;align-items:center;gap:9px;margin-bottom:16px;
@@ -229,7 +229,7 @@
   .hero-trust{margin-top:16px;font-size:.83rem;color:var(--muted);line-height:1.7}
   .hero-trust b{color:var(--navy-800);font-family:var(--font-display);font-weight:600}
   .hero-trust .stars{color:var(--gold);letter-spacing:1px}
-  .hero-jump{display:none}   /* CTA de salto al form: solo en movil (ver @media 900) */
+  .hero-jump{display:inline-flex;margin-top:20px}   /* CTA principal del hero → sección de agenda */
 
   /* ---- Booking card (form → Zcal) ---- */
   .book{
@@ -287,13 +287,17 @@
   .book-devnote{margin-top:10px;font-size:.72rem;color:var(--gold-300);opacity:.8;text-align:center}
 
   @media (max-width:900px){
-    .hero .wrap{grid-template-columns:1fr;gap:26px}
     .hero h1{max-width:22ch}
     .book .globe{opacity:.3;width:60%}
-    .hero-obj .hide-sm{display:none}                       /* menos chips antes del form en movil */
-    .hero-jump{display:flex;width:100%;justify-content:center;margin-top:18px}
-    .hero-trust{margin-top:12px;font-size:.8rem}           /* mas compacto en movil */
+    .hero-obj .hide-sm{display:none}
+    .hero-jump{width:100%;justify-content:center}
+    .hero-trust{margin-top:12px;font-size:.8rem}
   }
+
+  /* ============================ SECCIÓN DE AGENDA (form al final) ============================ */
+  .agenda-final{background:var(--mist)}
+  .agenda-final .section-head{margin-inline:auto;text-align:center}
+  .agenda-final .book{max-width:520px;margin:26px auto 0}
 
   /* ============================ PAIN ============================ */
   .pain{background:var(--navy-800);color:#fff;position:relative;overflow:hidden}
@@ -514,23 +518,18 @@
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Lista en semanas, no en meses</span>
         </div>
         <a class="btn btn--primary hero-jump" href="#agendar" data-cta="hero-jump">Agendar mi asesoría gratis ↓</a>
-        <p class="hero-trust reveal d3">
-          <b>+5.000 empresas</b> incorporadas · <b>10 años</b> · <b>Partner de Mercury &amp; Relay</b><br>
-          <span class="stars" aria-hidden="true">★★★★☆</span> 4,3/5 en Trustpilot con reseñas verificadas
-        </p>
-
-        <!-- VIDEO — mensaje del equipo (bajo el hero, estilo VSL) -->
+        <!-- VIDEO — mensaje del equipo (bajo el CTA principal, estilo VSL) -->
         <div class="hero-vmsg reveal d3">
           <button class="vmsg-frame" type="button" aria-haspopup="dialog"
-                  aria-label="Ver el video con sonido: lo que deberías saber antes de abrir tu LLC (0:27)">
+                  aria-label="Ver el video con sonido: mensaje de bienvenida de Sebastián Sotomayor, Managing Partner (0:27)">
             <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
                    poster="../../form-landing-poster.jpg">
               <source src="../../form-landing-loop.mp4" type="video/mp4" />
             </video>
             <span class="vmsg-frame__overlay" aria-hidden="true">
               <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-              <span class="vmsg-frame__hook">Lo que deberías saber<br>antes de abrir tu LLC</span>
-              <span class="vmsg-frame__dur">Míralo completo &middot; 0:27</span>
+              <span class="vmsg-frame__hook">Lo define un especialista,<br>no una plantilla</span>
+              <span class="vmsg-frame__dur">Sebastián Sotomayor &middot; Managing Partner</span>
             </span>
           </button>
           <dialog class="vmsg-modal" aria-label="Mensaje de Sotomayor Consulting">
@@ -542,81 +541,12 @@
             </video>
           </dialog>
         </div>
+
+        <p class="hero-trust reveal d3">
+          <b>+5.000 empresas</b> incorporadas · <b>10 años</b> · <b>Partner de Mercury &amp; Relay</b><br>
+          <span class="stars" aria-hidden="true">★★★★☆</span> 4,3/5 en Trustpilot con reseñas verificadas
+        </p>
       </div>
-
-      <!-- Booking card: paso 1 (form) → paso 2 (Zcal) -->
-      <aside class="book" id="agendar" aria-label="Agenda tu asesoría gratuita">
-        <svg class="globe" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <circle cx="100" cy="100" r="78" stroke="#fff" stroke-opacity=".35"/>
-          <ellipse cx="100" cy="100" rx="30" ry="78" stroke="#fff" stroke-opacity=".25"/>
-          <ellipse cx="100" cy="100" rx="58" ry="78" stroke="#fff" stroke-opacity=".18"/>
-          <path d="M24 78h152M30 122h140M22 100h156" stroke="#fff" stroke-opacity=".2"/>
-          <path d="M40 66c30 26 90 26 120 0" stroke="#e4c078" stroke-width="1.5"/>
-          <path d="M46 138c28-22 82-22 108 4" stroke="#e4c078" stroke-width="1.5"/>
-          <g fill="#e4c078"><circle cx="40" cy="66" r="3.4"/><circle cx="160" cy="66" r="3.4"/></g>
-          <g fill="#fff"><circle cx="100" cy="22" r="3"/><circle cx="22" cy="100" r="3"/><circle cx="178" cy="100" r="3"/></g>
-        </svg>
-
-        <!-- PASO 1 -->
-        <div id="book-step-form">
-          <span class="book-badge">Asesoría gratuita · por Zoom</span>
-          <h2>Agenda tu reunión</h2>
-          <p class="book-sub">Sin costo, sin compromiso. Es el primer paso que recomendamos a todos. Déjanos tus datos y elige el horario en el siguiente paso.</p>
-          <form id="lead-form" novalidate>
-            <input type="text" name="contact_channel" id="f-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
-            <div class="field">
-              <label for="f-name">Nombre completo</label>
-              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Tu nombre y apellido" required aria-describedby="e-name" />
-              <p class="err" id="e-name" role="status" aria-live="polite">Escribe tu nombre.</p>
-            </div>
-            <div class="field">
-              <label for="f-phone">WhatsApp</label>
-              <div class="phone-row">
-                <div class="ccx" id="f-cc">
-                  <button type="button" class="ccx-btn" id="f-cc-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="f-cc-list" aria-label="País del WhatsApp">
-                    <img class="ccx-flag" id="f-cc-flag" src="https://flagcdn.com/w40/ec.png" srcset="https://flagcdn.com/w80/ec.png 2x" alt="" width="22" height="16" />
-                    <span class="ccx-code" id="f-cc-code">+593</span>
-                    <svg class="ccx-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                  </button>
-                  <ul class="ccx-list" id="f-cc-list" role="listbox" tabindex="-1" aria-label="Elige el país" hidden></ul>
-                  <input type="hidden" name="country_code" id="f-cc-value" value="+593" data-iso="EC" />
-                </div>
-                <input id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="099 123 4567" required aria-describedby="e-phone" />
-              </div>
-              <p class="err" id="e-phone" role="status" aria-live="polite">Escribe un número válido.</p>
-            </div>
-            <div class="field">
-              <label for="f-email">Correo electrónico</label>
-              <input id="f-email" name="email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required aria-describedby="e-email" />
-              <p class="err" id="e-email" role="status" aria-live="polite">Escribe un correo válido.</p>
-            </div>
-            <div class="field">
-              <label for="f-goal">¿Qué quieres resolver? <span style="color:var(--muted);font-weight:600">(opcional)</span></label>
-              <select id="f-goal" name="goal" aria-describedby="e-goal">
-                <option value="" selected>Prefiero decirlo en la reunión</option>
-                <option value="llc_nueva">Crear una LLC nueva</option>
-                <option value="ordenar_llc">Ordenar o corregir mi LLC actual</option>
-                <option value="banca_pagos">Banca, pagos o tributación</option>
-                <option value="inversion_patrimonio">Inversión, bienes raíces o patrimonio</option>
-              </select>
-              <p class="err" id="e-goal" role="status" aria-live="polite">Elige una opción.</p>
-            </div>
-            <button class="btn btn--primary" type="submit" id="lead-submit">Elegir mi horario →</button>
-          </form>
-          <p class="fineprint">Gratis y sin compromiso. Al enviar aceptas nuestra <a href="https://www.sotomayorconsulting.com/politicas" target="_blank" rel="noopener">política de privacidad</a>.</p>
-          <a class="wa-alt" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="hero-wa">o escríbenos por WhatsApp →</a>
-        </div>
-
-        <!-- PASO 2 -->
-        <div id="book-step-cal" class="book-cal" hidden>
-          <span class="book-badge">Casi listo</span>
-          <h2>Elige tu horario</h2>
-          <p class="book-sub" id="cal-greeting">Tus datos ya están cargados — solo elige el día y la hora.</p>
-          <div class="cal-frame" id="cal-frame"><!-- iframe Zcal se inyecta aquí tras el envío --></div>
-          <p class="cal-fallback"><a id="cal-open" href="#" target="_blank" rel="noopener">Abrir el calendario en una pestaña nueva</a> (tus datos van igual de precargados).</p>
-          <p class="book-devnote" id="book-devnote" hidden></p>
-        </div>
-      </aside>
     </div>
   </section>
 
@@ -643,7 +573,7 @@
       transition:transform .2s var(--e-out)}
     .vmsg-frame:hover .vmsg-frame__play{transform:scale(1.07)}
     .vmsg-frame__play svg{width:26px;height:26px;margin-left:3px}
-    .vmsg-frame__hook{max-width:20ch;
+    .vmsg-frame__hook{max-width:26ch;
       font:700 clamp(1rem,1.4vw,1.15rem)/1.32 var(--font-display);
       text-shadow:0 2px 12px rgba(0,0,0,.55)}
     .vmsg-frame__dur{font:600 .78rem/1 var(--font-body);letter-spacing:.06em;
@@ -1054,17 +984,86 @@
     </div>
   </section>
 
-  <!-- ============ FINAL ============ -->
-  <section class="final">
+  <!-- ============ AGENDA (form → Zcal) — al final, tras la nutrición ============ -->
+  <section class="agenda-final" id="agendar">
     <div class="wrap">
-      <div class="reveal">
+      <div class="section-head reveal">
+        <span class="kicker">Último paso</span>
         <h2>Tu primer paso es gratis: agenda tu asesoría</h2>
-        <p>Revisamos tu caso y sales con una recomendación clara: si la LLC te conviene, en qué estado y con qué plan. Sin costo y sin compromiso.</p>
-        <div class="cta-row">
-          <a class="btn btn--primary" href="#agendar" data-cta="final">Agendar asesoría gratis</a>
-          <a class="btn btn--on-navy" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="final-wa">Hablar por WhatsApp</a>
+        <p class="lede">Revisamos tu caso y sales con una recomendación clara: si la LLC te conviene, en qué estado y con qué plan. Sin costo ni compromiso.</p>
+      </div>
+
+      <div class="book reveal d1" aria-label="Agenda tu asesoría gratuita">
+        <svg class="globe" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="78" stroke="#fff" stroke-opacity=".35"/>
+          <ellipse cx="100" cy="100" rx="30" ry="78" stroke="#fff" stroke-opacity=".25"/>
+          <ellipse cx="100" cy="100" rx="58" ry="78" stroke="#fff" stroke-opacity=".18"/>
+          <path d="M24 78h152M30 122h140M22 100h156" stroke="#fff" stroke-opacity=".2"/>
+          <path d="M40 66c30 26 90 26 120 0" stroke="#e4c078" stroke-width="1.5"/>
+          <path d="M46 138c28-22 82-22 108 4" stroke="#e4c078" stroke-width="1.5"/>
+          <g fill="#e4c078"><circle cx="40" cy="66" r="3.4"/><circle cx="160" cy="66" r="3.4"/></g>
+          <g fill="#fff"><circle cx="100" cy="22" r="3"/><circle cx="22" cy="100" r="3"/><circle cx="178" cy="100" r="3"/></g>
+        </svg>
+
+        <!-- PASO 1 -->
+        <div id="book-step-form">
+          <span class="book-badge">Asesoría gratuita · por Zoom</span>
+          <h2>Da el primer paso</h2>
+          <p class="book-sub">Déjanos tus datos y dinos cómo seguir. Sin costo ni compromiso.</p>
+          <form id="lead-form" novalidate>
+            <input type="text" name="contact_channel" id="f-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
+            <div class="field">
+              <label for="f-name">Nombre completo</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Tu nombre y apellido" required aria-describedby="e-name" />
+              <p class="err" id="e-name" role="status" aria-live="polite">Escribe tu nombre.</p>
+            </div>
+            <div class="field">
+              <label for="f-phone">WhatsApp</label>
+              <div class="phone-row">
+                <div class="ccx" id="f-cc">
+                  <button type="button" class="ccx-btn" id="f-cc-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="f-cc-list" aria-label="País del WhatsApp">
+                    <img class="ccx-flag" id="f-cc-flag" src="https://flagcdn.com/w40/ec.png" srcset="https://flagcdn.com/w80/ec.png 2x" alt="" width="22" height="16" />
+                    <span class="ccx-code" id="f-cc-code">+593</span>
+                    <svg class="ccx-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <ul class="ccx-list" id="f-cc-list" role="listbox" tabindex="-1" aria-label="Elige el país" hidden></ul>
+                  <input type="hidden" name="country_code" id="f-cc-value" value="+593" data-iso="EC" />
+                </div>
+                <input id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="099 123 4567" required aria-describedby="e-phone" />
+              </div>
+              <p class="err" id="e-phone" role="status" aria-live="polite">Escribe un número válido.</p>
+            </div>
+            <div class="field">
+              <label for="f-email">Correo electrónico</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required aria-describedby="e-email" />
+              <p class="err" id="e-email" role="status" aria-live="polite">Escribe un correo válido.</p>
+            </div>
+            <div class="field">
+              <label for="f-goal">¿Qué quieres resolver?</label>
+              <select id="f-goal" name="goal" aria-describedby="e-goal">
+                <option value="" selected>Prefiero decirlo en la reunión</option>
+                <option value="llc_nueva">Crear una LLC nueva</option>
+                <option value="ordenar_llc">Ordenar o corregir mi LLC actual</option>
+                <option value="banca_pagos">Banca, pagos o tributación</option>
+                <option value="inversion_patrimonio">Inversión, bienes raíces o patrimonio</option>
+              </select>
+              <p class="err" id="e-goal" role="status" aria-live="polite">Elige una opción.</p>
+            </div>
+            <button class="btn btn--primary" type="submit" id="lead-submit">Agendar mi asesoría gratis</button>
+          </form>
+          <p class="fineprint">Gratis y sin compromiso. Al enviar aceptas nuestra <a href="https://www.sotomayorconsulting.com/politicas" target="_blank" rel="noopener">política de privacidad</a>.</p>
+          <a class="wa-alt" href="https://wa.link/jx59a9" target="_blank" rel="noopener" data-cta="hero-wa">o escríbenos por WhatsApp →</a>
         </div>
-        <span class="cta-note on-navy-note" style="text-align:center">Gratis · sin compromiso · por Zoom</span>
+
+        <!-- PASO 2 -->
+        <div id="book-step-cal" class="book-cal" hidden>
+          <span class="book-badge" id="cal-badge">Casi listo</span>
+          <h2 id="cal-title">Elige tu horario</h2>
+          <p class="book-sub" id="cal-greeting">Tus datos ya están cargados — solo elige el día y la hora.</p>
+          <div class="cal-frame" id="cal-frame"><!-- iframe Zcal se inyecta aquí --></div>
+          <p class="cal-fallback" id="cal-fallback"><a id="cal-open" href="#" target="_blank" rel="noopener">Abrir el calendario en una pestaña nueva</a> (tus datos van igual de precargados).</p>
+          <p class="book-devnote" id="book-devnote" hidden></p>
+        </div>
       </div>
     </div>
   </section>
@@ -1662,7 +1661,6 @@
       submitBtn.textContent = "Un momento…";
 
       sendLeadToWebhook(payload).then(function (res) {
-        // Evento de conversión (dedup con el CAPI server-side vía n8n por el mismo event_id)
         trackAdsEvent("CompleteRegistration", {
           event_id: crmEventId,
           crm_event_name: "CompleteRegistration",
@@ -1673,7 +1671,7 @@
           content_name: (window.SCI_TRACKING_CONFIG && window.SCI_TRACKING_CONFIG.service_content && window.SCI_TRACKING_CONFIG.service_content.content_name) || "",
           value: 0, currency: "USD"
         });
-        goToCalendar(payload, res);
+        goToStep2(payload, res);
       });
     });
   }
@@ -1721,7 +1719,10 @@
     }
   }
 
-  function goToCalendar(payload, res) {
+  var zcalInjected = false;
+  function injectZcal(payload) {
+    if (zcalInjected) return;
+    zcalInjected = true;
     // URL de Zcal prellenada. El lead_id NO va en la URL (igual que producción).
     var u = new URL(CONFIG.zcalBaseUrl);
     u.searchParams.set("name", payload.full_name);
@@ -1737,30 +1738,13 @@
     iframe.setAttribute("allow", "clipboard-write");
     frame.appendChild(iframe);
 
-    // Si el iframe de Zcal no carga (ad-blocker, red corporativa, caída), realza el enlace de respaldo.
-    var fb = stepCal.querySelector(".cal-fallback");
+    var fb = document.getElementById("cal-fallback");
     var iframeLoaded = false;
     iframe.addEventListener("load", function () { iframeLoaded = true; });
     setTimeout(function () { if (!iframeLoaded && fb) fb.classList.add("cal-fallback--urgent"); }, 6000);
-
     document.getElementById("cal-open").href = u.toString();
-    var greet = document.getElementById("cal-greeting");
-    if (greet) greet.textContent = "Ya casi, " + payload.full_name.split(" ")[0] + ". Tus datos ya están cargados — solo elige el día y la hora.";
 
-    var dn = document.getElementById("book-devnote");
-    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
-      dn.hidden = false;
-      dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
-    }
-
-    stepForm.hidden = true;
-    stepCal.hidden = false;
-    stepCal.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
-
-    // Confirmación de reserva de Zcal → evento Schedule.
-    // Señal solo de cliente: es la mejor disponible aquí, pero la FIABLE es server-side
-    // (webhook de Zcal → n8n → CAPI). Mientras tanto, este listener acota a las formas de
-    // mensaje de "reserva confirmada" e ignora los mensajes de resize/height de Zcal.
+    // Confirmación de reserva de Zcal → evento Schedule (mejor esfuerzo cliente; lo fiable es server-side).
     window.addEventListener("message", function onMsg(e) {
       var host = (e.origin || "").replace(/^https?:\/\//, "").split("/")[0];
       if (!/(^|\.)zcal\.co$/.test(host)) return;
@@ -1778,6 +1762,26 @@
         window.removeEventListener("message", onMsg);
       }
     });
+  }
+
+  // Paso 2: registro hecho → calendario Zcal prellenado.
+  function goToStep2(payload, res) {
+    var first = payload.full_name.split(" ")[0];
+
+    var dn = document.getElementById("book-devnote");
+    if (dn && res && (res.status === "webhook_pending_no_cors" || res.status === "qa_no_webhook")) {
+      dn.hidden = false;
+      dn.textContent = "Registro enviado. La confirmación del CRM llega por el webhook de la reserva.";
+    }
+
+    stepForm.hidden = true;
+    stepCal.hidden = false;
+    document.getElementById("cal-badge").textContent = "Casi listo";
+    document.getElementById("cal-title").textContent = "Elige tu horario";
+    document.getElementById("cal-greeting").textContent = "Ya casi, " + first + ". Tus datos ya están cargados — solo elige el día y la hora.";
+    injectZcal(payload);
+
+    stepCal.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
   }
 })();
 </script>
