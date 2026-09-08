@@ -599,18 +599,16 @@
   <!-- ============ VIDEO — MENSAJE DEL EQUIPO ============ -->
   <div class="hero-vmsg">
     <div class="wrap">
-      <button class="vmsg-peek" type="button" aria-haspopup="dialog"
-              aria-label="Reproducir el mensaje de Sotomayor Consulting (0:27, con sonido)">
-        <span class="vmsg-peek__thumb">
-          <video class="vmsg-peek__loop" muted loop autoplay playsinline preload="auto"
-                 poster="../../form-landing-poster.jpg">
-            <source src="../../form-landing-loop.mp4" type="video/mp4" />
-          </video>
-          <span class="vmsg-peek__play" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </span>
+      <button class="vmsg-frame" type="button" aria-haspopup="dialog"
+              aria-label="Reproducir con sonido el mensaje de Sotomayor Consulting (0:27)">
+        <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
+               poster="../../form-landing-poster.jpg">
+          <source src="../../form-landing-loop.mp4" type="video/mp4" />
+        </video>
+        <span class="vmsg-frame__cue" aria-hidden="true">
+          <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          Toca para escuchar &middot; 0:27
         </span>
-        <span class="vmsg-peek__label"><b>Antes de agendar, míralo.</b> 0:27 · con sonido</span>
       </button>
     </div>
 
@@ -625,23 +623,27 @@
   </div>
 
   <style>
-    .hero-vmsg{margin:8px auto 2px}
+    .hero-vmsg{margin:16px auto 6px}
     .hero-vmsg .wrap{text-align:center}
-    .vmsg-peek{display:inline-flex;align-items:center;gap:14px;cursor:pointer;
-      background:transparent;border:0;padding:8px;font:inherit;color:inherit}
-    .vmsg-peek__thumb{position:relative;flex:none;width:104px;height:104px;border-radius:14px;
-      overflow:hidden;background:#070b13;
-      box-shadow:0 10px 30px rgba(12,26,42,.22),0 0 0 1px rgba(230,199,120,.4);
-      transition:transform .2s var(--e-out),box-shadow .2s var(--e-out)}
-    .vmsg-peek:hover .vmsg-peek__thumb{transform:translateY(-2px);
-      box-shadow:0 16px 40px rgba(12,26,42,.28),0 0 0 1px rgba(230,199,120,.75)}
-    .vmsg-peek__loop{width:100%;height:100%;object-fit:cover;display:block}
-    .vmsg-peek__play{position:absolute;inset:0;margin:auto;width:36px;height:36px;
-      display:grid;place-items:center;border-radius:50%;background:rgba(214,161,68,.92);
-      color:#0b0f18;box-shadow:0 4px 14px rgba(0,0,0,.35)}
-    .vmsg-peek__play svg{width:16px;height:16px;margin-left:2px}
-    .vmsg-peek__label{text-align:left;font-size:.9rem;color:var(--ink-2);line-height:1.35;max-width:22ch}
-    .vmsg-peek__label b{display:block;color:var(--navy-800);font-family:var(--font-display);font-weight:700}
+    .vmsg-frame{position:relative;display:block;width:min(520px,92vw);margin:0 auto;
+      padding:0;border:0;cursor:pointer;background:#070b13;
+      border-radius:20px;aspect-ratio:1/1;overflow:hidden;
+      box-shadow:0 24px 60px rgba(12,26,42,.22),0 0 0 1px rgba(230,199,120,.5),
+                 0 0 90px 8px rgba(214,161,68,.26);
+      transition:transform .22s var(--e-out),box-shadow .22s var(--e-out)}
+    .vmsg-frame:hover{transform:translateY(-3px);
+      box-shadow:0 30px 72px rgba(12,26,42,.28),0 0 0 1px rgba(230,199,120,.85),
+                 0 0 110px 12px rgba(214,161,68,.34)}
+    .vmsg-frame__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+    .vmsg-frame__cue{position:absolute;left:0;right:0;bottom:0;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      padding:16px 16px 18px;color:#fff;
+      background:linear-gradient(transparent,rgba(7,11,19,.8));
+      font:600 14px/1 var(--font-body);letter-spacing:.01em}
+    .vmsg-frame__play{flex:none;width:34px;height:34px;display:grid;place-items:center;
+      border-radius:50%;background:var(--gold-cta);color:#0b0f18;
+      box-shadow:0 4px 14px rgba(0,0,0,.4)}
+    .vmsg-frame__play svg{width:15px;height:15px;margin-left:2px}
 
     .vmsg-modal{border:0;padding:0;background:transparent;width:100%;height:100%;
       max-width:none;max-height:none;overflow:visible}
@@ -654,13 +656,9 @@
       font-size:24px;line-height:1;display:grid;place-items:center}
     .vmsg-modal__x:hover{background:rgba(255,255,255,.28)}
 
-    @media (max-width:560px){
-      .vmsg-peek{flex-direction:column;gap:10px}
-      .vmsg-peek__label{text-align:center}
-    }
     @media (prefers-reduced-motion:reduce){
-      .vmsg-peek__loop{display:none}
-      .vmsg-peek__thumb{background:#0b0f18 url(../../form-landing-poster.jpg) center/cover}
+      .vmsg-frame__loop{display:none}
+      .vmsg-frame{background:#0b0f18 url(../../form-landing-poster.jpg) center/cover}
     }
   </style>
 
@@ -669,8 +667,8 @@
       var wrap = document.currentScript.previousElementSibling;      // <style>
       while (wrap && !(wrap.classList && wrap.classList.contains("hero-vmsg"))) wrap = wrap.previousElementSibling;
       if (!wrap) return;
-      var peek = wrap.querySelector(".vmsg-peek");
-      var loop = wrap.querySelector(".vmsg-peek__loop");
+      var trigger = wrap.querySelector(".vmsg-frame");
+      var loop = wrap.querySelector(".vmsg-frame__loop");
       var modal = wrap.querySelector(".vmsg-modal");
       var mv = wrap.querySelector(".vmsg-modal__video");
       var reduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -692,7 +690,7 @@
         if (typeof modal.close === "function") modal.close(); else modal.removeAttribute("open");
       }
 
-      peek.addEventListener("click", openModal);
+      trigger.addEventListener("click", openModal);
       wrap.querySelector(".vmsg-modal__x").addEventListener("click", closeModal);
       modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
       modal.addEventListener("close", function () { try { mv.pause(); } catch (e) {} });
