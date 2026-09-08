@@ -24,14 +24,14 @@ for (const [name, html, verb] of [["A", a, "asesoría"], ["B", b, "revisión"]])
   assert.match(html, /@media \(max-width:900px\)\{[\s\S]*?\.hero-jump\{width:100%/, `${name}: hero-jump full-width en movil`);
   assert.ok((html.match(/<div class="hero-obj[\s\S]*?<\/div>/)[0].match(/class="hide-sm"/g) || []).length === 2, `${name}: 2 chips marcados hide-sm`);
 
-  // CTA de body dorados a #agendar: 4 (fit/cases, pain, meeting, faq) — sin "final"
-  const goldBody = [...html.matchAll(/class="btn btn--primary"[^>]*href="#agendar"[^>]*data-cta="(fit|cases|pain|meeting|faq)"/g)].map(m => m[1]);
-  assert.equal(goldBody.length, 4, `${name}: 4 CTAs dorados en el body (hay ${goldBody.length}: ${goldBody})`);
+  // CTA de body dorados a #agendar: 5 (fit/cases, pain, meeting, faq, plans) — sin "final"
+  const goldBody = [...html.matchAll(/class="btn btn--primary"[^>]*href="#agendar"[^>]*data-cta="(fit|cases|pain|meeting|faq|plans)"/g)].map(m => m[1]);
+  assert.equal(goldBody.length, 5, `${name}: 5 CTAs dorados en el body (hay ${goldBody.length}: ${goldBody})`);
   assert.doesNotMatch(html, /data-cta="why-first"/, `${name}: se quitó el CTA de why-first`);
-  assert.doesNotMatch(html, /class="btn btn--primary"[^>]*data-cta="plans"/, `${name}: plans ya no es botón dorado`);
+  assert.match(html, /class="btn btn--primary" href="#agendar" data-cta="plans"/, `${name}: la tabla de planes cierra con un botón dorado real`);
 
   // Etiqueta unificada en los CTAs de body
-  const bodyLabels = [...html.matchAll(/data-cta="(fit|cases|pain|meeting|faq)">([^<]+)</g)].map(m => m[2]);
+  const bodyLabels = [...html.matchAll(/data-cta="(fit|cases|pain|meeting|faq|plans)">([^<]+)</g)].map(m => m[2]);
   assert.ok(bodyLabels.length && bodyLabels.every(l => l === `Agendar ${verb} gratis`), `${name}: etiquetas unificadas (${[...new Set(bodyLabels)]})`);
 
   // Formulario: un solo botón de envío (se quitaron more_info / not_now)

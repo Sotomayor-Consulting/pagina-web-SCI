@@ -245,6 +245,8 @@
   }
   .book h2{color:#fff;font-size:1.16rem;font-weight:600;letter-spacing:-.01em;position:relative}
   .book .book-sub{color:rgba(255,255,255,.72);font-size:.86rem;margin-top:5px;position:relative}
+  .book .book-human{color:rgba(255,255,255,.82);font-size:.8rem;margin-top:9px;position:relative;padding-left:16px}
+  .book .book-human::before{content:"";position:absolute;left:0;top:.42em;width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(15,122,75,.25)}
   .book form{margin-top:16px;display:grid;gap:11px;position:relative}
   .field label{display:block;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:5px;font-family:var(--font-display)}
   .field input,.field select{
@@ -356,6 +358,7 @@
 
   /* ============================ CONFIANZA ============================ */
   .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(13px,2.2vw,22px);margin-bottom:clamp(28px,3.6vw,42px)}
+  .stat-row--2{grid-template-columns:repeat(2,1fr);max-width:560px}
   .stat{border-top:2px solid var(--gold);padding-top:14px}
   .stat .n{font-family:var(--font-display);font-weight:700;font-size:clamp(1.45rem,2.3vw,1.9rem);color:var(--navy-800);letter-spacing:-.02em}
   .stat .l{font-size:.82rem;color:var(--muted);margin-top:3px}
@@ -833,7 +836,7 @@
       <div class="section-head reveal">
         <span class="kicker">Planes</span>
         <h2>Planes con renovación anual</h2>
-        <p class="plans-note"><b>Los planes son anuales, desde USD 350</b> (Básico). La <b>tasa del estado</b> se paga aparte y varía según la jurisdicción. El costo exacto de la renovación —según el plan y el estado que elijas— lo ves con número en la reunión.</p>
+        <p class="plans-note">Los planes de servicio son anuales (abajo). Aparte, la empresa tiene un <b>mantenimiento anual de USD 399</b> —agente residente y reporte estatal—, más la <i>franchise tax</i> y el cumplimiento tributario del estado, montos que fija cada jurisdicción. La estructura y el estado más adecuados para tu negocio los definimos juntos en la reunión, sin costo.</p>
       </div>
       <div class="plans-grid reveal">
         <div class="pcard">
@@ -858,7 +861,10 @@
           <p>Planificación y diseño de la LLC para ir paso a paso.</p>
         </div>
       </div>
-      <p class="plans-note reveal" style="margin-top:22px">El plan exacto lo defines en la asesoría, según tu caso y tu estado — sin costo. <a href="#agendar" data-cta="plans" style="color:var(--gold-ink);font-weight:700;white-space:nowrap">Agendar asesoría gratis →</a></p>
+      <div class="why-cta reveal" style="margin-top:22px">
+        <a class="btn btn--primary" href="#agendar" data-cta="plans">Agendar asesoría gratis</a>
+        <span class="cta-note">El plan exacto lo defines en la asesoría, según tu caso y tu estado — sin costo.</span>
+      </div>
     </div>
   </section>
 
@@ -869,11 +875,9 @@
         <span class="kicker">Confianza</span>
         <h2>10 años estructurando negocios internacionales</h2>
       </div>
-      <div class="stat-row reveal">
+      <div class="stat-row stat-row--2 reveal">
         <div class="stat"><div class="n">5.000</div><div class="l">empresas incorporadas</div></div>
-        <div class="stat"><div class="n">1.354</div><div class="l">proyectos realizados</div></div>
-        <div class="stat"><div class="n">97 %</div><div class="l">de satisfacción</div></div>
-        <div class="stat"><div class="n">10</div><div class="l">años de experiencia</div></div>
+        <div class="stat"><div class="n">10</div><div class="l">años estructurando negocios internacionales</div></div>
       </div>
       <div class="rating-line reveal">
         <span class="stars" aria-hidden="true">★★★★☆</span>
@@ -1010,6 +1014,7 @@
           <span class="book-badge">Asesoría gratuita · por Zoom</span>
           <h2>Da el primer paso</h2>
           <p class="book-sub">Déjanos tus datos y dinos cómo seguir. Sin costo ni compromiso.</p>
+          <p class="book-human">Del otro lado hay una persona: un asesor de la firma revisa tu caso contigo, en español — no un bot.</p>
           <form id="lead-form" novalidate>
             <input type="text" name="contact_channel" id="f-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
             <div class="field">
@@ -1379,8 +1384,17 @@
   });
 
   // Clics: WhatsApp → Contact (evento nativo) ; internos → sólo dataLayer (diagnóstico)
+  function focusFirstEmptyField() {
+    var sf = document.getElementById("book-step-form");
+    if (!sf || sf.hidden) return;
+    var ids = ["f-name", "f-phone", "f-email"];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (el && !el.value) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } break; }
+    }
+  }
   document.querySelectorAll('a[data-cta]').forEach(function (a) {
-    a.addEventListener("click", function () {
+    a.addEventListener("click", function (ev) {
       var isWa = /wa\.link|whatsapp/i.test(a.href || "");
       if (isWa) {
         trackAdsEvent("Contact", {
@@ -1392,17 +1406,15 @@
       } else {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: "cta_click", cta: a.getAttribute("data-cta") || "", page_name: PAGE_NAME });
-        // CTA que salta al form: tras el scroll, enfoca el primer campo vacío
+        // CTA que salta al form: salto instantáneo (no animar toda la página) + foco en el primer campo vacío
         if ((a.getAttribute("href") || "") === "#agendar") {
-          setTimeout(function () {
-            var sf = document.getElementById("book-step-form");
-            if (!sf || sf.hidden) return;
-            var ids = ["f-name", "f-phone", "f-email"];
-            for (var i = 0; i < ids.length; i++) {
-              var el = document.getElementById(ids[i]);
-              if (el && !el.value) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } break; }
-            }
-          }, 500);
+          var target = document.getElementById("agendar");
+          if (target) {
+            ev.preventDefault();
+            target.scrollIntoView({ block: "start", behavior: "auto" });
+            if (history.replaceState) history.replaceState(null, "", "#agendar");
+            setTimeout(focusFirstEmptyField, 60);
+          }
         }
       }
     });
