@@ -518,6 +518,30 @@
           <b>+5.000 empresas</b> incorporadas · <b>10 años</b> · <b>Partner de Mercury &amp; Relay</b><br>
           <span class="stars" aria-hidden="true">★★★★☆</span> 4,3/5 en Trustpilot con reseñas verificadas
         </p>
+
+        <!-- VIDEO — mensaje del equipo (bajo el hero, estilo VSL) -->
+        <div class="hero-vmsg reveal d3">
+          <button class="vmsg-frame" type="button" aria-haspopup="dialog"
+                  aria-label="Ver el video con sonido: lo que deberías saber antes de abrir tu LLC (0:27)">
+            <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
+                   poster="../../form-landing-poster.jpg">
+              <source src="../../form-landing-loop.mp4" type="video/mp4" />
+            </video>
+            <span class="vmsg-frame__overlay" aria-hidden="true">
+              <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="vmsg-frame__hook">Lo que deberías saber<br>antes de abrir tu LLC</span>
+              <span class="vmsg-frame__dur">Míralo completo &middot; 0:27</span>
+            </span>
+          </button>
+          <dialog class="vmsg-modal" aria-label="Mensaje de Sotomayor Consulting">
+            <button class="vmsg-modal__x" type="button" aria-label="Cerrar">&#215;</button>
+            <video class="vmsg-modal__video" playsinline controls preload="none"
+                   poster="../../form-landing-poster.jpg">
+              <source src="../../form-landing-sub.webm" type="video/webm" />
+              <source src="../../form-landing-sub.mp4" type="video/mp4" />
+            </video>
+          </dialog>
+        </div>
       </div>
 
       <!-- Booking card: paso 1 (form) → paso 2 (Zcal) -->
@@ -595,6 +619,123 @@
       </aside>
     </div>
   </section>
+
+  <style>
+    .hero-vmsg{margin:22px 0 2px;text-align:center}
+    .vmsg-frame{position:relative;display:block;width:min(520px,100%);margin:0 auto;
+      padding:0;border:0;cursor:pointer;background:#070b13;
+      border-radius:20px;aspect-ratio:1/1;overflow:hidden;
+      box-shadow:0 24px 60px rgba(12,26,42,.22),0 0 0 1px rgba(230,199,120,.5),
+                 0 0 90px 8px rgba(214,161,68,.26);
+      transition:transform .22s var(--e-out),box-shadow .22s var(--e-out)}
+    .vmsg-frame:hover{transform:translateY(-3px);
+      box-shadow:0 30px 72px rgba(12,26,42,.28),0 0 0 1px rgba(230,199,120,.85),
+                 0 0 110px 12px rgba(214,161,68,.34)}
+    .vmsg-frame__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+    .vmsg-frame__overlay{position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;color:#fff;
+      background:radial-gradient(130% 100% at 50% 42%, rgba(7,11,19,.12), rgba(7,11,19,.58));
+      transition:background .25s var(--e-out)}
+    .vmsg-frame:hover .vmsg-frame__overlay{
+      background:radial-gradient(130% 100% at 50% 42%, rgba(7,11,19,.04), rgba(7,11,19,.44))}
+    .vmsg-frame__play{width:62px;height:62px;display:grid;place-items:center;border-radius:50%;
+      background:var(--gold-cta);color:#0b0f18;box-shadow:0 10px 30px rgba(0,0,0,.45);
+      transition:transform .2s var(--e-out)}
+    .vmsg-frame:hover .vmsg-frame__play{transform:scale(1.07)}
+    .vmsg-frame__play svg{width:26px;height:26px;margin-left:3px}
+    .vmsg-frame__hook{max-width:20ch;
+      font:700 clamp(1rem,1.4vw,1.15rem)/1.32 var(--font-display);
+      text-shadow:0 2px 12px rgba(0,0,0,.55)}
+    .vmsg-frame__dur{font:600 .78rem/1 var(--font-body);letter-spacing:.06em;
+      text-transform:uppercase;opacity:.9;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+
+    .vmsg-modal{border:0;padding:0;background:transparent;width:100%;height:100%;
+      max-width:none;max-height:none;overflow:visible}
+    .vmsg-modal::backdrop{background:rgba(7,11,19,.82)}
+    .vmsg-modal[open]{display:grid;place-items:center}
+    .vmsg-modal__video{width:min(520px,92vw);max-height:86vh;aspect-ratio:1/1;
+      border-radius:16px;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+    .vmsg-modal__x{position:fixed;top:14px;right:16px;width:40px;height:40px;border:0;
+      border-radius:50%;cursor:pointer;background:rgba(255,255,255,.16);color:#fff;
+      font-size:24px;line-height:1;display:grid;place-items:center}
+    .vmsg-modal__x:hover{background:rgba(255,255,255,.28)}
+
+    @media (prefers-reduced-motion:reduce){
+      .vmsg-frame__loop{display:none}
+      .vmsg-frame{background:#0b0f18 url(../../form-landing-poster.jpg) center/cover}
+    }
+  </style>
+
+  <script>
+    (function () {
+      var wrap = document.querySelector(".hero-vmsg");
+      if (!wrap) return;
+      var trigger = wrap.querySelector(".vmsg-frame");
+      var loop = wrap.querySelector(".vmsg-frame__loop");
+      var modal = wrap.querySelector(".vmsg-modal");
+      var mv = wrap.querySelector(".vmsg-modal__video");
+      var reduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+      function playLoop() {
+        if (reduced || !loop) return;
+        var p = loop.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+      if (loop && !reduced) {
+        playLoop();
+        loop.addEventListener("loadeddata", playLoop);
+        loop.addEventListener("canplay", playLoop);
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (e.isIntersecting) playLoop();
+              else { try { loop.pause(); } catch (x) {} }
+            });
+          }, { threshold: 0.2 }).observe(loop);
+        }
+        var kick = function () {
+          playLoop();
+          ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.removeEventListener(ev, kick); });
+        };
+        ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.addEventListener(ev, kick, { passive: true }); });
+      }
+
+      function dl(ev) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: ev, page_name: (window.SCI_TRACKING_CONFIG || {}).page_name || location.pathname });
+      }
+      function openModal() {
+        if (typeof modal.showModal === "function") modal.showModal(); else modal.setAttribute("open", "");
+        mv.currentTime = 0; mv.muted = false;
+        var p = mv.play(); if (p && p.catch) p.catch(function () {});
+        dl("welcome_video_open");
+      }
+      function closeModal() {
+        try { mv.pause(); } catch (e) {}
+        if (typeof modal.close === "function") modal.close(); else modal.removeAttribute("open");
+      }
+
+      trigger.addEventListener("click", openModal);
+      wrap.querySelector(".vmsg-modal__x").addEventListener("click", closeModal);
+      modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+      modal.addEventListener("close", function () { try { mv.pause(); } catch (e) {} });
+
+      mv.addEventListener("ended", function () {
+        dl("welcome_video_complete");
+        closeModal();
+        var form = document.getElementById("agendar");
+        if (!form) return;
+        form.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+        setTimeout(function () {
+          var ids = ["f-name", "f-phone", "f-email"];
+          for (var i = 0; i < ids.length; i++) {
+            var el = document.getElementById(ids[i]);
+            if (el && !el.value) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } break; }
+          }
+        }, 600);
+      });
+    })();
+  </script>
 
   <!-- ============ PARTNERS OFICIALES ============ -->
   <section class="partners-auth" aria-label="Partners de banca oficiales">
