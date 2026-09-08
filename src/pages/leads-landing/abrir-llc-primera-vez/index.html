@@ -1409,18 +1409,29 @@
   });
 
   /* ---------- sticky bar visibility ---------- */
+  // Aparece al pasar el hero; se oculta de nuevo al llegar al form del final
+  // (ahí ya está el CTA a la vista). Solo alterna la clase; la media query
+  // max-width:820px decide si se renderiza.
   var sticky = document.querySelector(".stickybar");
-  var heroCard = document.getElementById("agendar");
-  if (sticky && heroCard && "IntersectionObserver" in window) {
-    // Only toggles a class; the max-width:820px media query decides if it renders.
-    var so = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        var show = !e.isIntersecting;
-        sticky.classList.toggle("is-on", show);
-        sticky.setAttribute("aria-hidden", show ? "false" : "true");
-      });
-    }, { threshold: 0 });
-    so.observe(heroCard);
+  var heroEl = document.querySelector(".hero");
+  var agendaEl = document.getElementById("agendar");
+  if (sticky && heroEl && "IntersectionObserver" in window) {
+    var heroOut = false, agendaIn = false;
+    var applySticky = function () {
+      var show = heroOut && !agendaIn;
+      sticky.classList.toggle("is-on", show);
+      sticky.setAttribute("aria-hidden", show ? "false" : "true");
+    };
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { heroOut = !e.isIntersecting; });
+      applySticky();
+    }, { threshold: 0 }).observe(heroEl);
+    if (agendaEl) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { agendaIn = e.isIntersecting; });
+        applySticky();
+      }, { threshold: 0 }).observe(agendaEl);
+    }
   }
 
   /* ---------- teléfono: selector de país con bandera + placeholder por país ---------- */
