@@ -524,14 +524,15 @@
         <!-- VIDEO — mensaje del equipo (bajo el hero, estilo VSL) -->
         <div class="hero-vmsg reveal d3">
           <button class="vmsg-frame" type="button" aria-haspopup="dialog"
-                  aria-label="Reproducir con sonido el mensaje de Sotomayor Consulting (0:27)">
+                  aria-label="Ver el video con sonido: lo que deberías revisar antes de corregir tu LLC (0:27)">
             <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
                    poster="../../form-landing-poster.jpg">
               <source src="../../form-landing-loop.mp4" type="video/mp4" />
             </video>
-            <span class="vmsg-frame__cue" aria-hidden="true">
+            <span class="vmsg-frame__overlay" aria-hidden="true">
               <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-              Toca para escuchar &middot; 0:27
+              <span class="vmsg-frame__hook">Lo que deberías revisar<br>antes de corregir tu LLC</span>
+              <span class="vmsg-frame__dur">Míralo completo &middot; 0:27</span>
             </span>
           </button>
           <dialog class="vmsg-modal" aria-label="Mensaje de Sotomayor Consulting">
@@ -634,15 +635,22 @@
       box-shadow:0 30px 72px rgba(12,26,42,.28),0 0 0 1px rgba(230,199,120,.85),
                  0 0 110px 12px rgba(214,161,68,.34)}
     .vmsg-frame__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-    .vmsg-frame__cue{position:absolute;left:0;right:0;bottom:0;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      padding:16px 16px 18px;color:#fff;
-      background:linear-gradient(transparent,rgba(7,11,19,.8));
-      font:600 14px/1 var(--font-body);letter-spacing:.01em}
-    .vmsg-frame__play{flex:none;width:34px;height:34px;display:grid;place-items:center;
-      border-radius:50%;background:var(--gold-cta);color:#0b0f18;
-      box-shadow:0 4px 14px rgba(0,0,0,.4)}
-    .vmsg-frame__play svg{width:15px;height:15px;margin-left:2px}
+    .vmsg-frame__overlay{position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;color:#fff;
+      background:radial-gradient(130% 100% at 50% 42%, rgba(7,11,19,.12), rgba(7,11,19,.58));
+      transition:background .25s var(--e-out)}
+    .vmsg-frame:hover .vmsg-frame__overlay{
+      background:radial-gradient(130% 100% at 50% 42%, rgba(7,11,19,.04), rgba(7,11,19,.44))}
+    .vmsg-frame__play{width:62px;height:62px;display:grid;place-items:center;border-radius:50%;
+      background:var(--gold-cta);color:#0b0f18;box-shadow:0 10px 30px rgba(0,0,0,.45);
+      transition:transform .2s var(--e-out)}
+    .vmsg-frame:hover .vmsg-frame__play{transform:scale(1.07)}
+    .vmsg-frame__play svg{width:26px;height:26px;margin-left:3px}
+    .vmsg-frame__hook{max-width:20ch;
+      font:700 clamp(1rem,1.4vw,1.15rem)/1.32 var(--font-display);
+      text-shadow:0 2px 12px rgba(0,0,0,.55)}
+    .vmsg-frame__dur{font:600 .78rem/1 var(--font-body);letter-spacing:.06em;
+      text-transform:uppercase;opacity:.9;text-shadow:0 2px 8px rgba(0,0,0,.5)}
 
     .vmsg-modal{border:0;padding:0;background:transparent;width:100%;height:100%;
       max-width:none;max-height:none;overflow:visible}
@@ -671,7 +679,29 @@
       var mv = wrap.querySelector(".vmsg-modal__video");
       var reduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-      if (loop && !reduced) { var lp = loop.play(); if (lp && lp.catch) lp.catch(function () {}); }
+      function playLoop() {
+        if (reduced || !loop) return;
+        var p = loop.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+      if (loop && !reduced) {
+        playLoop();
+        loop.addEventListener("loadeddata", playLoop);
+        loop.addEventListener("canplay", playLoop);
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (e.isIntersecting) playLoop();
+              else { try { loop.pause(); } catch (x) {} }
+            });
+          }, { threshold: 0.2 }).observe(loop);
+        }
+        var kick = function () {
+          playLoop();
+          ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.removeEventListener(ev, kick); });
+        };
+        ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.addEventListener(ev, kick, { passive: true }); });
+      }
 
       function dl(ev) {
         window.dataLayer = window.dataLayer || [];
