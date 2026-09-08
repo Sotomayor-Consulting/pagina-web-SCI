@@ -518,6 +518,29 @@
           <b>+5.000 empresas</b> incorporadas · <b>10 años</b> · <b>Partner de Mercury &amp; Relay</b><br>
           <span class="stars" aria-hidden="true">★★★★☆</span> 4,3/5 en Trustpilot con reseñas verificadas
         </p>
+
+        <!-- VIDEO — mensaje del equipo (bajo el hero, estilo VSL) -->
+        <div class="hero-vmsg reveal d3">
+          <button class="vmsg-frame" type="button" aria-haspopup="dialog"
+                  aria-label="Reproducir con sonido el mensaje de Sotomayor Consulting (0:27)">
+            <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
+                   poster="../../form-landing-poster.jpg">
+              <source src="../../form-landing-loop.mp4" type="video/mp4" />
+            </video>
+            <span class="vmsg-frame__cue" aria-hidden="true">
+              <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              Toca para escuchar &middot; 0:27
+            </span>
+          </button>
+          <dialog class="vmsg-modal" aria-label="Mensaje de Sotomayor Consulting">
+            <button class="vmsg-modal__x" type="button" aria-label="Cerrar">&#215;</button>
+            <video class="vmsg-modal__video" playsinline controls preload="none"
+                   poster="../../form-landing-poster.jpg">
+              <source src="../../form-landing-sub.webm" type="video/webm" />
+              <source src="../../form-landing-sub.mp4" type="video/mp4" />
+            </video>
+          </dialog>
+        </div>
       </div>
 
       <!-- Booking card: paso 1 (form) → paso 2 (Zcal) -->
@@ -596,36 +619,9 @@
     </div>
   </section>
 
-  <!-- ============ VIDEO — MENSAJE DEL EQUIPO ============ -->
-  <div class="hero-vmsg">
-    <div class="wrap">
-      <button class="vmsg-frame" type="button" aria-haspopup="dialog"
-              aria-label="Reproducir con sonido el mensaje de Sotomayor Consulting (0:27)">
-        <video class="vmsg-frame__loop" muted loop autoplay playsinline preload="auto"
-               poster="../../form-landing-poster.jpg">
-          <source src="../../form-landing-loop.mp4" type="video/mp4" />
-        </video>
-        <span class="vmsg-frame__cue" aria-hidden="true">
-          <span class="vmsg-frame__play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-          Toca para escuchar &middot; 0:27
-        </span>
-      </button>
-    </div>
-
-    <dialog class="vmsg-modal" aria-label="Mensaje de Sotomayor Consulting">
-      <button class="vmsg-modal__x" type="button" aria-label="Cerrar">&#215;</button>
-      <video class="vmsg-modal__video" playsinline controls preload="none"
-             poster="../../form-landing-poster.jpg">
-        <source src="../../form-landing-sub.webm" type="video/webm" />
-        <source src="../../form-landing-sub.mp4" type="video/mp4" />
-      </video>
-    </dialog>
-  </div>
-
   <style>
-    .hero-vmsg{margin:16px auto 6px}
-    .hero-vmsg .wrap{text-align:center}
-    .vmsg-frame{position:relative;display:block;width:min(520px,92vw);margin:0 auto;
+    .hero-vmsg{margin:22px 0 2px;text-align:center}
+    .vmsg-frame{position:relative;display:block;width:min(520px,100%);margin:0 auto;
       padding:0;border:0;cursor:pointer;background:#070b13;
       border-radius:20px;aspect-ratio:1/1;overflow:hidden;
       box-shadow:0 24px 60px rgba(12,26,42,.22),0 0 0 1px rgba(230,199,120,.5),
@@ -664,8 +660,7 @@
 
   <script>
     (function () {
-      var wrap = document.currentScript.previousElementSibling;      // <style>
-      while (wrap && !(wrap.classList && wrap.classList.contains("hero-vmsg"))) wrap = wrap.previousElementSibling;
+      var wrap = document.querySelector(".hero-vmsg");
       if (!wrap) return;
       var trigger = wrap.querySelector(".vmsg-frame");
       var loop = wrap.querySelector(".vmsg-frame__loop");
