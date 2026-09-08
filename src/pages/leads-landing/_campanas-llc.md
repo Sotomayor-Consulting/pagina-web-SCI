@@ -47,8 +47,11 @@ para que Astro no lo publique como ruta.
 - **Selector de país:** custom con **imagen de bandera** (flagcdn) en el botón y en la lista;
   autoselecciona el país por idioma/zona horaria del navegador; el placeholder es un
   ejemplo de número por país. 19 países (LATAM + Centro América + Rep. Dominicana + US + ES).
-- **Precio:** anual — «Los planes son anuales, desde USD 350 (Básico) + tasa del estado
-  (varía por jurisdicción). El costo exacto de la renovación se ve en la reunión.»
+- **Precio:** planes de servicio anuales (desde USD 350, Básico). Aparte, la empresa
+  tiene un **mantenimiento anual de USD 399** (agente residente + reporte estatal), más
+  la *franchise tax* y el cumplimiento tributario del estado, que fija cada jurisdicción.
+  La estructura y el estado adecuados se definen en la reunión. No se publica un número
+  cerrado de tasa estatal porque depende del estado que se elija en la asesoría.
 - **Reembolso:** no se anuncia como garantía. FAQ: se puede solicitar la devolución cuando
   el servicio no se concreta; sujeto a revisión y a `/terminos` y `/politicas`.
 
