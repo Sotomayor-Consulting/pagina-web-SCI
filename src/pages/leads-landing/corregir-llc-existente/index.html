@@ -599,6 +599,106 @@
     </div>
   </section>
 
+  <!-- ============ VIDEO DE BIENVENIDA ============ -->
+  <section class="welcome-video">
+    <div class="wrap">
+      <figure class="sc-welcome">
+        <div class="sc-welcome__frame">
+          <video
+            class="sc-welcome__video"
+            poster="../../form-landing-poster.jpg"
+            preload="none"
+            playsinline
+            muted
+            loop
+            aria-label="Mensaje de bienvenida de Sebastián Sotomayor, Managing Partner de Sotomayor Consulting">
+            <source src="../../form-landing-sub.webm" type="video/webm" />
+            <source src="../../form-landing-sub.mp4" type="video/mp4" />
+          </video>
+          <button class="sc-welcome__unmute" type="button" aria-live="polite">
+            <span class="sc-welcome__icon" aria-hidden="true">&#9654;</span>
+            Toca para escuchar la invitación
+          </button>
+        </div>
+        <figcaption class="sc-welcome__caption">Un minuto con el equipo antes de agendar.</figcaption>
+      </figure>
+      <style>
+        .sc-welcome{margin:0 auto;max-width:600px;text-align:center}
+        .sc-welcome__frame{position:relative;border-radius:16px;overflow:hidden;
+          background:#070b13;box-shadow:0 18px 48px rgba(7,11,19,.28);
+          border:1px solid rgba(230,199,120,.35);aspect-ratio:1/1}
+        .sc-welcome__video{display:block;width:100%;height:100%;object-fit:cover}
+        .sc-welcome__unmute{position:absolute;inset:auto 0 0 0;margin:0 auto 18px;
+          display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+          padding:12px 20px;border:0;border-radius:999px;
+          font:600 15px/1 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+          color:#0b0f18;background:#E6C778;box-shadow:0 8px 24px rgba(0,0,0,.35);
+          transition:opacity .25s ease,transform .25s ease}
+        .sc-welcome__unmute:hover{transform:translateY(-1px)}
+        .sc-welcome__unmute[hidden]{display:none}
+        .sc-welcome__icon{font-size:12px}
+        .sc-welcome__caption{margin-top:12px;
+          font:400 14px/1.4 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--muted)}
+        @media (prefers-reduced-motion:reduce){.sc-welcome__unmute{position:static;margin:16px auto 0}}
+      </style>
+      <script>
+        (function () {
+          var fig = document.currentScript.previousElementSibling;
+          while (fig && !fig.classList.contains("sc-welcome")) fig = fig.previousElementSibling;
+          if (!fig) return;
+          var video = fig.querySelector(".sc-welcome__video");
+          var btn = fig.querySelector(".sc-welcome__unmute");
+          var reduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+          var unmuted = false;
+
+          function playMuted() {
+            video.muted = true;
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+
+          if (reduced) {
+            btn.textContent = "";
+            btn.appendChild(Object.assign(document.createElement("span"), {
+              className: "sc-welcome__icon", textContent: "▶", ariaHidden: "true",
+            }));
+            btn.appendChild(document.createTextNode(" Reproducir con sonido"));
+          } else if ("IntersectionObserver" in window) {
+            new IntersectionObserver(function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) { if (!unmuted) playMuted(); }
+                else video.pause();
+              });
+            }, { threshold: 0.4 }).observe(video);
+          } else {
+            playMuted();
+          }
+
+          btn.addEventListener("click", function () {
+            unmuted = true;
+            video.currentTime = 0;
+            video.muted = false;
+            video.loop = false;
+            video.controls = true;
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+            btn.hidden = true;
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ event: "welcome_video_unmute", page_name: (window.SCI_TRACKING_CONFIG || {}).page_name || location.pathname });
+          });
+
+          video.addEventListener("ended", function () {
+            video.controls = false;
+            video.loop = true;
+            unmuted = false;
+            btn.hidden = false;
+            if (!reduced) playMuted();
+          });
+        })();
+      </script>
+    </div>
+  </section>
+
   <!-- ============ PARTNERS OFICIALES ============ -->
   <section class="partners-auth" aria-label="Partners de banca oficiales">
     <div class="wrap">
