@@ -15,6 +15,8 @@
     "@astrojs/mdx": "^8.0.0",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/starlight": "^0.42.0",
+    "@starwind-ui/astro": "1.2.1",
+    "@tabler/icons": "^3.46.0",
     "@tailwindcss/vite": "^4.3.3",
     "animejs": "^4.5.0",
     "astro": "^7.3.1",
@@ -30,7 +32,10 @@
     "rimraf": "^6.1.3",
     "sharp": "^0.34.5",
     "sharp-ico": "^0.1.5",
-    "tailwindcss": "^4.3.3"
+    "tailwind-merge": "^3",
+    "tailwind-variants": "^3.3.1",
+    "tailwindcss": "^4.3.3",
+    "tw-animate-css": "^1"
   },
   "devDependencies": {
     "@iconify-json/ant-design": "^1.2.9",
