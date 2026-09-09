@@ -969,10 +969,20 @@
       });
 
       var params = new URLSearchParams(
-        typeof window.__SCI_SCHEDULE_QUERY__ === "string"
-          ? window.__SCI_SCHEDULE_QUERY__
+        typeof window.location.search === "string"
+          ? window.location.search
           : ""
       );
+      var injectedQuery =
+        typeof window.__SCI_SCHEDULE_QUERY__ === "string"
+          ? new URLSearchParams(window.__SCI_SCHEDULE_QUERY__)
+          : null;
+
+      if (injectedQuery) {
+        injectedQuery.forEach(function (value, key) {
+          params.set(key, value);
+        });
+      }
 
       var elements = {
         navbarStatus: document.getElementById("sci-navbar-status"),
@@ -1004,7 +1014,9 @@
         timezone: readParam("timezone"),
         duration: readParam("duration"),
         start_date: readParam("startDate"),
-        preparation_answer: readParam("a[1]") || readParam("detail")
+        billing_range: readParam("a[1]") || readParam("billing") || readParam("facturacion"),
+        meeting_topic: readParam("a[2]") || readParam("topic") || readParam("detail"),
+        preparation_answer: readParam("a[2]") || readParam("topic") || readParam("detail")
       });
 
       var requestRunning = false;
@@ -1193,9 +1205,14 @@
 
         setUrlParam(url, "fullName", agenda.full_name);
         setUrlParam(url, "email", agenda.email);
+        setUrlParam(url, "phone", agenda.phone);
         setUrlParam(url, "timezone", agenda.timezone);
         setUrlParam(url, "a[0]", agenda.phone);
-        setUrlParam(url, "a[1]", agenda.preparation_answer);
+        setUrlParam(url, "billing_range", agenda.billing_range);
+        setUrlParam(url, "a[1]", agenda.billing_range);
+        setUrlParam(url, "meeting_topic", agenda.meeting_topic || agenda.preparation_answer);
+        setUrlParam(url, "preparation_answer", agenda.preparation_answer);
+        setUrlParam(url, "a[2]", agenda.meeting_topic || agenda.preparation_answer);
         setUrlParam(url, "duration", agenda.duration);
         setUrlParam(url, "startDate", agenda.start_date);
         url.searchParams.set("_validation_ts", String(Date.now()));
@@ -1232,6 +1249,20 @@
             source.start_date || source.startDate
           ),
           preparation_answer: normalizeText(
+            source.meeting_topic ||
+            source.preparation_answer ||
+            source.detail ||
+            source.additional_detail
+          ),
+          billing_range: normalizeText(
+            source.billing_range ||
+            source.billing ||
+            source.facturacion ||
+            source.revenue_range
+          ),
+          meeting_topic: normalizeText(
+            source.meeting_topic ||
+            source.topic ||
             source.preparation_answer ||
             source.detail ||
             source.additional_detail
@@ -1295,7 +1326,7 @@
         setText("sci-email", agenda.email, "No informado");
         setText("sci-phone", formatPhone(agenda.phone), "No informado");
         setText("sci-timezone", agenda.timezone, "No informada");
-        setText("sci-detail", agenda.preparation_answer, "No informado");
+        setText("sci-detail", agenda.meeting_topic, "No informado");
         setText(
           "sci-duration",
           agenda.duration ? agenda.duration + " minutos" : "",
